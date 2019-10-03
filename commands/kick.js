@@ -1,4 +1,6 @@
 module.exports = message => {
+  if (!message.guild) return;
+  
   const member = message.mentions.members.first();
 
   if (!member) {

@@ -1,5 +1,5 @@
 module.exports = (client, member) => {
-  member.send(
-    `Welcome on the server! Please be aware that we won't tolerate troll, spam or harassment. Have fun 😀`
-  );
+  const channel = member.guild.channels.find(ch => ch.name === "general");
+  if (!channel) return;
+  channel.send(`Welcome to the server, ${member}!`);
 };
