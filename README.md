@@ -1,1 +1,1 @@
-# discod-bot
+# discord-bot
