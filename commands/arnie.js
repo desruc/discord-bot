@@ -1,7 +1,8 @@
-const quotes = require("../data/arnieQuotes");
+const quotes = require("../data/quotes");
 
 module.exports = message => {
   const channel = message.channel;
-  const index = Math.floor(Math.random() * quotes.length);
-  channel.send(quotes[index]);
+  const allQuotes = [...quotes.movieQuotes, ...quotes.movieQuotes];
+  const rand = Math.ceil(Math.random() * (selections.length + 1));
+  channel.send(allQuotes[rand]);
 };
