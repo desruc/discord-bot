@@ -1,4 +1,4 @@
-const generateGreetings = require("../data/quotes");
+const { generateGreetings } = require("../data/quotes");
 
 module.exports = (client, member) => {
   const channel = member.guild.channels.find(ch => ch.name === "bunnings");
