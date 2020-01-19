@@ -5,7 +5,17 @@ module.exports = (client, message) => {
   if (message.content.startsWith("!kick")) {
     return kick(message);
   }
-  if (message.content.toLowercase() === "arnie, what do you think?") {
+
+  if (message.content.toLowerCase() === "arnie, what do you think?") {
     return arnie(message);
+  }
+
+  if (message.content.toLowerCase() === "!inspirational") {
+    return arnie('inspiration', message);
+  }
+
+  
+  if (message.content.toLowerCase() === "!movie") {
+    return arnie('movie', message);
   }
 };

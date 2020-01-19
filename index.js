@@ -9,7 +9,7 @@ fs.readdir("./events/", (err, files) => {
   files.forEach(file => {
     const handler = require(`./events/${file}`);
     const event = file.split(".")[0];
-    client.on(event, (...args) => handler(client, arg));
+    client.on(event, arg => handler(client, arg));
   });
 });
 
