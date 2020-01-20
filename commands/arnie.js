@@ -18,7 +18,7 @@ const inspirationalQuote = () => {
   return quotes.inspirationalQuotes[rand];
 };
 
-module.exports = (type, message) => {
+module.exports = (type = null, message) => {
   const channel = message.channel;
 
   switch (type) {

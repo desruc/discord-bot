@@ -1,30 +1,52 @@
 const kick = require("../commands/kick");
 const arnie = require("../commands/arnie");
 const jokes = require("../commands/joke");
+const roll = require("../commands/roll");
+const say = require("../commands/say");
+const squad = require("../commands/squad");
 
 module.exports = (client, message) => {
-  if (message.content.startsWith("!kick")) {
-    return kick(message);
-  }
+  if (message.author.bot) return;
 
-  if (message.content.toLowerCase() === "arnie, what do you think?") {
+  const prefix = "arnie";
+  if (message.content.toLowerCase().indexOf(prefix) !== 0) return;
+
+  const args = message.content
+    .slice(prefix.length)
+    .trim()
+    .split(/ +/g);
+  const command = args.shift().toLowerCase();
+
+  if (command === "quote") {
     return arnie(message);
   }
 
-  if (message.content.toLowerCase() === "!inspirational") {
-    return arnie('inspiration', message);
+  if (command === "inspiration") {
+    return arnie("inspiration", message);
   }
 
-  
-  if (message.content.toLowerCase() === "!movie") {
-    return arnie('movie', message);
+  if (command === "movie") {
+    return arnie("movie", quote);
   }
 
-  if (message.content.toLowerCase() === "joke plz") {
+  if (command === "joke") {
     return jokes(message);
   }
 
-  if (message.content.toLowerCase() === "!help") {
-    return message.channel.send(`Of course you'd want help... Sissy!`)
+  if (command === "roll") {
+    const num = args[0] || 100;
+    return roll(message, num);
+  }
+
+  if (command === "kick") {
+    return kick(message);
+  }
+
+  if (command === "say") {
+    return say(message, args);
+  }
+
+  if (command === "squad") {
+    return squad(message, args);
   }
 };

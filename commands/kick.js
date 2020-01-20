@@ -1,20 +1,16 @@
 module.exports = message => {
   if (!message.guild) return;
-  
+
+  const author = message.author;
   const member = message.mentions.members.first();
 
   if (!member) {
-    return message.reply(
-      `Who are you trying to kick? You must mention a user.`
-    );
+    return message.reply(`C'mon sissy! You didn't specify a user`);
   }
 
   if (!member.kickable) {
-    return message.reply(`I can't kick this user. Sorry!`);
+    return message.channel.send(`Nice try, asshole! ${member} is here to stay`);
   }
 
-  return member
-    .kick()
-    .then(() => message.reply(`${member.user.tag} was kicked.`))
-    .catch(error => message.reply(`Sorry, an error occured.`));
+  return message.channel.send(`Nice try, asshole! ${member} is here to stay`);
 };
