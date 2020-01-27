@@ -4,6 +4,7 @@ const jokes = require("../commands/joke");
 const roll = require("../commands/roll");
 const say = require("../commands/say");
 const squad = require("../commands/squad");
+const meme = require("../commands/meme");
 
 module.exports = (client, message) => {
   if (message.author.bot) return;
@@ -48,5 +49,9 @@ module.exports = (client, message) => {
 
   if (command === "squad") {
     return squad(message, args);
+  }
+
+  if (command === "meme") {
+    return meme(message);
   }
 };
