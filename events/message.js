@@ -5,11 +5,15 @@ const roll = require("../commands/roll");
 const say = require("../commands/say");
 const squad = require("../commands/squad");
 const meme = require("../commands/meme");
+const who = require("../commands/who");
 
-module.exports = (client, message) => {
-  if (message.author.bot) return;
-
+module.exports = async (client, message) => {
   const prefix = "arnie";
+  // If the author is a bot, return
+  if (message.author.bot) return;
+  // If the message was not sent in the server, return
+  if (!message.guild) return;
+  // If the message doesn't start with the prefix, return
   if (message.content.toLowerCase().indexOf(prefix) !== 0) return;
 
   const args = message.content
@@ -17,6 +21,21 @@ module.exports = (client, message) => {
     .trim()
     .split(/ +/g);
   const command = args.shift().toLowerCase();
+
+  if (command === "ping") {
+    const msg = await message.channel.send(`🏓 Pinging....`);
+    msg.edit(
+      `🏓 Pong!\nLatency is ${Math.floor(
+        msg.createdTimestamp - message.createdTimestamp
+      )}ms\nAPI Latency is ${Math.round(client.ping)}ms`
+    );
+    console.log(msg.createdTimestap)
+    console.log(message.createdTimestap)
+  }
+
+  if (command === 'who') {
+    return who(client, message, args);
+  }
 
   if (command === "quote") {
     return arnie(message);
@@ -27,7 +46,7 @@ module.exports = (client, message) => {
   }
 
   if (command === "movie") {
-    return arnie("movie", quote);
+    return arnie("movie", message);
   }
 
   if (command === "joke") {
