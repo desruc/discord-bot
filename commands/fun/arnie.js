@@ -1,4 +1,4 @@
-const quotes = require("../data/quotes");
+const quotes = require("../../data/quotes");
 
 const allQuotes = () => {
   const allQuotes = [...quotes.movieQuotes, ...quotes.inspirationalQuotes];
