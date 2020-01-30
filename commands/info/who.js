@@ -2,46 +2,48 @@ const { RichEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
 const { getMember, formatDate } = require("../../functions");
 
+const who = async (client, message, args) => {
+  const member = getMember(message, args.join(" "));
+
+  const joined = formatDate(member.joinedAt);
+  const created = formatDate(member.user.createdAt);
+
+  const embed = new RichEmbed()
+    .setFooter(member.displayName, member.user.displayAvatarURL)
+    .setThumbnail(member.user.displayAvatarURL)
+
+    .addField(
+      "Member information:",
+      stripIndents`**> Display name:** ${member.displayName}
+        **> Joined at:** ${joined}`,
+      true
+    )
+
+    .addField(
+      "User information:",
+      stripIndents`**> ID:** ${member.user.id}
+        **> Username:** ${member.user.username}
+        **> Tag:** ${member.user.tag}
+        **> Created at:** ${created}`,
+      true
+    )
+
+    .setTimestamp();
+
+  if (member.user.presence.game)
+    embed.addField(
+      "Currently playing",
+      stripIndents`**> Name:** ${member.user.presence.game.name}`
+    );
+
+  message.channel.send(embed);
+};
+
 module.exports = {
   name: "who",
   aliases: ["user"],
   category: "info",
   description: "Returns the users profile.",
   usage: "[user || id || mention]",
-  run: async (client, message, args) => {
-    const member = getMember(message, args.join(" "));
-
-    const joined = formatDate(member.joinedAt);
-    const created = formatDate(member.user.createdAt);
-
-    const embed = new RichEmbed()
-      .setFooter(member.displayName, member.user.displayAvatarURL)
-      .setThumbnail(member.user.displayAvatarURL)
-
-      .addField(
-        "Member information:",
-        stripIndents`**> Display name:** ${member.displayName}
-          **> Joined at:** ${joined}`,
-        true
-      )
-
-      .addField(
-        "User information:",
-        stripIndents`**> ID:** ${member.user.id}
-          **> Username:** ${member.user.username}
-          **> Tag:** ${member.user.tag}
-          **> Created at:** ${created}`,
-        true
-      )
-
-      .setTimestamp();
-
-    if (member.user.presence.game)
-      embed.addField(
-        "Currently playing",
-        stripIndents`**> Name:** ${member.user.presence.game.name}`
-      );
-
-    message.channel.send(embed);
-  }
+  run: who
 };
