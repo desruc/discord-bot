@@ -2,6 +2,8 @@ require("dotenv").config();
 const fs = require("fs");
 const { Client, Collection } = require("discord.js");
 
+const scheduledTasks = require('./tasks');
+
 const client = new Client();
 client.commands = new Collection();
 client.aliases = new Collection();
@@ -24,3 +26,5 @@ fs.readdir("./events/", (err, files) => {
 });
 
 client.login(process.env.TOKEN);
+
+scheduledTasks(client);

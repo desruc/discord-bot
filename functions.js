@@ -24,6 +24,10 @@ module.exports = {
   },
 
   formatDate: function(date) {
-    return moment(date).format('DD/MM/YYYY');
+    return moment(date).format("DD/MM/YYYY");
+  },
+
+  randomNumber: function(number) {
+    return Math.ceil(Math.random() * (Number(number) - 1));
   }
 };

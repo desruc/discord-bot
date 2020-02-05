@@ -57,6 +57,21 @@ const inspirationalQuotes = [
   "The more knowledge you have, the more you’re free to rely on your instincts."
 ];
 
+const memeMessages = [
+  "Morning ladies!",
+  "Spicy or nah?",
+  `Top o' the mornin’ to ya!`,
+  "This ones on me",
+  "Dank/10",
+  "Thank me later",
+  `You're gonna love this`,
+  "Ahoy there mateys!",
+  "This will put some lead in your pencil",
+  ";)",
+  "Me Gusta",
+  "Whaddaya think?"
+];
+
 function generateGreetings(member) {
   return [
     `${member}, you son of a bitch!`,
@@ -75,5 +90,6 @@ function generateGreetings(member) {
 module.exports = {
   movieQuotes,
   inspirationalQuotes,
+  memeMessages,
   generateGreetings
 };

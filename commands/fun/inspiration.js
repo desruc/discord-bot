@@ -1,10 +1,9 @@
 const quotes = require("../../data/quotes");
+const { randomNumber } = require("../../functions");
 
 const inspirationalQuote = async (client, message, args) => {
   const channel = message.channel;
-  const rand = Math.ceil(
-    Math.random() * (quotes.inspirationalQuotes.length - 1)
-  );
+  const rand = randomNumber(quotes.inspirationalQuotes.length);
   const quote = quotes.inspirationalQuotes[rand];
   channel.send(quote);
 };

@@ -4,8 +4,8 @@ module.exports = client => {
   client.user.setPresence({
     status: "online",
     game: {
-      name: "my master develop",
-      type: "WATCHING"
+      name: "games with your heart",
+      type: "PLAYING"
     }
   });
 };
