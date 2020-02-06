@@ -1,3 +1,6 @@
+const { checkForSwears } = require("../functions");
+const censor = require("../commands/moderation/censor");
+
 module.exports = async (client, message) => {
   const prefix = "arnie";
   // If the author is a bot, return
@@ -17,6 +20,9 @@ module.exports = async (client, message) => {
 
   let command = client.commands.get(cmd);
   if (!command) command = client.commands.get(client.aliases.get(cmd));
+
+  if (command !== "say" && checkForSwears(args))
+    return censor(client, message, args);
 
   if (command) command.run(client, message, args);
 };
