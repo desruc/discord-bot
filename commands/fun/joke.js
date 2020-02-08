@@ -20,8 +20,8 @@ const joke = async (client, message, args) => {
 
 module.exports = {
   name: "joke",
-  aliases: ["pun"],
+  aliases: ["pun", "fun"],
   category: "fun",
-  description: "Returns a random joke.",
+  description: "returns a random joke.",
   run: joke
 };

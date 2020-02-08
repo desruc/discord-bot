@@ -15,8 +15,9 @@ const kick = async (client, message, args) => {
 
 module.exports = {
   name: "kick",
+  aliases: ["terminate"],
   category: "moderation",
-  description: "Attempts to kick the mentioned user",
+  description: "attempts to kick the mentioned user",
   usage: "[mention]",
   run: kick
 };

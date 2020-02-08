@@ -10,7 +10,7 @@ module.exports = {
   name: "roll",
   category: "fun",
   description:
-    "Returns a random number between 0 and 100 (or the number specified).",
+    "returns a random number between 0 and 100 (or the number specified).",
   usage: "[number]",
   run: roll
 };

@@ -13,6 +13,6 @@ const meme = async (client, message, args) => {
 module.exports = {
   name: "meme",
   category: "fun",
-  description: "Grabs a random meme from /r/dankmemes",
+  description: "returns a random meme from /r/dankmemes",
   run: meme
 };

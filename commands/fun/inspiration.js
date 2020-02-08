@@ -11,6 +11,6 @@ const inspirationalQuote = async (client, message, args) => {
 module.exports = {
   name: "inspiration",
   category: "fun",
-  description: "Return an inspirational quote.",
+  description: "returns an inspirational quote.",
   run: inspirationalQuote
 };

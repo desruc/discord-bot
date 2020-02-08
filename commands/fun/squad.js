@@ -9,7 +9,7 @@ const squad = async (client, message, args) => {
 module.exports = {
   name: "squad",
   category: "fun",
-  description: "The bot will message the channel calling for action.",
+  description: "the bot will message the channel calling for action.",
   usage: "[game]",
   run: squad
 };
