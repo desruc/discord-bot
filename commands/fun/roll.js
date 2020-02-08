@@ -12,5 +12,6 @@ module.exports = {
   description:
     "returns a random number between 0 and 100 (or the number specified).",
   usage: "[number]",
+  example: "arnie roll 666",
   run: roll
 };

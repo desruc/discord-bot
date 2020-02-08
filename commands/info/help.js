@@ -52,12 +52,16 @@ function getCMD(client, message, input) {
 
   // Add all cmd info to the embed
   if (cmd.name) info = `**Command name**: ${cmd.name}`;
+  if (cmd.category) info += `\n**Category**: ${cmd.category}`;
   if (cmd.aliases)
     info += `\n**Aliases**: ${cmd.aliases.map(a => `${a}`).join(", ")}`;
   if (cmd.description) info += `\n**Description**: ${cmd.description}`;
   if (cmd.usage) {
     info += `\n**Usage**: ${cmd.usage}`;
     embed.setFooter(`Syntax: <> = required, [] = optional`);
+  }
+  if (cmd.example) {
+    info += `\n**Example**: ${cmd.example}`;
   }
 
   return message.channel.send(embed.setColor("GREEN").setDescription(info));

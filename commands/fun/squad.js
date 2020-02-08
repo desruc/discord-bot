@@ -11,5 +11,6 @@ module.exports = {
   category: "fun",
   description: "the bot will message the channel calling for action.",
   usage: "[game]",
+  example: 'arnie squad Dota 2',
   run: squad
 };
