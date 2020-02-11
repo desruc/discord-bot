@@ -43,7 +43,7 @@ module.exports = {
   name: "who",
   aliases: ["user"],
   category: "info",
-  description: "Returns the users profile.",
-  usage: "[user || id || mention]",
+  description: "returns the users profile.",
+  usage: "[user | id | mention]",
   run: who
 };

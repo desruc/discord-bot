@@ -22,6 +22,6 @@ module.exports = {
   name: "joke",
   aliases: ["pun"],
   category: "fun",
-  description: "Returns a random joke.",
+  description: "returns a random joke.",
   run: joke
 };

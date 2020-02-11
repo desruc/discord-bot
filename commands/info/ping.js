@@ -9,6 +9,6 @@ const ping = async (client, message, args) => {
 module.exports = {
   name: "ping",
   category: "info",
-  description: "Returns latency and API ping",
+  description: "returns latency and API ping",
   run: ping
 };
