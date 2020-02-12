@@ -9,7 +9,7 @@ const morningMeme = async client => {
   // Grab the first text channel available
   const { id: channelId } = client.channels
     .filter(({ type }) => type === "text")
-    .last();
+    .first();
   const channel = client.channels.get(channelId);
 
   // Grab a meme from /r/dankmemes

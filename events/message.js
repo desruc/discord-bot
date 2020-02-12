@@ -21,7 +21,7 @@ module.exports = async (client, message) => {
   let command = client.commands.get(cmd);
   if (!command) command = client.commands.get(client.aliases.get(cmd));
 
-  if (command !== "say" && checkForSwears(args))
+  if ((!command || cmd !== "say") && checkForSwears([cmd, ...args])) 
     return censor(client, message, args);
 
   if (command) command.run(client, message, args);
