@@ -32,7 +32,7 @@ module.exports = {
   },
 
   checkForSwears: function(args) {
-    const swears = ["fuck", "shit", "dick", "tits", "porn"];
+    const swears = ["fuck", "shit", "dick", "tits", "porn", "cunt", "cock"];
     return args.some(arg => swears.includes(arg));
   }
 };

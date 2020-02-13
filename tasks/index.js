@@ -26,7 +26,10 @@ const morningMeme = async client => {
 
 module.exports = client => {
   // Post a meme to the channel at 8.30 every morning
-  schedule.scheduleJob("30 8 * * *", function() {
+  const meme = schedule.scheduleJob("30 8 * * *", function() {
+    console.info(`morningMeme will next run at ${meme.nextInvocation()}`);
     morningMeme(client);
   });
+
+  console.info(`the first morningMeme will run at ${meme.nextInvocation()}`);
 };

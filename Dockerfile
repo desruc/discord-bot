@@ -1,4 +1,8 @@
+# For raspberry pi
 FROM arm32v7/node:latest
+
+# FROM node:latest
+ENV TZ=Australia/Brisbane
 
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
