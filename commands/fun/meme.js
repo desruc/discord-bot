@@ -1,13 +1,36 @@
 const { RichEmbed } = require("discord.js");
-const got = require("got");
+
+const {
+  canUserRequestMeme,
+  noMoreMemesQuotes,
+  getMemeImgUrl
+} = require("../../data/memePolice");
 
 const meme = async (client, message, args) => {
-  const embed = new RichEmbed();
-  const response = await got("https://www.reddit.com/r/dankmemes/random/.json");
-  const result = JSON.parse(response.body);
-  const image = result[0].data.children[0].data.url;
-  embed.setImage(image);
-  message.channel.send(embed);
+  try {
+    const channel = message.channel;
+    const authorId = message.author.id;
+    const canRequest = canUserRequestMeme(authorId);
+
+    if (canRequest) {
+      const memeUrl = await getMemeImgUrl();
+      if (memeUrl) {
+        const embed = new RichEmbed();
+        embed.setImage(memeUrl);
+        channel.send(embed);
+      } else {
+        channel.send("Todays meme pool yields no more. Try again tomorrow.");
+      }
+    } else {
+      // User has requested two memes today
+      message.channel.send(noMoreMemesQuotes(message.author));
+    }
+  } catch (error) {
+    console.info("meme error: ", error);
+    channel.send(
+      "My apologies! There was an error retrieving the meme..."
+    );
+  }
 };
 
 module.exports = {
