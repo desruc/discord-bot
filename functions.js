@@ -34,5 +34,11 @@ module.exports = {
   checkForSwears: function(args) {
     const swears = ["fuck", "shit", "dick", "tits", "porn", "cunt", "cock"];
     return args.some(arg => swears.includes(arg));
+  },
+
+  asyncForEach: async function(array, callback) {
+    for (let index = 0; index < array.length; index++) {
+      await callback(array[index], index, array);
+    }
   }
 };

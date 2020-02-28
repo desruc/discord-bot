@@ -6,7 +6,7 @@ const removeIdAndVersion = (doc, ret) => {
   delete ret.__v;
 };
 
-const userExperienceModel = new Schema(
+const userModel = new Schema(
   {
     userId: { type: String, unique: true },
     experience: { type: Number }
@@ -18,4 +18,4 @@ const userExperienceModel = new Schema(
   }
 );
 
-module.exports = model("UserExperience", userExperienceModel);
+module.exports = model("User", userModel);
