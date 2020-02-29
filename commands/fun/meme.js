@@ -10,7 +10,7 @@ const meme = async (client, message, args) => {
   try {
     const channel = message.channel;
     const authorId = message.author.id;
-    const canRequest = canUserRequestMeme(authorId);
+    const canRequest = await canUserRequestMeme(authorId);
 
     if (canRequest) {
       const memeUrl = await getMemeImgUrl();

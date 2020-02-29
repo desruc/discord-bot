@@ -1,6 +1,7 @@
-const { asyncForEach } = require("../functions");
 const levelRoles = require("../constants/levelRanks");
 const User = require("../database/models/userModel");
+
+const { asyncForEach, getUserDatabaseRecord } = require("../functions");
 
 // Create the roles on the server
 const initializeLevelRoles = async message => {
@@ -35,25 +36,6 @@ const initializeLevelRoles = async message => {
       channel.send(
         "Something might have gone wrong -I couldn't initialize all of the ranks..."
       );
-  }
-};
-
-// Check if record exits / create one
-const getUserRecord = async userId => {
-  try {
-    const result = await User.findOne({ userId });
-    // If a user record exists - return it
-    if (result) return result;
-
-    // Otherwise create a new record and return that
-    const newRecord = await new User({
-      userId,
-      experience: 0
-    }).save();
-
-    return newRecord;
-  } catch (error) {
-    throw error;
   }
 };
 
@@ -102,7 +84,7 @@ const incrementExperience = async message => {
   try {
     // Get the users information
     const { author } = message;
-    const userRecord = await getUserRecord(author.id);
+    const userRecord = await getUserDatabaseRecord(author.id);
     const { experience: currentExperience } = userRecord;
 
     // Update their record with experience gained

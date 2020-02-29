@@ -6,11 +6,9 @@ const removeIdAndVersion = (doc, ret) => {
   delete ret.__v;
 };
 
-const userModel = new Schema(
+const memeModel = new Schema(
   {
-    userId: { type: String, unique: true },
-    experience: { type: Number, default: 0 },
-    memesRequested: { type: Number, default: 0 }
+    url: { type: String, unique: true }
   },
   {
     toJSON: {
@@ -19,4 +17,4 @@ const userModel = new Schema(
   }
 );
 
-module.exports = model("User", userModel);
+module.exports = model("Meme", memeModel);

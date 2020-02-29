@@ -4,7 +4,10 @@ const { RichEmbed } = require("discord.js");
 const { memeMessages } = require("../constants/quotes");
 const { randomNumber } = require("../functions");
 
-const { getMemeImgUrl, clearUsersRequestedMeme } = require('../services/memeService');
+const {
+  getMemeImgUrl,
+  clearUsersRequestedMeme
+} = require("../services/memeService");
 
 // Post a meme from the hot section of /r/dankmemes
 const morningMeme = async client => {
@@ -27,7 +30,6 @@ const morningMeme = async client => {
       // There were no posts in the hot post list that haven't been posted before
       channel.send("No good memes today folks. I'll be back... tomorrow");
     }
-
   } catch (error) {
     console.info("morningMeme error: ", error);
     channel.send(
@@ -46,9 +48,15 @@ module.exports = client => {
   console.info(`the first morningMeme will run at ${meme.nextInvocation()}`);
 
   // Clear the usersRequestedMeme record daily at 1am - only two memes per day
-  const clearMemeRecords = schedule.scheduleJob("* 1 * * *", function() {
-    clearUsersRequestedMeme();
+  const clearMemeRecords = schedule.scheduleJob("* 1 * * *", async function() {
+    try {
+      await clearUsersRequestedMeme();
+    } catch (error) {
+      console.error("Error clearing user meme requested: ", error);
+    }
   });
 
-  console.info(`the first clearMemeRecords will run at ${clearMemeRecords.nextInvocation()}`);
+  console.info(
+    `the first clearMemeRecords will run at ${clearMemeRecords.nextInvocation()}`
+  );
 };

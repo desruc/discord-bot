@@ -74,9 +74,9 @@ const memeMessages = [
 
 function generateGreetings(member) {
   return [
-    `${member}, you son of a bitch!`,
-    `${member}, I need your clothes, your boots, and your motorcycle.`,
-    `${member}, you're one ugly motherfucker.`,
+    `${member}, you son of a bitch! Welcome to the server!`,
+    `${member}, I need your clothes, your boots, and your motorcycle... `,
+    `${member}, you're one ugly motherfucker...`,
     `${member}, GET TO THE CHOPPA!`,
     `Hasta La Vista, ${member}`,
     `You're a funny guy ${member}, I like you. That's why I'm going to kill you last.`,

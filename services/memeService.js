@@ -1,9 +1,9 @@
 const got = require("got");
 
-const { randomNumber } = require("../functions");
+const Meme = require("../database/models/memeModel");
+const User = require("../database/models/userModel");
 
-// Store the URL so it doesn't post the same meme
-const postedMemeUrls = [];
+const { randomNumber, getUserDatabaseRecord } = require("../functions");
 
 // Get a meme from /r/dankmemes
 const getMemeImgUrl = async () => {
@@ -14,11 +14,19 @@ const getMemeImgUrl = async () => {
     const result = JSON.parse(response.body);
     const redditPosts = result.data.children;
 
+    // Grab all urls from database
+    const postedMemeUrls = await Meme.find({});
+
     // Loop through the posts and find one that is an image and hasn't been posted previously
     const image = redditPosts.find(post => {
       const postUrl = post.data.url;
-      const isImage = postUrl.includes(".jpg") || postUrl.includes(".png") || postUrl.includes(".gif");
-      const isNew = postedMemeUrls.every(url => url !== postUrl);
+      const isImage =
+        postUrl.includes(".jpg") ||
+        postUrl.includes(".png") ||
+        postUrl.includes(".gif");
+
+      // Check the image doesn't exist in the database
+      const isNew = postedMemeUrls.every(doc => doc.url !== postUrl);
 
       // Basic title check to see if it is meme of the month voting post
       const notMoMVote = !post.data.title
@@ -29,14 +37,13 @@ const getMemeImgUrl = async () => {
     });
 
     if (image) {
-      // We store 50 images - the hot posts should be fully refreshed by then
-      if (postedMemeUrls.length > 49) {
-        postedMemeUrls.splice(0, postedMemeUrls.length);
-      }
-
-      // Add the new meme to postedMemeUrls array
       const newMemeUrl = image.data.url;
-      postedMemeUrls.push(newMemeUrl);
+
+      // Save the url in the database so it doesn't get posted again
+      await new Meme({
+        url: newMemeUrl
+      }).save();
+
       return newMemeUrl;
     } else return null;
   } catch (error) {
@@ -44,23 +51,21 @@ const getMemeImgUrl = async () => {
   }
 };
 
-// Store user Id and amount of times they've requested a meme
-let usersRequestedMeme = [];
-
 // Stop users requesting memes after two requests
-const canUserRequestMeme = id => {
-  const userMemeRecord = usersRequestedMeme.find(user => user.id === id);
-  if (userMemeRecord) {
-    if (userMemeRecord.memes === 2) return false;
-    userMemeRecord.memes += 1;
-    usersRequestedMeme = usersRequestedMeme.map(record => {
-      if (record.id === id) return userMemeRecord;
-      return record;
-    });
+const canUserRequestMeme = async id => {
+  try {
+    await clearUsersRequestedMeme();
+
+    const userRecord = await getUserDatabaseRecord(id);
+    const { memesRequested } = userRecord;
+
+    if (memesRequested === 2) return false;
+
+    await userRecord.updateOne({ memesRequested: memesRequested + 1 });
+
     return true;
-  } else {
-    usersRequestedMeme = [...usersRequestedMeme, { id, memes: 1 }];
-    return true;
+  } catch (error) {
+    throw error;
   }
 };
 
@@ -87,7 +92,9 @@ const noMoreMemesQuotes = member => {
 };
 
 // Clear all records
-const clearUsersRequestedMeme = () => (usersRequestedMeme = []);
+const clearUsersRequestedMeme = async () => {
+  await User.updateMany({}, { memesRequested: 0 });
+};
 
 module.exports = {
   getMemeImgUrl,

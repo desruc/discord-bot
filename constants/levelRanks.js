@@ -1,6 +1,6 @@
 module.exports = [
   {
-    name: "Peon",
+    name: "Normie",
     level: 0,
     color: "#17ab00"
   },
