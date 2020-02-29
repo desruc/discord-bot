@@ -8,7 +8,7 @@ const mongoHost = process.env.MONGO_HOST;
 const mongoPort = process.env.MONGO_PORT;
 const dbName = process.env.MONGO_DB;
 
-let url = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoHost}/${dbName}?retryWrites=true`;
+let url = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoHost}-ebmxw.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 if (nodeEnv === "development") {
   url = `mongodb://${mongoHost}:${mongoPort}`;

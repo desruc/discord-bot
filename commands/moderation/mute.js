@@ -3,14 +3,17 @@ const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
 const mute = async (client, message, args) => {
   const { deletable, guild, mentions, channel, author } = message;
 
-  if (author.id !== guild.owner.id)
-    return message.reply("you don't have permissions to mute members.");
-
   if (deletable) message.delete();
 
   const toMute = mentions.members.first();
   if (!toMute)
     return message.reply("you must specify a member").then(m => m.delete(5000));
+
+  if (author.id === toMute.id)
+    return message.reply("why would you want to mute yourself?");
+
+  if (author.id !== guild.owner.id)
+    return message.reply("you don't have permissions to mute members.");
 
   let mutedRole = guild.roles.find(r => r.name === "MUTED");
   if (!mutedRole) {
