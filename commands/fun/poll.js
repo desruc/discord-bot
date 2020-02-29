@@ -1,6 +1,8 @@
 const { RichEmbed } = require("discord.js");
 
 const poll = async (client, message, args) => {
+  if (!args.length > 0) return message.reply("you didn't supply a question...");
+
   const pollMessage = args.join(" ");
   // Send the message then react
   const msg = await message.channel.send(

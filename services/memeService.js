@@ -52,11 +52,8 @@ const getMemeImgUrl = async () => {
 };
 
 // Stop users requesting memes after two requests
-const canUserRequestMeme = async id => {
+const canUserRequestMeme = async userRecord => {
   try {
-    await clearUsersRequestedMeme();
-
-    const userRecord = await getUserDatabaseRecord(id);
     const { memesRequested } = userRecord;
 
     if (memesRequested === 2) return false;

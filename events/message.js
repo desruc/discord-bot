@@ -1,4 +1,4 @@
-const { checkForSwears } = require("../functions");
+const { checkForSwears, getUserDatabaseRecord } = require("../functions");
 const {
   initializeLevelRoles,
   incrementExperience
@@ -6,7 +6,7 @@ const {
 const censor = require("../commands/moderation/censor");
 
 module.exports = async (client, message) => {
-  const prefix = "arnie";
+  const prefix = process.env.BOT_PREFIX;
   // If the author is a bot, return
   if (message.author.bot) return;
   // If the message was not sent in the server, return
@@ -14,7 +14,10 @@ module.exports = async (client, message) => {
 
   // Leveling system
   await initializeLevelRoles(message);
-  await incrementExperience(message);
+
+  const userRecord = await getUserDatabaseRecord(message.author.id);
+
+  incrementExperience(message, userRecord);
 
   // If the message doesn't start with the prefix, return
   if (message.content.toLowerCase().indexOf(prefix) !== 0) return;
@@ -33,5 +36,5 @@ module.exports = async (client, message) => {
   if ((!command || cmd !== "say") && checkForSwears(message.content))
     return censor(client, message, args);
 
-  if (command) command.run(client, message, args);
+  if (command) command.run(client, message, args, userRecord);
 };

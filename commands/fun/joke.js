@@ -3,6 +3,7 @@ const axios = require("axios");
 const joke = async (client, message, args) => {
   const channel = message.channel;
   try {
+    const msg = await channel.send("Hold up, just thinking of a good one...");
     const {
       data: { joke }
     } = await axios.get("https://icanhazdadjoke.com/", {
@@ -11,7 +12,7 @@ const joke = async (client, message, args) => {
         Accept: "application/json"
       }
     });
-    channel.send(joke);
+    msg.edit(joke);
   } catch (error) {
     console.log("TCL: error", error);
     channel.send("Apologies. I'm all outta jokes right now.");

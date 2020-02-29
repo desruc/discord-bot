@@ -6,20 +6,20 @@ const {
   getMemeImgUrl
 } = require("../../services/memeService");
 
-const meme = async (client, message, args) => {
+const meme = async (client, message, args, userRecord) => {
   try {
     const channel = message.channel;
-    const authorId = message.author.id;
-    const canRequest = await canUserRequestMeme(authorId);
+    const canRequest = await canUserRequestMeme(userRecord);
 
     if (canRequest) {
+      const msg = await channel.send("Alright lemme see what I've got...");
       const memeUrl = await getMemeImgUrl();
       if (memeUrl) {
         const embed = new RichEmbed();
         embed.setImage(memeUrl);
-        channel.send(embed);
+        msg.edit(embed);
       } else {
-        channel.send("Todays meme pool yields no more. Try again tomorrow.");
+        msg.edit("Todays meme pool yields no more. Try again tomorrow.");
       }
     } else {
       // User has requested two memes today
