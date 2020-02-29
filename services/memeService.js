@@ -9,7 +9,7 @@ const postedMemeUrls = [];
 const getMemeImgUrl = async () => {
   try {
     const response = await got(
-      "https://www.reddit.com/r/dankmemes/hot/.json?limit=50"
+      "https://www.reddit.com/r/dankmemes/top/.json?limit=50&t=week"
     );
     const result = JSON.parse(response.body);
     const redditPosts = result.data.children;
@@ -17,7 +17,7 @@ const getMemeImgUrl = async () => {
     // Loop through the posts and find one that is an image and hasn't been posted previously
     const image = redditPosts.find(post => {
       const postUrl = post.data.url;
-      const isImage = postUrl.includes(".jpg") || postUrl.includes(".png");
+      const isImage = postUrl.includes(".jpg") || postUrl.includes(".png") || postUrl.includes(".gif");
       const isNew = postedMemeUrls.every(url => url !== postUrl);
 
       // Basic title check to see if it is meme of the month voting post

@@ -1,4 +1,8 @@
 const { checkForSwears } = require("../functions");
+const {
+  initializeLevelRoles,
+  incrementExperience
+} = require("../services/levelingService");
 const censor = require("../commands/moderation/censor");
 
 module.exports = async (client, message) => {
@@ -7,6 +11,11 @@ module.exports = async (client, message) => {
   if (message.author.bot) return;
   // If the message was not sent in the server, return
   if (!message.guild) return;
+
+  // Leveling system
+  await initializeLevelRoles(message);
+  await incrementExperience(message);
+
   // If the message doesn't start with the prefix, return
   if (message.content.toLowerCase().indexOf(prefix) !== 0) return;
 
@@ -21,7 +30,7 @@ module.exports = async (client, message) => {
   let command = client.commands.get(cmd);
   if (!command) command = client.commands.get(client.aliases.get(cmd));
 
-  if ((!command || cmd !== "say") && checkForSwears([cmd, ...args])) 
+  if ((!command || cmd !== "say") && checkForSwears(message.content))
     return censor(client, message, args);
 
   if (command) command.run(client, message, args);

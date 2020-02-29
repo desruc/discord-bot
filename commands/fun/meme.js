@@ -4,7 +4,7 @@ const {
   canUserRequestMeme,
   noMoreMemesQuotes,
   getMemeImgUrl
-} = require("../../data/memePolice");
+} = require("../../services/memeService");
 
 const meme = async (client, message, args) => {
   try {
@@ -27,9 +27,7 @@ const meme = async (client, message, args) => {
     }
   } catch (error) {
     console.info("meme error: ", error);
-    channel.send(
-      "My apologies! There was an error retrieving the meme..."
-    );
+    channel.send("My apologies! There was an error retrieving the meme...");
   }
 };
 

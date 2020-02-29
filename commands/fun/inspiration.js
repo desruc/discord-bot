@@ -1,4 +1,4 @@
-const quotes = require("../../data/quotes");
+const quotes = require("../../constants/quotes");
 const { randomNumber } = require("../../functions");
 
 const inspirationalQuote = async (client, message, args) => {

@@ -1,10 +1,10 @@
 const schedule = require("node-schedule");
 const { RichEmbed } = require("discord.js");
 
-const { memeMessages } = require("../data/quotes");
+const { memeMessages } = require("../constants/quotes");
 const { randomNumber } = require("../functions");
 
-const { getMemeImgUrl, clearUsersRequestedMeme } = require('../data/memePolice');
+const { getMemeImgUrl, clearUsersRequestedMeme } = require('../services/memeService');
 
 // Post a meme from the hot section of /r/dankmemes
 const morningMeme = async client => {

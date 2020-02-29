@@ -1,4 +1,4 @@
-const { generateGreetings } = require("../data/quotes");
+const { generateGreetings } = require("../constants/quotes");
 const { randomNumber } = require("../functions");
 
 module.exports = (client, member) => {

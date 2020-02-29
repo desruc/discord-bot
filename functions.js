@@ -31,9 +31,9 @@ module.exports = {
     return Math.ceil(Math.random() * (Number(number) - 1));
   },
 
-  checkForSwears: function(args) {
+  checkForSwears: function(sentence) {
     const swears = ["fuck", "shit", "dick", "tits", "porn", "cunt", "cock"];
-    return args.some(arg => swears.includes(arg));
+    return swears.some(swear => sentence.includes(swear));
   },
 
   asyncForEach: async function(array, callback) {

@@ -58,7 +58,9 @@ const getUserRecord = async userId => {
 };
 
 const calculateExperience = message => {
-  // Check if text, attachment, link, bot interaction
+  const { embeds, attachments } = message;
+  if (attachments.length > 0) return 21;
+  if (embeds.length > 0) return 14;
   return 7;
 };
 
@@ -82,7 +84,7 @@ const updateRole = async (message, userExperience) => {
       try {
         await member.addRole(role);
         channel.send(
-          `Congratulations ${member}! You've ascended to ${role.name}!`
+          `Congratulations ${member}! You've ascended to a ${role.name}!`
         );
       } catch (error) {
         channel.send(
@@ -91,7 +93,7 @@ const updateRole = async (message, userExperience) => {
       }
     }
   } else {
-    channel.send("There was an error determining the users rank...");
+    // Role doesn't exist - leveling system hasn't been initialized
     return false;
   }
 };
@@ -119,7 +121,31 @@ const incrementExperience = async message => {
   }
 };
 
+const getUserLevelInfo = async message => {
+  try {
+    const { author } = message;
+    const user = await User.findOne({ userId: author.id });
+
+    if (user) {
+      const { experience } = user;
+      const currentLevel = Math.floor(Number(experience / 100));
+      const expToNextLevel = (currentLevel + 1) * 100 - experience;
+
+      return {
+        currentLevel,
+        experience,
+        expToNextLevel
+      };
+    }
+  } catch (error) {
+    message.channel.send(
+      `Sorry ${author}! There was a problem retreiving your user record...`
+    );
+  }
+};
+
 module.exports = {
   initializeLevelRoles,
-  incrementExperience
+  incrementExperience,
+  getUserLevelInfo
 };
