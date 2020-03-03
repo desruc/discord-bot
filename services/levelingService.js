@@ -46,10 +46,30 @@ const calculateExperience = message => {
   return 7;
 };
 
+const expForLevel = num => {
+  let exp = 0;
+  for (let i = 0; i < num; i++) {
+    exp += i * 100;
+  }
+  return exp;
+};
+
+const calculateLevel = experience => {
+  const levels = [];
+  for (let i = 1; i < 100; i++) {
+    levels.push({ level: i, experience: expForLevel(i) });
+  }
+  let userLevel = 0;
+  levels.forEach(l => {
+    if (experience >= l.experience) userLevel = l.level;
+  });
+  return userLevel;
+};
+
 const updateRole = async (message, userExperience) => {
   const { guild, member, channel } = message;
 
-  const currentLevel = userExperience / 100;
+  const currentLevel = calculateLevel(userExperience);
 
   let roleName = "";
   levelRoles.forEach(({ level, name }) => {
@@ -110,8 +130,8 @@ const getUserLevelInfo = async message => {
 
     if (user) {
       const { experience } = user;
-      const currentLevel = Math.floor(Number(experience / 100));
-      const expToNextLevel = (currentLevel + 1) * 100 - experience;
+      const currentLevel = calculateLevel(experience);
+      const expToNextLevel = expForLevel(currentLevel + 1) - experience;
 
       return {
         currentLevel,
@@ -129,5 +149,6 @@ const getUserLevelInfo = async message => {
 module.exports = {
   initializeLevelRoles,
   incrementExperience,
-  getUserLevelInfo
+  getUserLevelInfo,
+  calculateLevel
 };

@@ -10,8 +10,13 @@ module.exports = [
     color: "#5603fc"
   },
   {
-    name: "Fancy Nancy",
+    name: 'Social Media Influencer',
     level: 20,
+    color: "#14d6e0"
+  },
+  {
+    name: "Fancy Nancy",
+    level: 30,
     color: "#d142f5"
   }
 ];
