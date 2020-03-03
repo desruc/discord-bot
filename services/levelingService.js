@@ -1,7 +1,7 @@
 const levelRoles = require("../constants/levelRanks");
 const User = require("../database/models/userModel");
 
-const { asyncForEach, getUserDatabaseRecord } = require("../functions");
+const { asyncForEach } = require("../functions");
 
 // Create the roles on the server
 const initializeLevelRoles = async message => {
@@ -100,11 +100,8 @@ const updateRole = async (message, userExperience) => {
   }
 };
 
-const incrementExperience = async message => {
+const incrementExperience = async (message, userRecord) => {
   try {
-    // Get the users information
-    const { author } = message;
-    const userRecord = await getUserDatabaseRecord(author.id);
     const { experience: currentExperience } = userRecord;
 
     // Update their record with experience gained
@@ -141,7 +138,7 @@ const getUserLevelInfo = async message => {
     }
   } catch (error) {
     message.channel.send(
-      `Sorry ${author}! There was a problem retreiving your user record...`
+      `Sorry ${author}! There was a problem retrieving your user record...`
     );
   }
 };
