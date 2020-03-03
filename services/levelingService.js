@@ -48,15 +48,15 @@ const calculateExperience = message => {
 
 const expForLevel = num => {
   let exp = 0;
-  for (let i = 0; i < num; i++) {
-    exp += i * 100;
+  for (let i = 1; i < num; i++) {
+    exp += i * 50;
   }
   return exp;
 };
 
 const calculateLevel = experience => {
   const levels = [];
-  for (let i = 1; i < 100; i++) {
+  for (let i = 0; i < 100; i++) {
     levels.push({ level: i, experience: expForLevel(i) });
   }
   let userLevel = 0;
@@ -128,7 +128,9 @@ const getUserLevelInfo = async message => {
     if (user) {
       const { experience } = user;
       const currentLevel = calculateLevel(experience);
-      const expToNextLevel = expForLevel(currentLevel + 1) - experience;
+      const expToNextLevel = Math.ceil(
+        Number(expForLevel(currentLevel + 1) - experience)
+      );
 
       return {
         currentLevel,
