@@ -3,7 +3,8 @@ const got = require("got");
 const Meme = require("../database/models/memeModel");
 const User = require("../database/models/userModel");
 
-const { randomNumber, getUserDatabaseRecord } = require("../functions");
+const { randomNumber } = require("../functions");
+const { memeMessages } = require("../constants/quotes");
 
 // Get a meme from /r/dankmemes
 const getMemeImgUrl = async () => {
@@ -93,9 +94,39 @@ const clearUsersRequestedMeme = async () => {
   await User.updateMany({}, { memesRequested: 0 });
 };
 
+// Post a meme from the hot section of /r/dankmemes
+const morningMeme = async client => {
+  // Grab the first text channel available
+  const { id: channelId } = client.channels
+    .filter(({ type }) => type === "text")
+    .first();
+  const channel = client.channels.get(channelId);
+
+  try {
+    const embed = new RichEmbed();
+
+    const memeUrl = await getMemeImgUrl();
+
+    if (memeUrl) {
+      embed.setImage(memeUrl);
+      embed.setTitle(memeMessages[randomNumber(memeMessages.length)]);
+      channel.send(embed);
+    } else {
+      // There were no posts in the hot post list that haven't been posted before
+      channel.send("No good memes today folks. I'll be back... tomorrow");
+    }
+  } catch (error) {
+    console.info("morningMeme error: ", error);
+    channel.send(
+      "Sorry guys! There was an error retrieving your morning meme..."
+    );
+  }
+};
+
 module.exports = {
   getMemeImgUrl,
   clearUsersRequestedMeme,
   canUserRequestMeme,
-  noMoreMemesQuotes
+  noMoreMemesQuotes,
+  morningMeme
 };

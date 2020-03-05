@@ -10,7 +10,8 @@ const userModel = new Schema(
   {
     userId: { type: String, unique: true },
     experience: { type: Number, default: 0 },
-    memesRequested: { type: Number, default: 0 }
+    memesRequested: { type: Number, default: 0 },
+    currency: { type: Number, default: 0 }
   },
   {
     toJSON: {
