@@ -1,4 +1,5 @@
 const got = require("got");
+const { RichEmbed } = require("discord.js");
 
 const Meme = require("../database/models/memeModel");
 const User = require("../database/models/userModel");
