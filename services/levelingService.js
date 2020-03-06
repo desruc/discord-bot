@@ -120,34 +120,37 @@ const incrementExperience = async (message, userRecord) => {
   }
 };
 
-const getUserLevelInfo = async message => {
-  try {
-    const { author } = message;
-    const user = await User.findOne({ userId: author.id });
+const getUserLevelInfo = async userRecord => {
+  const { experience } = userRecord;
+  const currentLevel = calculateLevel(experience);
+  const expToNextLevel = Math.ceil(
+    Number(expForLevel(currentLevel + 1) - experience)
+  );
 
-    if (user) {
-      const { experience } = user;
-      const currentLevel = calculateLevel(experience);
-      const expToNextLevel = Math.ceil(
-        Number(expForLevel(currentLevel + 1) - experience)
-      );
+  return {
+    currentLevel,
+    experience,
+    expToNextLevel
+  };
+};
 
-      return {
-        currentLevel,
-        experience,
-        expToNextLevel
-      };
+const getLevelChannel = async guild => {
+  const channel = guild.channels.find(channel => channel.name === "levels");
+  if (!channel) {
+    try {
+      const result = await guild.createChannel("levels", "text");
+      return result;
+    } catch (error) {
+      throw error;
     }
-  } catch (error) {
-    message.channel.send(
-      `Sorry ${author}! There was a problem retrieving your user record...`
-    );
   }
+  return channel;
 };
 
 module.exports = {
   initializeLevelRoles,
   incrementExperience,
   getUserLevelInfo,
-  calculateLevel
+  calculateLevel,
+  getLevelChannel
 };

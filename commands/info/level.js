@@ -1,15 +1,27 @@
-const { getUserLevelInfo } = require("../../services/levelingService");
+const {
+  getUserLevelInfo,
+  getLevelChannel
+} = require("../../services/levelingService");
 
-const level = async (client, message, args) => {
+const level = async (client, message, args, userRecord) => {
   try {
+    const levelChannel = await getLevelChannel(message);
+
     const { channel, author } = message;
-    const userDetails = await getUserLevelInfo(message);
+    if (channel.name !== "levels" && message.deletable) {
+      message.delete();
+    }
+
+    const userDetails = await getUserLevelInfo(userRecord);
     const { currentLevel, experience, expToNextLevel } = userDetails;
-    channel.send(
+    levelChannel.send(
       `${author}, you are currently level ${currentLevel} and have ${experience} EXP! You need ${expToNextLevel} EXP to level up.`
     );
   } catch (error) {
-    message.channel.send(`Sorry ${message.author}! I can't get your record right now`);
+    const levelChannel = await createLevelChannel(message);
+    levelChannel.send(
+      `Sorry ${message.author}! I can't get your record right now`
+    );
   }
 };
 
@@ -17,5 +29,6 @@ module.exports = {
   name: "level",
   category: "info",
   description: "returns the users experience.",
+  aliases: ["xp"],
   run: level
 };

@@ -1,3 +1,5 @@
+const { RichEmbed } = require("discord.js");
+
 const say = async (client, message, args) => {
   if (message.deletable) message.delete();
 

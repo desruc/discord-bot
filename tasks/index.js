@@ -4,7 +4,7 @@ const {
   morningMeme,
   clearUsersRequestedMeme
 } = require("../services/memeService");
-const { incrementAllUserCurrency } = require("../services/currencyService");
+const { incrementAllUserCurrency } = require("../services/robotService");
 
 module.exports = client => {
   // Post a meme to the channel at 8.30 every morning
