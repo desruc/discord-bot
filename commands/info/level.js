@@ -5,7 +5,7 @@ const {
 
 const level = async (client, message, args, userRecord) => {
   try {
-    const levelChannel = await getLevelChannel(message);
+    const levelChannel = await getLevelChannel(message.guild);
 
     const { channel, author } = message;
     if (channel.name !== "levels" && message.deletable) {
@@ -18,7 +18,7 @@ const level = async (client, message, args, userRecord) => {
       `${author}, you are currently level ${currentLevel} and have ${experience} EXP! You need ${expToNextLevel} EXP to level up.`
     );
   } catch (error) {
-    const levelChannel = await createLevelChannel(message);
+    const levelChannel = await getLevelChannel(message.guild);
     levelChannel.send(
       `Sorry ${message.author}! I can't get your record right now`
     );

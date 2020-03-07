@@ -5,7 +5,7 @@ const showCurrency = async (client, message, args, userRecord) => {
 
 module.exports = {
   name: "currency",
-  category: "fun",
+  category: "robots",
   description: "returns the users gold",
   aliases: ["gold", "cheddar", "bank"],
   run: showCurrency
