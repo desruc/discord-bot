@@ -25,12 +25,17 @@ const getMember = (message, toFind = "") => {
 
 const formatDate = date => moment(date).format("DD/MM/YYYY");
 
-const randomNumber = number => Math.ceil(Math.random() * (Number(number) - 1));
-
 const asyncForEach = async (array, callback) => {
   for (let index = 0; index < array.length; index++) {
     await callback(array[index], index, array);
   }
+};
+
+const randomNumber = (min, max) => {
+  if (min === 0) {
+    return Math.ceil(Math.random() * (Number(max) - 1));
+  }
+  return Math.floor(Math.random() * (Math.ceil(min) * Math.floor(max))) + min;
 };
 
 const getUserDatabaseRecord = async userId => {

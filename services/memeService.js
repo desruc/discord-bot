@@ -86,7 +86,7 @@ const noMoreMemesQuotes = member => {
     `smd fuccboi`,
     "Have you ever heard of reddit?"
   ];
-  return quotes[randomNumber(quotes.length)];
+  return quotes[randomNumber(0, quotes.length)];
 };
 
 // Clear all records
@@ -109,7 +109,7 @@ const morningMeme = async client => {
 
     if (memeUrl) {
       embed.setImage(memeUrl);
-      embed.setTitle(memeMessages[randomNumber(memeMessages.length)]);
+      embed.setTitle(memeMessages[randomNumber(0, memeMessages.length)]);
       channel.send(embed);
     } else {
       // There were no posts in the hot post list that haven't been posted before

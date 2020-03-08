@@ -6,6 +6,6 @@ module.exports = (client, member) => {
   if (!channel) return;
 
   const greetings = generateGreetings(member);
-  const rand = randomNumber(greetings.length);
+  const rand = randomNumber(0, greetings.length);
   channel.send(greetings[rand]);
 };

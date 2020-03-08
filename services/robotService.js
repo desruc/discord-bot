@@ -1,4 +1,9 @@
+const { RichEmbed } = require("discord.js");
+const { stripIndents } = require("common-tags");
+const { getMember } = require("../helpers");
+
 const User = require("../database/models/userModel");
+const Robot = require("../database/models/robotModel");
 
 const incrementAllUserCurrency = async () => {
   try {
@@ -8,11 +13,58 @@ const incrementAllUserCurrency = async () => {
   }
 };
 
-const getUserCurrency = async userId => {
+const getUserRobot = async userId => {
   try {
-    const result = await User.findOne({ userId });
-    const { currency } = result;
-    return currency;
+    const result = await Robot.findOne({ userId });
+
+    if (result) return result;
+
+    const newRecord = await new Robot({
+      userId
+    }).save();
+    return newRecord;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const getStatCard = async (message, args) => {
+  try {
+    await simulateFight(message);
+    const member = getMember(message, args.join(" "));
+    const userRobot = await getUserRobot(member.id);
+
+    const embed = new RichEmbed()
+      .setColor("RANDOM")
+      .setThumbnail(member.user.displayAvatarURL)
+      .setTitle(`${member.displayName}'s Robot`)
+
+      .addField(
+        "Stats:",
+        stripIndents`**Hit points:** ${userRobot.hitPoints}
+          **Damage:** ${userRobot.damage}`,
+        true
+      );
+
+    return embed;
+  } catch (error) {
+    throw error;
+  }
+};
+
+const simulateFight = async message => {
+  try {
+    const { author, mentions } = message;
+    const opponent = mentions.members.first();
+
+    if (!opponent) return message.reply("who do you wan't to challenge?");
+
+    // Get each robot seperately incase one hasn't been created
+    const authorRobot = getUserRobot(author.id);
+    const opponentRobot = getUserRobot(opponent.id);
+
+    // TODO: Fight!
+
   } catch (error) {
     throw error;
   }
@@ -20,5 +72,6 @@ const getUserCurrency = async userId => {
 
 module.exports = {
   incrementAllUserCurrency,
-  getUserCurrency
+  getStatCard,
+  simulateFight
 };
