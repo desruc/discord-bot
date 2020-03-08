@@ -1,14 +1,13 @@
-const {
-  getUserLevelInfo,
-  getLevelChannel
-} = require("../../services/levelingService");
+const { getUserLevelInfo } = require("../../services/levelingService");
+
+const { getBotChannel } = require("../../helpers");
 
 const level = async (client, message, args, userRecord) => {
   try {
-    const levelChannel = await getLevelChannel(message.guild);
+    const levelChannel = await getBotChannel(message.guild);
 
-    const { channel, author } = message;
-    if (channel.name !== "levels" && message.deletable) {
+    const { author } = message;
+    if (message.deletable) {
       message.delete();
     }
 
@@ -18,7 +17,7 @@ const level = async (client, message, args, userRecord) => {
       `${author}, you are currently level ${currentLevel} and have ${experience} EXP! You need ${expToNextLevel} EXP to level up.`
     );
   } catch (error) {
-    const levelChannel = await getLevelChannel(message.guild);
+    const levelChannel = await getBotChannel(message.guild);
     levelChannel.send(
       `Sorry ${message.author}! I can't get your record right now`
     );

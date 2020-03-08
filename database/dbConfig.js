@@ -14,6 +14,7 @@ if (nodeEnv === "development") {
   url = `mongodb://${mongoHost}:${mongoPort}`;
 }
 
+console.log("url", url)
 const initializeDb = async () => {
   const options = {
     useNewUrlParser: true,

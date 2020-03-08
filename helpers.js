@@ -35,7 +35,11 @@ const randomNumber = (min, max) => {
   if (min === 0) {
     return Math.ceil(Math.random() * (Number(max) - 1));
   }
-  return Math.floor(Math.random() * (Math.ceil(min) * Math.floor(max))) + min;
+  return (
+    Math.floor(
+      Math.random() * (Math.ceil(Number(max)) - Math.floor(Number(min)))
+    ) + Number(min)
+  );
 };
 
 const getUserDatabaseRecord = async userId => {
@@ -58,10 +62,24 @@ const getUserDatabaseRecord = async userId => {
   }
 };
 
+const getBotChannel = async guild => {
+  const channel = guild.channels.find(channel => channel.name === "bot");
+  if (!channel) {
+    try {
+      const result = await guild.createChannel("bot", { type: "text" });
+      return result;
+    } catch (error) {
+      throw error;
+    }
+  }
+  return channel;
+};
+
 module.exports = {
   getMember,
   formatDate,
   randomNumber,
   asyncForEach,
-  getUserDatabaseRecord
+  getUserDatabaseRecord,
+  getBotChannel
 };

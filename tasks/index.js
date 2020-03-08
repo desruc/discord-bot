@@ -4,7 +4,10 @@ const {
   morningMeme,
   clearUsersRequestedMeme
 } = require("../services/memeService");
-const { incrementAllUserCurrency } = require("../services/robotService");
+const {
+  incrementAllUserCurrency,
+  updateStock
+} = require("../services/robotService");
 
 module.exports = client => {
   // Post a meme to the channel at 8.30 every morning
@@ -31,6 +34,17 @@ module.exports = client => {
     }
   });
 
+  const refreshStore = schedule.scheduleJob("* 3 * * *", async function() {
+    try {
+      await updateStock();
+    } catch (error) {
+      console.error("Error updating stock: ", error);
+    }
+  });
+
+  console.info(
+    `the first refreshStore will run at ${refreshStore.nextInvocation()}`
+  );
   console.info(
     `the first handOutGold will run at ${handOutGold.nextInvocation()}`
   );

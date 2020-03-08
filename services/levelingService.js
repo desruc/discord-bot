@@ -134,23 +134,9 @@ const getUserLevelInfo = async userRecord => {
   };
 };
 
-const getLevelChannel = async guild => {
-  const channel = guild.channels.find(channel => channel.name === "levels");
-  if (!channel) {
-    try {
-      const result = await guild.createChannel("levels", { type: "text" });
-      return result;
-    } catch (error) {
-      throw error;
-    }
-  }
-  return channel;
-};
-
 module.exports = {
   initializeLevelRoles,
   incrementExperience,
   getUserLevelInfo,
-  calculateLevel,
-  getLevelChannel
+  calculateLevel
 };

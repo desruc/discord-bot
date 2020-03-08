@@ -3,6 +3,7 @@ const {
   initializeLevelRoles,
   incrementExperience
 } = require("../services/levelingService");
+const { initializeShop } = require("../services/robotService");
 
 module.exports = async (client, message) => {
   const prefix = process.env.BOT_PREFIX;
@@ -13,6 +14,9 @@ module.exports = async (client, message) => {
 
   // Leveling system
   await initializeLevelRoles(message);
+
+  // Robot system
+  await initializeShop(message);
 
   const userRecord = await getUserDatabaseRecord(message.author.id);
 
