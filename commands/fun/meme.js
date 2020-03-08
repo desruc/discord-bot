@@ -8,7 +8,7 @@ const {
 
 const meme = async (client, message, args, userRecord) => {
   try {
-    const channel = message.channel;
+    const { channel } = message;
     const canRequest = await canUserRequestMeme(userRecord);
 
     if (canRequest) {
@@ -23,11 +23,13 @@ const meme = async (client, message, args, userRecord) => {
       }
     } else {
       // User has requested two memes today
-      message.channel.send(noMoreMemesQuotes(message.author));
+      channel.send(noMoreMemesQuotes(message.author));
     }
   } catch (error) {
-    console.info("meme error: ", error);
-    channel.send("My apologies! There was an error retrieving the meme...");
+    console.error("Error with meme command: ", error);
+    message.channel.send(
+      "My apologies! There was an error retrieving the meme..."
+    );
   }
 };
 

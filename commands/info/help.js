@@ -1,15 +1,6 @@
 const { RichEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
 
-module.exports = {
-  name: "help",
-  aliases: ["h"],
-  category: "info",
-  description: "returns all commands, or one specific command info",
-  usage: "[command | alias]",
-  run: help
-};
-
 function getAll(client, message) {
   const embed = new RichEmbed().setColor("RANDOM");
 
@@ -76,3 +67,12 @@ async function help(client, message, args) {
     return getAll(client, message);
   }
 }
+
+module.exports = {
+  name: "help",
+  aliases: ["h"],
+  category: "info",
+  description: "returns all commands, or one specific command info",
+  usage: "[command | alias]",
+  run: help
+};

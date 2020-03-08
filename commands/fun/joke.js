@@ -1,7 +1,7 @@
 const axios = require("axios");
 
 const joke = async (client, message, args) => {
-  const channel = message.channel;
+  const { channel } = message;
   try {
     const msg = await channel.send("Hold up, just thinking of a good one...");
     const {
@@ -14,7 +14,7 @@ const joke = async (client, message, args) => {
     });
     msg.edit(joke);
   } catch (error) {
-    console.log("TCL: error", error);
+    console.error("Error with joke command: ", error);
     channel.send("Apologies. I'm all outta jokes right now.");
   }
 };

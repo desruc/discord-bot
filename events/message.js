@@ -1,9 +1,8 @@
-const { checkForSwears, getUserDatabaseRecord } = require("../functions");
+const { getUserDatabaseRecord } = require("../helpers");
 const {
   initializeLevelRoles,
   incrementExperience
 } = require("../services/levelingService");
-const censor = require("../commands/moderation/censor");
 
 module.exports = async (client, message) => {
   const prefix = process.env.BOT_PREFIX;
@@ -32,9 +31,6 @@ module.exports = async (client, message) => {
 
   let command = client.commands.get(cmd);
   if (!command) command = client.commands.get(client.aliases.get(cmd));
-
-  if ((!command || cmd !== "say") && checkForSwears(message.content))
-    return censor(client, message, args);
 
   if (command) command.run(client, message, args, userRecord);
 };

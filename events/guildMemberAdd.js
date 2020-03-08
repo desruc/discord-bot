@@ -1,5 +1,5 @@
 const { generateGreetings } = require("../constants/quotes");
-const { randomNumber } = require("../functions");
+const { randomNumber } = require("../helpers");
 
 module.exports = (client, member) => {
   const channel = member.guild.channels.find(ch => ch.name === "bunnings");

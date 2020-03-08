@@ -1,6 +1,5 @@
 const roll = async (client, message, args) => {
-  const channel = message.channel;
-  const member = message.member;
+  const { channel, member } = message;
   let num = args[0] || 100;
 
   if (isNaN(Number(num))) return channel.send("Yeah, that isn't a number...");

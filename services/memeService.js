@@ -1,20 +1,19 @@
-const got = require("got");
+const axios = require("axios");
 const { RichEmbed } = require("discord.js");
 
 const Meme = require("../database/models/memeModel");
 const User = require("../database/models/userModel");
 
-const { randomNumber } = require("../functions");
+const { randomNumber } = require("../helpers");
 const { memeMessages } = require("../constants/quotes");
 
 // Get a meme from /r/dankmemes
 const getMemeImgUrl = async () => {
   try {
-    const response = await got(
+    const response = await axios.get(
       "https://www.reddit.com/r/dankmemes/top/.json?limit=50&t=week"
     );
-    const result = JSON.parse(response.body);
-    const redditPosts = result.data.children;
+    const redditPosts = response.data.data.children;
 
     // Grab all urls from database
     const postedMemeUrls = await Meme.find({});
