@@ -11,6 +11,12 @@ const buy = async (client, message, args, userRecord) => {
     }
 
     const itemNumber = Number(args[0]);
+
+    if (isNaN(itemNumber) || !isFinite(itemNumber))
+      return botChannel.send(
+        `${author}, you specify a number. Check the docs if you need help!`
+      );
+
     if (itemNumber > 4 || itemNumber < 1)
       return botChannel.send(`${author}... don't take me for a fool.`);
 
@@ -32,5 +38,7 @@ module.exports = {
   category: "robots",
   description: "buy an item from the shop",
   aliases: ["purchase"],
+  usage: "[number]",
+  example: "arnie buy 1",
   run: buy
 };

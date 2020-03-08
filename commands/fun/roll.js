@@ -2,7 +2,8 @@ const roll = async (client, message, args) => {
   const { channel, member } = message;
   let num = args[0] || 100;
 
-  if (isNaN(Number(num))) return channel.send("Yeah, that isn't a number...");
+  if (isNaN(Number(num)) || !isFinite(Number(num)))
+    return channel.send("Yeah, that isn't a number...");
 
   num = Math.ceil(Number(num));
   if (Number(num) <= 1) return channel.send("Nice try...");

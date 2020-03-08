@@ -14,11 +14,11 @@ if (nodeEnv === "development") {
   url = `mongodb://${mongoHost}:${mongoPort}`;
 }
 
-console.log("url", url)
 const initializeDb = async () => {
   const options = {
     useNewUrlParser: true,
-    useUnifiedTopology: true
+    useUnifiedTopology: true,
+    useFindAndModify: false
   };
 
   return await mongoose.connect(url, options, err => {

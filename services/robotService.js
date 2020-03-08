@@ -127,13 +127,15 @@ const purchaseItem = async (userRecord, itemNumber) => {
   try {
     const { currency } = userRecord;
     const item = currentStock[itemNumber - 1];
+    console.log("purchaseItem -> item", item)
     const itemPrice = Number(item.cost);
 
     if (currency > itemPrice) {
       await userRecord.updateOne({ $inc: { currency: -itemPrice } });
       await Robot.findOneAndUpdate(
         { userId: userRecord.userId },
-        { $inc: { [item.type]: item.value } }
+        { $inc: { [item.type]: item.value } },
+        { new: true }
       );
       return true;
     }
