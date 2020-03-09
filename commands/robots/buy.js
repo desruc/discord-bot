@@ -3,19 +3,17 @@ const { getBotChannel } = require("../../helpers");
 
 const buy = async (client, message, args, userRecord) => {
   try {
-    const { author } = message;
+    const { author, channel } = message;
     const botChannel = await getBotChannel(message.guild);
 
-    if (message.deletable) {
+    if (channel !== botChannel && message.deletable) {
       message.delete();
     }
 
     const itemNumber = Number(args[0]);
 
     if (isNaN(itemNumber) || !isFinite(itemNumber))
-      return botChannel.send(
-        `${author}, you specify a number. Check the docs if you need help!`
-      );
+      return botChannel.send(`${author}, you didn't specify an item number.`);
 
     if (itemNumber > 4 || itemNumber < 1)
       return botChannel.send(`${author}... don't take me for a fool.`);
@@ -23,7 +21,7 @@ const buy = async (client, message, args, userRecord) => {
     const purchased = await purchaseItem(userRecord, itemNumber);
     if (!purchased)
       return botChannel.send(`${author}, are you sure you can afford that?`);
-    return botChannel.send(`Thanks for your business! Good luck out there!`);
+    return botChannel.send(`Thanks for your business ${author}! Good luck out there!`);
   } catch (error) {
     console.error("Error purchasing item: ", error);
     const botChannel = await getBotChannel(message.guild);

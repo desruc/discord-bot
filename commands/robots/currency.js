@@ -2,10 +2,10 @@ const { getBotChannel } = require("../../helpers");
 
 const showCurrency = async (client, message, args, userRecord) => {
   try {
-    const { author } = message;
+    const { author, channel } = message;
     const botChannel = await getBotChannel(message.guild);
 
-    if (message.deletable) {
+    if (channel !== botChannel && message.deletable) {
       message.delete();
     }
 

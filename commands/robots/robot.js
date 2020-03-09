@@ -2,15 +2,16 @@ const { getStatCard } = require("../../services/robotService");
 
 const { getBotChannel } = require("../../helpers");
 
-const robot = async (client, message, args) => {
+const robot = async (client, message, args, userRecord) => {
   try {
+    const { channel } = message;
     const botChannel = await getBotChannel(message.guild);
 
-    if (message.deletable) {
+    if (channel !== botChannel && message.deletable) {
       message.delete();
     }
 
-    const statCard = await getStatCard(message, args);
+    const statCard = await getStatCard(message, args, userRecord);
     return botChannel.send(statCard);
   } catch (error) {
     console.error("Error getting robot stat card: ", error);

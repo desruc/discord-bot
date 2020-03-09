@@ -6,8 +6,8 @@ const level = async (client, message, args, userRecord) => {
   try {
     const levelChannel = await getBotChannel(message.guild);
 
-    const { author } = message;
-    if (message.deletable) {
+    const { author, channel } = message;
+    if (channel !== levelChannel && message.deletable) {
       message.delete();
     }
 

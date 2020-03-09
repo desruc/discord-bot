@@ -1,5 +1,6 @@
 const moment = require("moment");
 const User = require("./database/models/userModel");
+const { getUserRobot } = require("./services/robotService");
 
 const getMember = (message, toFind = "") => {
   toFind = toFind.toLowerCase();
@@ -46,15 +47,25 @@ const getUserDatabaseRecord = async userId => {
   try {
     const result = await User.findOne({ userId });
 
+    let robotDocId = "";
+    if (!result || !result.robot) {
+      const robotResult = await getUserRobot(userId);
+      robotDocId = robotResult._id;
+    }
+
     // If a user record exists - return it
-    if (result) return result;
+    if (result && result.robot) return result;
 
     // Otherwise create a new record and return that
-    const newRecord = await new User({
+    await new User({
       userId,
       experience: 0,
-      memesRequested: 0
+      memesRequested: 0,
+      robot: robotDocId
     }).save();
+
+    // Has to be a better way than this
+    const newRecord = await User.findOne({ userId });
 
     return newRecord;
   } catch (error) {
@@ -63,10 +74,14 @@ const getUserDatabaseRecord = async userId => {
 };
 
 const getBotChannel = async guild => {
-  const channel = guild.channels.find(channel => channel.name === "bot");
+  const channel = guild.channels.find(
+    channel => channel.name === process.env.BOT_CHANNEL
+  );
   if (!channel) {
     try {
-      const result = await guild.createChannel("bot", { type: "text" });
+      const result = await guild.createChannel(process.env.BOT_CHANNEL, {
+        type: "text"
+      });
       return result;
     } catch (error) {
       throw error;
@@ -75,11 +90,14 @@ const getBotChannel = async guild => {
   return channel;
 };
 
+const checkNumber = num => !isNaN(Number(num)) && isFinite(Number(num));
+
 module.exports = {
   getMember,
   formatDate,
   randomNumber,
   asyncForEach,
   getUserDatabaseRecord,
-  getBotChannel
+  getBotChannel,
+  checkNumber
 };

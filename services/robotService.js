@@ -13,7 +13,7 @@ let currentStock = [];
 
 const incrementAllUserCurrency = async () => {
   try {
-    await User.updateMany({}, { $inc: { currency: 9 } });
+    await User.updateMany({}, { $inc: { currency: 10 } });
   } catch (error) {
     throw error;
   }
@@ -34,10 +34,10 @@ const getUserRobot = async userId => {
   }
 };
 
-const getStatCard = async (message, args) => {
+const getStatCard = async (message, args, userRecord) => {
   try {
     const member = getMember(message, args.join(" "));
-    const userRobot = await getUserRobot(member.id);
+    const { robot: userRobot } = userRecord;
 
     const embed = new RichEmbed()
       .setColor("RANDOM")
@@ -76,13 +76,19 @@ const initializeShop = async message => {
 const updateStock = async () => {
   try {
     const itemDocuments = await ShopItem.aggregate([{ $sample: { size: 4 } }]);
-    currentStock = itemDocuments.map((doc, idx) => ({
-      index: idx + 1,
-      name: doc.name,
-      cost: randomNumber(Number(doc.minCost), Number(doc.maxCost)),
-      value: randomNumber(doc.minValue, doc.maxValue),
-      type: doc.type
-    }));
+
+    if (itemDocuments.length === 0) {
+      return false;
+    } else {
+      currentStock = itemDocuments.map((doc, idx) => ({
+        index: idx + 1,
+        name: doc.name,
+        cost: randomNumber(Number(doc.minCost), Number(doc.maxCost)),
+        value: randomNumber(doc.minValue, doc.maxValue),
+        type: doc.type
+      }));
+      return true;
+    }
   } catch (error) {
     throw error;
   }
@@ -111,7 +117,7 @@ const simulateFight = async message => {
     const { author, mentions } = message;
     const opponent = mentions.members.first();
 
-    if (!opponent) return message.reply("who do you wan't to challenge?");
+    if (!opponent) return message.reply("who do you want to challenge?");
 
     // Get each robot separately incase one hasn't been created
     const authorRobot = getUserRobot(author.id);
@@ -127,7 +133,6 @@ const purchaseItem = async (userRecord, itemNumber) => {
   try {
     const { currency } = userRecord;
     const item = currentStock[itemNumber - 1];
-    console.log("purchaseItem -> item", item)
     const itemPrice = Number(item.cost);
 
     if (currency > itemPrice) {
@@ -145,11 +150,15 @@ const purchaseItem = async (userRecord, itemNumber) => {
   }
 };
 
+const getStock = () => currentStock;
+
 module.exports = {
   incrementAllUserCurrency,
   getStatCard,
   initializeShop,
   updateStock,
+  getStock,
   getStockCard,
-  purchaseItem
+  purchaseItem,
+  getUserRobot
 };

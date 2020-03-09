@@ -11,7 +11,8 @@ const userModel = new Schema(
     userId: { type: String, unique: true },
     experience: { type: Number, default: 0 },
     memesRequested: { type: Number, default: 0 },
-    currency: { type: Number, default: 0 }
+    currency: { type: Number, default: 0 },
+    robot: { type: Schema.Types.ObjectId, ref: "Robot", default: null }
   },
   {
     toJSON: {
@@ -19,5 +20,9 @@ const userModel = new Schema(
     }
   }
 );
+
+userModel.pre(/^find/, function() {
+  this.populate("robot");
+});
 
 module.exports = model("User", userModel);

@@ -3,7 +3,7 @@ const { randomNumber } = require("../../helpers");
 
 const inspiration = async (client, message, args) => {
   const { channel } = message;
-  const quote = inspirationalQuotes[randomNumber(inspirationalQuotes.length)];
+  const quote = inspirationalQuotes[randomNumber(0, inspirationalQuotes.length)];
   channel.send(quote);
 };
 
