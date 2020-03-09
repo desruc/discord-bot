@@ -29,6 +29,7 @@ const shop = async (client, message, args) => {
   } catch (error) {
     console.error("Error getting stock: ", error);
     const botChannel = await getBotChannel(message.guild);
+    const { author } = message;
     botChannel.send(`${author}, The shop is closed until further notice`);
   }
 };

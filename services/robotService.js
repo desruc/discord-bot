@@ -1,6 +1,6 @@
 const { RichEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
-const { getMember, asyncForEach, randomNumber } = require("../helpers");
+const { randomNumber } = require("../helpers");
 
 const User = require("../database/models/userModel");
 const Robot = require("../database/models/robotModel");
@@ -19,24 +19,9 @@ const incrementAllUserCurrency = async () => {
   }
 };
 
-const getUserRobot = async userId => {
-  try {
-    const result = await Robot.findOne({ userId });
-
-    if (result) return result;
-
-    const newRecord = await new Robot({
-      userId
-    }).save();
-    return newRecord;
-  } catch (error) {
-    throw error;
-  }
-};
-
 const getStatCard = async (message, args, userRecord) => {
   try {
-    const member = getMember(message, args.join(" "));
+    const { member } = message;
     const { robot: userRobot } = userRecord;
 
     const embed = new RichEmbed()
@@ -159,6 +144,5 @@ module.exports = {
   updateStock,
   getStock,
   getStockCard,
-  purchaseItem,
-  getUserRobot
+  purchaseItem
 };

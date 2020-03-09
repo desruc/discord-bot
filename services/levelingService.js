@@ -1,5 +1,4 @@
 const levelRoles = require("../constants/levelRanks");
-const User = require("../database/models/userModel");
 
 const { asyncForEach } = require("../helpers");
 

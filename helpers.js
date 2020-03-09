@@ -1,6 +1,6 @@
 const moment = require("moment");
 const User = require("./database/models/userModel");
-const { getUserRobot } = require("./services/robotService");
+const Robot = require('./database/models/robotModel');
 
 const getMember = (message, toFind = "") => {
   toFind = toFind.toLowerCase();
@@ -41,6 +41,21 @@ const randomNumber = (min, max) => {
       Math.random() * (Math.ceil(Number(max)) - Math.floor(Number(min)))
     ) + Number(min)
   );
+};
+
+const getUserRobot = async userId => {
+  try {
+    const result = await Robot.findOne({ userId });
+
+    if (result) return result;
+
+    const newRecord = await new Robot({
+      userId
+    }).save();
+    return newRecord;
+  } catch (error) {
+    throw error;
+  }
 };
 
 const getUserDatabaseRecord = async userId => {
