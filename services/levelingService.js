@@ -1,6 +1,6 @@
 const levelRoles = require("../constants/levelRanks");
-
 const { asyncForEach } = require("../helpers");
+const User = require("../database/models/userModel");
 
 // Create the roles on the server
 const initializeLevelRoles = async message => {
@@ -72,7 +72,7 @@ const updateRole = async (message, userExperience) => {
 
   let roleName = "";
   levelRoles.forEach(({ level, name }) => {
-    if (currentLevel > level) roleName = name;
+    if (currentLevel >= level) roleName = name;
   });
 
   // Get the role object
@@ -133,9 +133,21 @@ const getUserLevelInfo = async userRecord => {
   };
 };
 
+const getLevelLeaderboard = async () => {
+  try {
+    const result = User.find({})
+      .sort({ experience: -1 })
+      .limit(5);
+    return result;
+  } catch (error) {
+    throw error;
+  }
+};
+
 module.exports = {
   initializeLevelRoles,
   incrementExperience,
   getUserLevelInfo,
-  calculateLevel
+  calculateLevel,
+  getLevelLeaderboard
 };

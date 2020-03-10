@@ -1,6 +1,6 @@
 const moment = require("moment");
 const User = require("./database/models/userModel");
-const Robot = require('./database/models/robotModel');
+const Robot = require("./database/models/robotModel");
 
 const getMember = (message, toFind = "") => {
   toFind = toFind.toLowerCase();
@@ -34,12 +34,12 @@ const asyncForEach = async (array, callback) => {
 
 const randomNumber = (min, max) => {
   if (min === 0) {
-    return Math.ceil(Math.random() * (Number(max) - 1));
+    return Math.ceil(Math.random() * (Number(max)));
   }
   return (
     Math.floor(
-      Math.random() * (Math.ceil(Number(max)) - Math.floor(Number(min)))
-    ) + Number(min)
+      Math.random() * (Math.floor(Number(max)) - Math.ceil(Number(min)))
+    ) + Math.ceil(Number(min))
   );
 };
 
@@ -68,16 +68,22 @@ const getUserDatabaseRecord = async userId => {
       robotDocId = robotResult._id;
     }
 
+    if (result && !result.robot) {
+      await result.updateOne({ robot: robotDocId });
+    }
+
     // If a user record exists - return it
     if (result && result.robot) return result;
 
     // Otherwise create a new record and return that
-    await new User({
-      userId,
-      experience: 0,
-      memesRequested: 0,
-      robot: robotDocId
-    }).save();
+    if (!result) {
+      await new User({
+        userId,
+        experience: 0,
+        memesRequested: 0,
+        robot: robotDocId
+      }).save();
+    }
 
     // Has to be a better way than this
     const newRecord = await User.findOne({ userId });

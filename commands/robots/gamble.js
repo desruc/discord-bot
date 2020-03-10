@@ -1,4 +1,4 @@
-const { getBotChannel, checkNumber } = require("../../helpers");
+const { getBotChannel, checkNumber, randomNumber } = require("../../helpers");
 
 const gamble = async (client, message, args, userRecord) => {
   try {
@@ -10,6 +10,7 @@ const gamble = async (client, message, args, userRecord) => {
       message.delete();
     }
 
+    // Check if the supplied argument is valid
     const bet = Number(args[0]);
     const isValid = checkNumber(bet);
     if (!isValid)
@@ -17,29 +18,58 @@ const gamble = async (client, message, args, userRecord) => {
         `${author}, why are you like this? Enter a valid bet.`
       );
 
-    const hasMoney = currency > bet;
+    // Check the user has money
+    const hasMoney = currency >= bet;
     if (!hasMoney)
       return botChannel.send(
         `Nice try ${author}! Come back when you have enough cash...`
       );
 
+    //
     const putItOn = args[1];
     const number = checkNumber(Number(putItOn));
+    const rand = randomNumber(1, 10);
+
     if (number) {
-      if (number < 37 && number > 0) {
-        // Bets on
-      } else
+      // Number bet
+      const validNumber = Number(putItOn) <= 10 && Number(putItOn) > 0;
+      if (!validNumber)
         return botChannel.send(
-          `${author}, have you ever played roulette? You must choose a number below 37 and above 0 or specify even or odd`
+          `${author}, You must choose a number between 1-10 or specify even or odd.`
         );
+
+      if (putItOn === rand) {
+        await userRecord.updateOne({ $inc: { currency: bet * 10 } });
+        return botChannel.send(
+          `Nicely done ${author}! You've won $${bet * 10}`
+        );
+      } else {
+        await userRecord.updateOne({ $inc: { currency: -bet } });
+        return botChannel.send(
+          `Better luck next time ${author}! The number was ${rand}.`
+        );
+      }
     } else {
+      // Odd or Even
       const validString = putItOn === "odd" || putItOn === "even";
-      if (validString) {
-        // Bets on
-      } else
+      if (!validString)
         return botChannel.send(`${author} - come back when you're serious...`);
+
+      const evenSuccess = putItOn === "even" && rand % 2 === 0;
+      const oddSuccess = putItOn === "odd" && rand % 2 !== 0;
+      if (evenSuccess || oddSuccess) {
+        await userRecord.updateOne({ $inc: { currency: bet * 2 } });
+        const winnings = bet * 2;
+        return botChannel.send(
+          `Congratulations ${author}! The number was ${rand} and you've won $${winnings}.`
+        );
+      } else {
+        await userRecord.updateOne({ $inc: { currency: -bet } });
+        return botChannel.send(`Unlucky ${author}! The number was ${rand}.`);
+      }
     }
   } catch (error) {
+    console.log("gamble -> error", error)
     const { author } = message;
     const botChannel = await getBotChannel(message.guild);
     botChannel.send(`Sorry ${author}, the casino is closed for maintenance...`);
@@ -49,7 +79,9 @@ const gamble = async (client, message, args, userRecord) => {
 module.exports = {
   name: "gamble",
   category: "robots",
-  description: "gamble your currency for a chance to win big",
-  aliases: ["bet", "roulette"],
+  description:
+    "gamble your currency for a chance to win big. takes two arguments, your bet and what you bet on (either odd/even or 1-10).",
+  aliases: ["bet"],
+  example: "[arnie bet 1000 even] OR [arnie bet 10 4]",
   run: gamble
 };
