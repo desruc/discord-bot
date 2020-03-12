@@ -113,6 +113,8 @@ const getBotChannel = async guild => {
 
 const checkNumber = num => !isNaN(Number(num)) && isFinite(Number(num));
 
+const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
+
 module.exports = {
   getMember,
   formatDate,
@@ -120,5 +122,6 @@ module.exports = {
   asyncForEach,
   getUserDatabaseRecord,
   getBotChannel,
-  checkNumber
+  checkNumber,
+  timeout
 };

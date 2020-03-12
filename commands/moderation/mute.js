@@ -1,4 +1,4 @@
-const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
+const { timeout } = require('../../helpers');
 
 const mute = async (client, message, args) => {
   const { deletable, guild, mentions, channel, author } = message;

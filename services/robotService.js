@@ -1,6 +1,12 @@
 const { RichEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
-const { randomNumber } = require("../helpers");
+const {
+  randomNumber,
+  getBotChannel,
+  getMember,
+  asyncForEach,
+  timeout
+} = require("../helpers");
 
 const User = require("../database/models/userModel");
 const Robot = require("../database/models/robotModel");
@@ -11,13 +17,9 @@ const shopItemDocuments = require("../constants/shopItems");
 // Store the current items in memory for speed
 let currentStock = [];
 
-const incrementAllUserCurrency = async () => {
-  try {
-    await User.updateMany({}, { $inc: { currency: 10 } });
-  } catch (error) {
-    throw error;
-  }
-};
+/*
+ * GENERIC FUNCTIONS
+ */
 
 const getStatCard = async (message, args, userRecord) => {
   try {
@@ -37,6 +39,18 @@ const getStatCard = async (message, args, userRecord) => {
       );
 
     return embed;
+  } catch (error) {
+    throw error;
+  }
+};
+
+/*
+ * SHOP FUNCTIONS
+ */
+
+const incrementAllUserCurrency = async () => {
+  try {
+    await User.updateMany({}, { $inc: { currency: 10 } });
   } catch (error) {
     throw error;
   }
@@ -97,23 +111,6 @@ const getStockCard = () => {
   return embed;
 };
 
-const simulateFight = async message => {
-  try {
-    const { author, mentions } = message;
-    const opponent = mentions.members.first();
-
-    if (!opponent) return message.reply("who do you want to challenge?");
-
-    // Get each robot separately incase one hasn't been created
-    const authorRobot = getUserRobot(author.id);
-    const opponentRobot = getUserRobot(opponent.id);
-
-    // TODO: Fight!
-  } catch (error) {
-    throw error;
-  }
-};
-
 const purchaseItem = async (userRecord, itemNumber) => {
   try {
     const { currency } = userRecord;
@@ -136,6 +133,95 @@ const purchaseItem = async (userRecord, itemNumber) => {
 };
 
 const getStock = () => currentStock;
+
+/*
+ * FIGHT FUNCTIONS
+ */
+
+const checkIfHit = () => {
+  const rand = randomNumber(1, 30);
+  if (rand < 11) return true;
+  return false;
+};
+
+const playerTurn = (user, opponent) => {
+  const hit = checkIfHit();
+  let msg = `${user.userId}'s hit misses!`;
+  if (hit)
+    msg = `${user.userId} smashes ${opponent.userId} for ${user.damage} points!`;
+  return { hit, msg };
+};
+
+const simulateFight = async message => {
+  try {
+    const { author, mentions } = message;
+    const opponent = mentions.members.first();
+
+    if (!opponent) return message.reply("who do you want to challenge?");
+
+    const botChannel = await getBotChannel();
+
+    // Get each robot separately incase one hasn't been created
+    const authorRobot = getUserRobot(author.id);
+    const opponentRobot = getUserRobot(opponent.id);
+
+    const msg = await botChannel.send(
+      `LET'S GET READY TO RUMBLE! ${author} VS ${getMember(
+        message,
+        opponentRobot.userId
+      )}`
+    );
+
+    // Variables
+    const fightMsgs = [];
+    let authorTurn = null;
+    let opponentTurn = null;
+
+    // Fight loop
+    while (authorRobot.hitPoints > 0 && opponentRobot.hitPoints > 0) {
+      authorTurn = playerTurn(authorRobot, opponentRobot);
+      fightMsgs.push(authorTurn.msg);
+      if (authorTurn.hit) opponentRobot.hitPoints -= authorRobot.damage;
+
+      opponentTurn = playerTurn(opponentRobot, authorRobot);
+      fightMsgs.push(opponentTurn.msg);
+      if (opponentTurn.hit) authorRobot.hitPoints -= opponentTurn.damage;
+    }
+
+    // Determine winner based on hitpoints and add victory message
+    let victoryMsg = "";
+    let winner = null;
+    const authorWin = authorRobot.hitPoints > 0;
+    if (authorWin) {
+      victoryMsg = `${authorRobot.id} is the victor! They survived with ${authorRobot.hitPoints}`;
+      winner = author;
+    } else {
+      victoryMsg = `${opponentRobot.id} is the victor! They survived with ${opponentRobot.hitPoints}`;
+      winner = getMember(message, opponentRobot.userId);
+    }
+    fightMsgs.push(victoryMsg);
+
+    // Loop through messages updating every couple of seconds.
+    await asyncForEach(fightMsgs, async fm => {
+      await msg.edit(fm);
+      await timeout(3000);
+    });
+
+    // Add edit to victory message
+    await msg.edit(victoryMsg);
+    await timeout(5000);
+
+    // After everything create embed card with results
+    const embed = new RichEmbed()
+      .setColor("RANDOM")
+      .setTitle(`${author} VS ${getMember(message, opponentRobot.userId)}`)
+      .addField("Winner", stripIndents`${winner}`, false);
+
+    await msg.edit(embed);
+  } catch (error) {
+    throw error;
+  }
+};
 
 module.exports = {
   incrementAllUserCurrency,
