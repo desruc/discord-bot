@@ -12,7 +12,7 @@ const gamble = async (client, message, args, userRecord) => {
 
     // Check if the supplied argument is valid
     const bet = Number(args[0]);
-    const isValid = checkNumber(bet);
+    const isValid = checkNumber(bet) && bet > 0;
     if (!isValid)
       return botChannel.send(
         `${author}, why are you like this? Enter a valid bet.`
@@ -33,12 +33,13 @@ const gamble = async (client, message, args, userRecord) => {
     if (number) {
       // Number bet
       const validNumber = Number(putItOn) <= 10 && Number(putItOn) > 0;
+
       if (!validNumber)
         return botChannel.send(
           `${author}, You must choose a number between 1-10 or specify even or odd.`
         );
 
-      if (putItOn === rand) {
+      if (Number(putItOn) === rand) {
         await userRecord.updateOne({ $inc: { currency: bet * 10 } });
         return botChannel.send(
           `Nicely done ${author}! You've won $${bet * 10}`
@@ -58,10 +59,9 @@ const gamble = async (client, message, args, userRecord) => {
       const evenSuccess = putItOn === "even" && rand % 2 === 0;
       const oddSuccess = putItOn === "odd" && rand % 2 !== 0;
       if (evenSuccess || oddSuccess) {
-        await userRecord.updateOne({ $inc: { currency: bet * 2 } });
-        const winnings = bet * 2;
+        await userRecord.updateOne({ $inc: { currency: bet } });
         return botChannel.send(
-          `Congratulations ${author}! The number was ${rand} and you've won $${winnings}.`
+          `Congratulations ${author}! The number was ${rand} and you've won $${bet}.`
         );
       } else {
         await userRecord.updateOne({ $inc: { currency: -bet } });
@@ -69,7 +69,7 @@ const gamble = async (client, message, args, userRecord) => {
       }
     }
   } catch (error) {
-    console.log("gamble -> error", error)
+    console.log("gamble -> error", error);
     const { author } = message;
     const botChannel = await getBotChannel(message.guild);
     botChannel.send(`Sorry ${author}, the casino is closed for maintenance...`);
