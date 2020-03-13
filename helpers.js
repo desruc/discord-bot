@@ -34,7 +34,7 @@ const asyncForEach = async (array, callback) => {
 
 const randomNumber = (min, max) => {
   if (min === 0) {
-    return Math.ceil(Math.random() * (Number(max)));
+    return Math.ceil(Math.random() * (Number(max)) -1);
   }
   return (
     Math.floor(
@@ -123,5 +123,6 @@ module.exports = {
   getUserDatabaseRecord,
   getBotChannel,
   checkNumber,
-  timeout
+  timeout,
+  getUserRobot
 };

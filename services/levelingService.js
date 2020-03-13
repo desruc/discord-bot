@@ -40,6 +40,8 @@ const initializeLevelRoles = async message => {
 
 const calculateExperience = message => {
   const { embeds, attachments } = message;
+  if (message.content.toLowerCase().indexOf(process.env.BOT_PREFIX) === 0)
+    return 3;
   if (attachments.length > 0) return 21;
   if (embeds.length > 0) return 14;
   return 7;

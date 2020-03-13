@@ -11,7 +11,8 @@ const robotModel = new Schema(
     userId: { type: String, unique: true },
     hitPoints: { type: Number, default: 5 },
     armour: { type: Number, default: 0 },
-    damage: { type: Number, default: 1 }
+    damage: { type: Number, default: 1 },
+    wins: { type: Number, default: 0 }
   },
   {
     toJSON: {

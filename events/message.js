@@ -20,7 +20,9 @@ module.exports = async (client, message) => {
 
   const userRecord = await getUserDatabaseRecord(message.author.id);
 
-  incrementExperience(message, userRecord);
+  if (message.channel.name !== "modz") {
+    incrementExperience(message, userRecord);
+  }
 
   // If the message doesn't start with the prefix, return
   if (message.content.toLowerCase().indexOf(prefix) !== 0) return;

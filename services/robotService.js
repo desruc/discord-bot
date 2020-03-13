@@ -5,7 +5,8 @@ const {
   getBotChannel,
   getMember,
   asyncForEach,
-  timeout
+  timeout,
+  getUserRobot
 } = require("../helpers");
 
 const User = require("../database/models/userModel");
@@ -34,7 +35,8 @@ const getStatCard = async (message, args, userRecord) => {
       .addField(
         "Stats:",
         stripIndents`**Hit points:** ${userRobot.hitPoints}
-          **Damage:** ${userRobot.damage}`,
+          **Damage:** ${userRobot.damage}
+          **Wins:** ${userRobot.wins || 0}`,
         true
       );
 
@@ -139,31 +141,38 @@ const getStock = () => currentStock;
  */
 
 const checkIfHit = () => {
-  const rand = randomNumber(1, 30);
+  const rand = randomNumber(1, 20);
   if (rand < 11) return true;
   return false;
 };
 
-const playerTurn = (user, opponent) => {
+const playerTurn = (user, opponent, message) => {
   const hit = checkIfHit();
-  let msg = `${user.userId}'s hit misses!`;
-  if (hit)
-    msg = `${user.userId} smashes ${opponent.userId} for ${user.damage} points!`;
-  return { hit, msg };
+  let winner = false;
+  let msg = getMissMessage(user, opponent, message);
+  if (hit) {
+    const kill = opponent.hitPoints - user.damage <= 0;
+    if (kill) {
+      msg = getVictoryMessage(user, opponent, message);
+      winner = true;
+    } else msg = getHitMessage(user, opponent, message);
+  }
+
+  return { hit, msg, winner };
 };
 
 const simulateFight = async message => {
   try {
-    const { author, mentions } = message;
+    const { author, mentions, guild } = message;
     const opponent = mentions.members.first();
 
     if (!opponent) return message.reply("who do you want to challenge?");
 
-    const botChannel = await getBotChannel();
+    const botChannel = await getBotChannel(guild);
 
     // Get each robot separately incase one hasn't been created
-    const authorRobot = getUserRobot(author.id);
-    const opponentRobot = getUserRobot(opponent.id);
+    const authorRobot = await getUserRobot(author.id);
+    const opponentRobot = await getUserRobot(opponent.id);
 
     const msg = await botChannel.send(
       `LET'S GET READY TO RUMBLE! ${author} VS ${getMember(
@@ -171,35 +180,42 @@ const simulateFight = async message => {
         opponentRobot.userId
       )}`
     );
+    await timeout(2000);
 
     // Variables
     const fightMsgs = [];
     let authorTurn = null;
     let opponentTurn = null;
+    let authorDmg = 0;
+    let opponentDmg = 0;
+    let winner = null;
 
     // Fight loop
     while (authorRobot.hitPoints > 0 && opponentRobot.hitPoints > 0) {
-      authorTurn = playerTurn(authorRobot, opponentRobot);
+      authorTurn = playerTurn(authorRobot, opponentRobot, message);
       fightMsgs.push(authorTurn.msg);
-      if (authorTurn.hit) opponentRobot.hitPoints -= authorRobot.damage;
+      if (authorTurn.hit) {
+        opponentRobot.hitPoints -= authorRobot.damage;
+        authorDmg += authorRobot.damage;
+      }
+      if (authorTurn.winner) {
+        winner = author;
+        await authorRobot.updateOne({ $inc: { wins: 1 } });
+        break;
+      }
 
-      opponentTurn = playerTurn(opponentRobot, authorRobot);
+      opponentTurn = playerTurn(opponentRobot, authorRobot, message);
       fightMsgs.push(opponentTurn.msg);
-      if (opponentTurn.hit) authorRobot.hitPoints -= opponentTurn.damage;
+      if (opponentTurn.hit) {
+        authorRobot.hitPoints -= opponentRobot.damage;
+        opponentDmg += opponentRobot.damage;
+      }
+      if (opponentTurn.winner) {
+        winner = opponent;
+        await opponentRobot.updateOne({ $inc: { wins: 1 } });
+        break;
+      }
     }
-
-    // Determine winner based on hitpoints and add victory message
-    let victoryMsg = "";
-    let winner = null;
-    const authorWin = authorRobot.hitPoints > 0;
-    if (authorWin) {
-      victoryMsg = `${authorRobot.id} is the victor! They survived with ${authorRobot.hitPoints}`;
-      winner = author;
-    } else {
-      victoryMsg = `${opponentRobot.id} is the victor! They survived with ${opponentRobot.hitPoints}`;
-      winner = getMember(message, opponentRobot.userId);
-    }
-    fightMsgs.push(victoryMsg);
 
     // Loop through messages updating every couple of seconds.
     await asyncForEach(fightMsgs, async fm => {
@@ -207,20 +223,76 @@ const simulateFight = async message => {
       await timeout(3000);
     });
 
-    // Add edit to victory message
-    await msg.edit(victoryMsg);
-    await timeout(5000);
-
     // After everything create embed card with results
     const embed = new RichEmbed()
       .setColor("RANDOM")
-      .setTitle(`${author} VS ${getMember(message, opponentRobot.userId)}`)
-      .addField("Winner", stripIndents`${winner}`, false);
+      .setTitle(`${message.member.displayName} VS ${opponent.displayName}`)
+      .addField("Winner:", stripIndents`${winner}`, false)
+      .addField(
+        `${message.member.displayName} Damage Dealt:`,
+        stripIndents`${authorDmg}`,
+        false
+      )
+      .addField(
+        `${opponent.displayName} Damage Dealt:`,
+        stripIndents`${opponentDmg}`,
+        false
+      )
+      .addField(
+        `${message.member.displayName} Remaining HP:`,
+        stripIndents`${authorRobot.hitPoints}`,
+        false
+      )
+      .addField(
+        `${opponent.displayName} Remaining HP:`,
+        stripIndents`${opponentRobot.hitPoints}`,
+        false
+      );
 
     await msg.edit(embed);
   } catch (error) {
     throw error;
   }
+};
+
+const getHitMessage = (user, opponent, message) => {
+  const uName = getMember(message, user.userId);
+  const oName = getMember(message, opponent.userId);
+  const uDmg = user.damage;
+  const oHp = opponent.hitPoints;
+  const hit = [
+    `${uName} draws faster and ${oName} takes ${uDmg} damage! Leaving them on ${oHp} hit points!`,
+    `${uName} gives ${oName} an atomic wedgie - they take ${uDmg} damage.`,
+    `${uName} strikes the low hanging fruit 🍌! ${oName} takes ${uDmg} damage.`,
+    `${oName} is caught over-extending... ${uName} deals ${uDmg} damage!`
+  ];
+  const rand = randomNumber(0, hit.length);
+  return hit[rand];
+};
+
+const getMissMessage = (user, opponent, message) => {
+  const uName = getMember(message, user.userId);
+  const oName = getMember(message, opponent.userId);
+  const miss = [
+    `${uName} is too zoinked and misses!`,
+    `${uName} has a mental breakdown and sobs in the corner. ${oName} takes no damage.`,
+    `${uName} trips over their own ego and misses...`,
+    `💨 WHIFF!! ${uName} misses their attack.`,
+    `${uName} rolls a critical fail. ${oName} takes no damage...`,
+    `${uName} channels their inner Kim Jong-Un and doesn't fire at all...`
+  ];
+  const rand = randomNumber(0, miss.length);
+  return miss[rand];
+};
+
+const getVictoryMessage = (user, opponent, message) => {
+  const uName = getMember(message, user.userId);
+  const oName = getMember(message, opponent.userId);
+  const uDmg = user.damage;
+  const victory = [
+    `${uName} crushes ${oName} with a powerful blow and claims the VICTORY!`
+  ];
+  return victory[0];
 };
 
 module.exports = {
@@ -230,5 +302,6 @@ module.exports = {
   updateStock,
   getStock,
   getStockCard,
-  purchaseItem
+  purchaseItem,
+  simulateFight
 };
