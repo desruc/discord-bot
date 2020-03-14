@@ -141,8 +141,8 @@ const getStock = () => currentStock;
  */
 
 const checkIfHit = () => {
-  const rand = randomNumber(1, 20);
-  if (rand < 11) return true;
+  const rand = randomNumber(1, 10);
+  if (rand <= 7) return true;
   return false;
 };
 
@@ -262,9 +262,21 @@ const getHitMessage = (user, opponent, message) => {
   const oHp = opponent.hitPoints;
   const hit = [
     `${uName} draws faster and ${oName} takes ${uDmg} damage! Leaving them on ${oHp} hit points!`,
-    `${uName} gives ${oName} an atomic wedgie - they take ${uDmg} damage.`,
+    `${uName} gives ${oName} an atomic wedgie!`,
     `${uName} strikes the low hanging fruit 🍌! ${oName} takes ${uDmg} damage.`,
-    `${oName} is caught over-extending... ${uName} deals ${uDmg} damage!`
+    `${oName} is caught over-extending... ${uName} deals ${uDmg} damage!`,
+    `${uName} hurts ${oName}'s feelings... they are now on ${oHp} hit points 😭`,
+    `${uName} blows a hole through ${oName}'s leg!!!`,
+    `${uName} roundhouse kicks ${oName}, leaving them on ${oHp} hit points.`,
+    `${uName} transforms into a tank and runs down ${oName}...`,
+    `KARATE CHOP!!! ${oName} is now on ${oHp} hit points.`,
+    `${oName} is hit with a fridge!!! They're now on ${oHp} hit points.`,
+    `${uName} throws out a sidewinder and connects! ${oName} is on ${oHp} hit points`,
+    `The blinding radiance of ${uName}'s good looks is too much too handle... ${oName} has ${oHp} hit points left...`,
+    `${oName} slips on a 🥒... they're on ${oHp} hit points.`,
+    `${uName} drops ${oName} with a BATISTA BOMB!!!!!`,
+    `GET OVER HERE! ${uName} reels ${oName} in and hits em with an uppercut.`,
+    `WAAAHHHHHHHH!! ${oName} is now on ${oHp} hit points`
   ];
   const rand = randomNumber(0, hit.length);
   return hit[rand];
@@ -279,7 +291,11 @@ const getMissMessage = (user, opponent, message) => {
     `${uName} trips over their own ego and misses...`,
     `💨 WHIFF!! ${uName} misses their attack.`,
     `${uName} rolls a critical fail. ${oName} takes no damage...`,
-    `${uName} channels their inner Kim Jong-Un and doesn't fire at all...`
+    `ZZZ... ${uName} is fast asleep...`,
+    `BZZRRT! ${uName}'s circuits are fried...`,
+    `${uName} is recharging their batteries. They miss their turn.`,
+    `${uName} attack catches nothing but air...`,
+    `${uName} is caught with their pants down and misses`
   ];
   const rand = randomNumber(0, miss.length);
   return miss[rand];
@@ -290,9 +306,17 @@ const getVictoryMessage = (user, opponent, message) => {
   const oName = getMember(message, opponent.userId);
   const uDmg = user.damage;
   const victory = [
-    `${uName} crushes ${oName} with a powerful blow and claims the VICTORY!`
+    `${uName} crushes ${oName} with a powerful blow and claims the VICTORY!`,
+    `${oName} takes the L! ${uName} is the WINNER!!!`,
+    `${oName} runs away in fear. ${uName} takes the crown.`,
+    `${oName}, your performance was embarrassing... ${uName} is the victor.`,
+    `FATALITY! ${uName} WINS!`,
+    `R A M P A G E! ${uName} wins...`,
+    `${uName} rips out ${oName}'s processor and secures the victory!!!`,
+    `What a mess! Someones gonna need to put ${oName} back together.... ${uName} wins!`,
+    `${uName} disintegrates after being blasted by a nuke! ${uName} conqueror!`
   ];
-  return victory[0];
+  return victory[randomNumber(0, victory.length)];
 };
 
 module.exports = {
