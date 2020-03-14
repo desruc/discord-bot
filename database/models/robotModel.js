@@ -12,7 +12,8 @@ const robotModel = new Schema(
     hitPoints: { type: Number, default: 5 },
     armour: { type: Number, default: 0 },
     damage: { type: Number, default: 1 },
-    wins: { type: Number, default: 0 }
+    wins: { type: Number, default: 0 },
+    losses: { type: Number, default: 0 }
   },
   {
     toJSON: {

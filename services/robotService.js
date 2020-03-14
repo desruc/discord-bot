@@ -166,6 +166,8 @@ const simulateFight = async message => {
     const { author, mentions, guild } = message;
     const opponent = mentions.members.first();
 
+    if (opponent.user.bot) return message.reply(", you are not ready to face my wrath...");
+
     if (!opponent) return message.reply("who do you want to challenge?");
 
     const botChannel = await getBotChannel(guild);
@@ -201,6 +203,7 @@ const simulateFight = async message => {
       if (authorTurn.winner) {
         winner = author;
         await authorRobot.updateOne({ $inc: { wins: 1 } });
+        await opponentRobot.updateOne({ $inc: { losses: 1 } });
         break;
       }
 
@@ -213,6 +216,7 @@ const simulateFight = async message => {
       if (opponentTurn.winner) {
         winner = opponent;
         await opponentRobot.updateOne({ $inc: { wins: 1 } });
+        await authorRobot.updateOne({ $inc: { losses: 1 } });
         break;
       }
     }
