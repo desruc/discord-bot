@@ -34,7 +34,7 @@ const asyncForEach = async (array, callback) => {
 
 const randomNumber = (min, max) => {
   if (min === 0) {
-    return Math.floor(Math.random() * (Number(max + 1)));
+    return Math.floor(Math.random() * (Number(max) + 1));
   }
   return (
     Math.floor(

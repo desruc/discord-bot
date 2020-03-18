@@ -6,7 +6,8 @@ const {
 } = require("../services/memeService");
 const {
   incrementAllUserCurrency,
-  updateStock
+  updateStock,
+  resetHasFoughtFlags
 } = require("../services/robotService");
 
 module.exports = client => {
@@ -42,6 +43,17 @@ module.exports = client => {
     }
   });
 
+  const resetFights = schedule.scheduleJob("* 2 * * *", async function() {
+    try {
+      await resetHasFoughtFlags();
+    } catch (error) {
+      console.error("Error reset current hp: ", error);
+    }
+  });
+
+  console.info(
+    `the first resetFights will run at ${resetFights.nextInvocation()}`
+  );
   console.info(
     `the first refreshStore will run at ${refreshStore.nextInvocation()}`
   );

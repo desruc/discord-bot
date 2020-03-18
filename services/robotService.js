@@ -6,7 +6,8 @@ const {
   getMember,
   asyncForEach,
   timeout,
-  getUserRobot
+  getUserRobot,
+  getUserDatabaseRecord
 } = require("../helpers");
 
 const User = require("../database/models/userModel");
@@ -36,7 +37,8 @@ const getStatCard = async (message, args, userRecord) => {
         "Stats:",
         stripIndents`**Hit points:** ${userRobot.hitPoints}
           **Damage:** ${userRobot.damage}
-          **Wins:** ${userRobot.wins || 0}`,
+          **Wins:** ${userRobot.wins || 0}
+          **Losses:** ${userRobot.losses || 0}`,
         true
       );
 
@@ -52,7 +54,7 @@ const getStatCard = async (message, args, userRecord) => {
 
 const incrementAllUserCurrency = async () => {
   try {
-    await User.updateMany({}, { $inc: { currency: 10 } });
+    await User.updateMany({}, { $inc: { currency: 20 } });
   } catch (error) {
     throw error;
   }
@@ -161,12 +163,13 @@ const playerTurn = (user, opponent, message) => {
   return { hit, msg, winner };
 };
 
-const simulateFight = async message => {
+const simulateFight = async (message, userRecord) => {
   try {
     const { author, mentions, guild } = message;
     const opponent = mentions.members.first();
 
-    if (opponent.user.bot) return message.reply(", you are not ready to face my wrath...");
+    if (opponent.user.bot)
+      return message.reply(", you are not ready to face my wrath...");
 
     if (!opponent) return message.reply("who do you want to challenge?");
 
@@ -175,6 +178,11 @@ const simulateFight = async message => {
     // Get each robot separately incase one hasn't been created
     const authorRobot = await getUserRobot(author.id);
     const opponentRobot = await getUserRobot(opponent.id);
+
+    if (authorRobot.hasFought)
+      return message.reply(
+        "you've already fought today..."
+      );
 
     const msg = await botChannel.send(
       `LET'S GET READY TO RUMBLE! ${author} VS ${getMember(
@@ -202,8 +210,13 @@ const simulateFight = async message => {
       }
       if (authorTurn.winner) {
         winner = author;
-        await authorRobot.updateOne({ $inc: { wins: 1 } });
-        await opponentRobot.updateOne({ $inc: { losses: 1 } });
+        await authorRobot.updateOne({
+          $inc: { wins: 1 },
+          $set: { hasFought: true }
+        });
+        await opponentRobot.updateOne({
+          $inc: { losses: 1 }
+        });
         break;
       }
 
@@ -215,8 +228,13 @@ const simulateFight = async message => {
       }
       if (opponentTurn.winner) {
         winner = opponent;
-        await opponentRobot.updateOne({ $inc: { wins: 1 } });
-        await authorRobot.updateOne({ $inc: { losses: 1 } });
+        await opponentRobot.updateOne({
+          $inc: { wins: 1 }
+        });
+        await authorRobot.updateOne({
+          $inc: { losses: 1 },
+          $set: { hasFought: true }
+        });
         break;
       }
     }
@@ -254,6 +272,12 @@ const simulateFight = async message => {
       );
 
     await msg.edit(embed);
+
+    // Get winner profile and update their currency
+    const authorWon = winner === author;
+    await userRecord.updateOne({
+      $inc: { currency: authorWon ? 500 : 400 }
+    });
   } catch (error) {
     throw error;
   }
@@ -318,9 +342,27 @@ const getVictoryMessage = (user, opponent, message) => {
     `R A M P A G E! ${uName} wins...`,
     `${uName} rips out ${oName}'s processor and secures the victory!!!`,
     `What a mess! Someones gonna need to put ${oName} back together.... ${uName} wins!`,
-    `${uName} disintegrates after being blasted by a nuke! ${uName} conqueror!`
+    `${oName} disintegrates after being blasted by a nuke! ${uName} conqueror!`
   ];
   return victory[randomNumber(0, victory.length)];
+};
+
+const resetHasFoughtFlags = async () => {
+  try {
+    await Robot.updateMany({}, { hasFought: false });
+  } catch (error) {
+    throw error;
+  }
+};
+
+const resetUserRobotHealth = async userId => {
+  try {
+    await Robot.findOneAndUpdate({ userId }, [
+      { $set: { currentHp: "$hitPoints" } }
+    ]);
+  } catch (error) {
+    throw error;
+  }
 };
 
 module.exports = {
@@ -331,5 +373,7 @@ module.exports = {
   getStock,
   getStockCard,
   purchaseItem,
-  simulateFight
+  simulateFight,
+  resetHasFoughtFlags,
+  resetUserRobotHealth
 };
