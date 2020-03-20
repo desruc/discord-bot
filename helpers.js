@@ -1,14 +1,13 @@
-const moment = require("moment");
-const User = require("./database/models/userModel");
-const Robot = require("./database/models/robotModel");
+const moment = require('moment');
+const User = require('./database/models/userModel');
+const Robot = require('./database/models/robotModel');
 
-const getMember = (message, toFind = "") => {
+const getMember = (message, toFind = '') => {
   toFind = toFind.toLowerCase();
 
   let target = message.guild.members.get(toFind);
 
-  if (!target && message.mentions.members)
-    target = message.mentions.members.first();
+  if (!target && message.mentions.members) target = message.mentions.members.first();
 
   if (!target && toFind) {
     target = message.guild.members.find(member => {
@@ -24,7 +23,7 @@ const getMember = (message, toFind = "") => {
   return target;
 };
 
-const formatDate = date => moment(date).format("DD/MM/YYYY");
+const formatDate = date => moment(date).format('DD/MM/YYYY');
 
 const asyncForEach = async (array, callback) => {
   for (let index = 0; index < array.length; index++) {
@@ -33,14 +32,9 @@ const asyncForEach = async (array, callback) => {
 };
 
 const randomNumber = (min, max) => {
-  if (min === 0) {
-    return Math.floor(Math.random() * (Number(max) + 1));
-  }
-  return (
-    Math.floor(
-      Math.random() * (Math.floor(Number(max)) - Math.ceil(Number(min)))
-    ) + Math.ceil(Number(min))
-  );
+  const strictMin = Math.ceil(Number(min));
+  const strictMax = Math.floor(Number(max));
+  return Math.floor(Math.random() * (strictMax - strictMin + 1)) + strictMin;
 };
 
 const getUserRobot = async userId => {
@@ -62,7 +56,7 @@ const getUserDatabaseRecord = async userId => {
   try {
     const result = await User.findOne({ userId });
 
-    let robotDocId = "";
+    let robotDocId = '';
     if (!result || !result.robot) {
       const robotResult = await getUserRobot(userId);
       robotDocId = robotResult._id;
@@ -101,7 +95,7 @@ const getBotChannel = async guild => {
   if (!channel) {
     try {
       const result = await guild.createChannel(process.env.BOT_CHANNEL, {
-        type: "text"
+        type: 'text'
       });
       return result;
     } catch (error) {
