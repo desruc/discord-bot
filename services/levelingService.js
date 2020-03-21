@@ -1,6 +1,6 @@
-const levelRoles = require("../constants/levelRanks");
-const { asyncForEach } = require("../helpers");
-const User = require("../database/models/userModel");
+const levelRoles = require('../constants/levelRanks');
+const { asyncForEach } = require('../helpers');
+const User = require('../database/models/userModel');
 
 // Create the roles on the server
 const initializeLevelRoles = async message => {
@@ -29,7 +29,7 @@ const initializeLevelRoles = async message => {
 
     if (rolesInitialized === numOfRanks) {
       channel.send(
-        "The leveling system has been initialized - let the games begin!"
+        'The leveling system has been initialized - let the games begin!'
       );
     } else
       channel.send(
@@ -40,8 +40,7 @@ const initializeLevelRoles = async message => {
 
 const calculateExperience = message => {
   const { embeds, attachments } = message;
-  if (message.content.toLowerCase().indexOf(process.env.BOT_PREFIX) === 0)
-    return 3;
+  if (message.content.toLowerCase().indexOf(process.env.BOT_PREFIX) === 0) return 3;
   if (attachments.length > 0) return 21;
   if (embeds.length > 0) return 14;
   return 7;
@@ -72,7 +71,7 @@ const updateRole = async (message, userExperience) => {
 
   const currentLevel = calculateLevel(userExperience);
 
-  let roleName = "";
+  let roleName = '';
   levelRoles.forEach(({ level, name }) => {
     if (currentLevel >= level) roleName = name;
   });
@@ -142,6 +141,7 @@ const getLevelLeaderboard = async () => {
       .limit(5);
     return result;
   } catch (error) {
+    console.error('Error retrieving level leaderboard: ', error);
     throw error;
   }
 };

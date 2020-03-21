@@ -48,6 +48,7 @@ const getUserRobot = async userId => {
     }).save();
     return newRecord;
   } catch (error) {
+    console.error('Error retrieving users robot: ', error);
     throw error;
   }
 };
@@ -84,6 +85,7 @@ const getUserDatabaseRecord = async userId => {
 
     return newRecord;
   } catch (error) {
+    console.error('Error getting users database record: ', error);
     throw error;
   }
 };
@@ -99,14 +101,17 @@ const getBotChannel = async guild => {
       });
       return result;
     } catch (error) {
+      console.error('Error getting/creating bot channel: ', error);
       throw error;
     }
   }
   return channel;
 };
 
+// Check if a number is valid
 const checkNumber = num => !isNaN(Number(num)) && isFinite(Number(num));
 
+// Pause a function for the specified time
 const timeout = ms => new Promise(resolve => setTimeout(resolve, ms));
 
 module.exports = {

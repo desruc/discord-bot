@@ -1,23 +1,23 @@
+const { checkNumber, randomNumber } = require('../../helpers');
+
 const roll = async (client, message, args) => {
   const { channel, member } = message;
-  let num = args[0] || 100;
+  const num = Number(args[0]) || 100;
 
-  if (isNaN(Number(num)) || !isFinite(Number(num)))
-    return channel.send("Yeah, that isn't a number...");
+  if (!checkNumber(num)) return channel.send("Yeah, that isn't a number...");
 
-  num = Math.ceil(Number(num));
-  if (Number(num) <= 1) return channel.send("Nice try...");
+  if (num <= 1) return channel.send('Nice try...');
 
-  const rand = Math.ceil(Math.random() * num);
+  const rand = randomNumber(1, num);
   channel.send(`${member} rolls ${rand} (1-${num})`);
 };
 
 module.exports = {
-  name: "roll",
-  category: "fun",
+  name: 'roll',
+  category: 'fun',
   description:
-    "returns a random number between 1 and 100 (or the number specified).",
-  usage: "[number]",
-  example: "arnie roll 666",
+    'returns a random number between 1 and 100 (or the number specified).',
+  usage: '[number]',
+  example: 'arnie roll 666',
   run: roll
 };

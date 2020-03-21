@@ -2,11 +2,11 @@ const {
   getStockCard,
   updateStock,
   getStock
-} = require("../../services/robotService");
+} = require('../../services/robotService');
 
-const { getBotChannel } = require("../../helpers");
+const { getBotChannel } = require('../../helpers');
 
-const shop = async (client, message, args) => {
+const shop = async (client, message) => {
   try {
     const { channel } = message;
     const botChannel = await getBotChannel(message.guild);
@@ -20,14 +20,14 @@ const shop = async (client, message, args) => {
       const updated = await updateStock();
       if (!updated)
         return botChannel.send(
-          "The Robot system has not been initialized. Talk to your administrator."
+          'The Robot system has not been initialized. Talk to your administrator.'
         );
     }
 
     const stockCard = getStockCard();
     botChannel.send(stockCard);
   } catch (error) {
-    console.error("Error getting stock: ", error);
+    console.error('Error getting stock: ', error);
     const botChannel = await getBotChannel(message.guild);
     const { author } = message;
     botChannel.send(`${author}, The shop is closed until further notice`);
@@ -35,9 +35,9 @@ const shop = async (client, message, args) => {
 };
 
 module.exports = {
-  name: "shop",
-  category: "robots",
-  description: "returns the current shop",
-  aliases: ["stock"],
+  name: 'shop',
+  category: 'robots',
+  description: 'returns the current shop',
+  aliases: ['stock'],
   run: shop
 };

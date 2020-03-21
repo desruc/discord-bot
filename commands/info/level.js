@@ -1,10 +1,10 @@
-const { RichEmbed } = require("discord.js");
-const { stripIndents } = require("common-tags");
+const { RichEmbed } = require('discord.js');
+const { stripIndents } = require('common-tags');
 const {
   getUserLevelInfo,
   getLevelLeaderboard
-} = require("../../services/levelingService");
-const { getBotChannel, getMember } = require("../../helpers");
+} = require('../../services/levelingService');
+const { getBotChannel, getMember } = require('../../helpers');
 
 const level = async (client, message, args, userRecord) => {
   try {
@@ -15,10 +15,10 @@ const level = async (client, message, args, userRecord) => {
       message.delete();
     }
 
-    if (args[0] === "leaderboard") {
+    if (args[0] === 'leaderboard') {
       const results = await getLevelLeaderboard();
       const embed = new RichEmbed()
-        .setColor("RANDOM")
+        .setColor('RANDOM')
         .setTitle(`Experience Leaderboard`);
 
       results.forEach((doc, idx) => {
@@ -39,18 +39,16 @@ const level = async (client, message, args, userRecord) => {
       `${author}, you are currently level ${currentLevel} and have ${experience} EXP! You need ${expToNextLevel} EXP to level up.`
     );
   } catch (error) {
-    console.log("level -> error", error);
+    console.error('level -> error', error);
     const botChannel = await getBotChannel(message.guild);
-    botChannel.send(
-      `Sorry ${message.author}! I can't get your record right now`
-    );
+    botChannel.send(`Sorry ${message.author}! I can't get your record right now`);
   }
 };
 
 module.exports = {
-  name: "level",
-  category: "info",
-  description: "returns the users experience.",
-  aliases: ["xp"],
+  name: 'level',
+  category: 'info',
+  description: 'returns the users experience.',
+  aliases: ['xp'],
   run: level
 };

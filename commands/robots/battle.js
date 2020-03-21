@@ -1,5 +1,5 @@
-const { simulateFight } = require("../../services/robotService");
-const { getBotChannel } = require("../../helpers");
+const { simulateFight } = require('../../services/robotService');
+const { getBotChannel } = require('../../helpers');
 
 const battle = async (client, message, args, userRecord) => {
   try {
@@ -13,7 +13,7 @@ const battle = async (client, message, args, userRecord) => {
     // All logic is handle within the robot service
     await simulateFight(message, userRecord);
   } catch (error) {
-    console.error("Error with fight: ", error);
+    console.error('Error with fight: ', error);
     const botChannel = await getBotChannel(message.guild);
     const { author } = message;
     botChannel.send(
@@ -23,11 +23,11 @@ const battle = async (client, message, args, userRecord) => {
 };
 
 module.exports = {
-  name: "battle",
-  category: "robots",
-  description: "send your robot to battle another",
-  aliases: ["fight", "duel"],
-  usage: "[mention]",
-  example: "arnie battle @user",
+  name: 'battle',
+  category: 'robots',
+  description: 'send your robot to battle another',
+  aliases: ['fight', 'duel'],
+  usage: '[mention]',
+  example: 'arnie battle @user',
   run: battle
 };
