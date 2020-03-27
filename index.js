@@ -1,15 +1,15 @@
-require("dotenv").config();
-const fs = require("fs");
-const { Client, Collection } = require("discord.js");
+require('dotenv').config();
+const fs = require('fs');
+const { Client, Collection } = require('discord.js');
 
-const { initializeDb } = require("./database/dbConfig");
-const scheduledTasks = require("./tasks");
+const { initializeDb } = require('./database/dbConfig');
+const scheduledTasks = require('./tasks');
 
 const initializeBot = async () => {
   await initializeDb();
 
   // Initialize system files
-  fs.readdir("./system/", (err, files) => {
+  fs.promises.readdir('./system/', (err, files) => {
     files.forEach(file => {
       require(`./system/${file}`)(client);
     });
@@ -18,13 +18,13 @@ const initializeBot = async () => {
   const client = new Client();
   client.commands = new Collection();
   client.aliases = new Collection();
-  client.categories = fs.readdirSync("./commands/");
+  client.categories = fs.readdirSync('./commands/');
 
   // Initialize event handlers
-  fs.readdir("./events/", (err, files) => {
+  fs.promises.readdir('./events/', (err, files) => {
     files.forEach(file => {
       const handler = require(`./events/${file}`);
-      const event = file.split(".")[0];
+      const event = file.split('.')[0];
       client.on(event, arg => handler(client, arg));
     });
   });

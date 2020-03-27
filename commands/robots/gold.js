@@ -1,6 +1,6 @@
-const { getBotChannel } = require("../../helpers");
+const { getBotChannel } = require('../../helpers');
 
-const showCurrency = async (client, message, args, userRecord) => {
+const showGold = async (client, message, args, userRecord) => {
   try {
     const { author, channel } = message;
     const botChannel = await getBotChannel(message.guild);
@@ -19,9 +19,9 @@ const showCurrency = async (client, message, args, userRecord) => {
 };
 
 module.exports = {
-  name: "currency",
-  category: "robots",
-  description: "returns the users gold",
-  aliases: ["gold", "cheddar", "bank"],
-  run: showCurrency
+  name: 'currency',
+  category: 'robots',
+  description: 'returns the users gold',
+  aliases: ['dosh', 'money'],
+  run: showGold
 };

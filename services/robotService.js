@@ -1,20 +1,19 @@
-const { RichEmbed } = require("discord.js");
-const { stripIndents } = require("common-tags");
+const { RichEmbed } = require('discord.js');
+const { stripIndents } = require('common-tags');
 const {
   randomNumber,
   getBotChannel,
   getMember,
   asyncForEach,
   timeout,
-  getUserRobot,
-  getUserDatabaseRecord
-} = require("../helpers");
+  getUserRobot
+} = require('../helpers');
 
-const User = require("../database/models/userModel");
-const Robot = require("../database/models/robotModel");
-const ShopItem = require("../database/models/shopItemModel");
+const User = require('../database/models/userModel');
+const Robot = require('../database/models/robotModel');
+const ShopItem = require('../database/models/shopItemModel');
 
-const shopItemDocuments = require("../constants/shopItems");
+const shopItemDocuments = require('../constants/shopItems');
 
 // Store the current items in memory for speed
 let currentStock = [];
@@ -29,12 +28,12 @@ const getStatCard = async (message, args, userRecord) => {
     const { robot: userRobot } = userRecord;
 
     const embed = new RichEmbed()
-      .setColor("RANDOM")
+      .setColor('RANDOM')
       .setThumbnail(member.user.displayAvatarURL)
       .setTitle(`${member.displayName}'s Robot`)
 
       .addField(
-        "Stats:",
+        'Stats:',
         stripIndents`**Hit points:** ${userRobot.hitPoints}
           **Damage:** ${userRobot.damage}
           **Wins:** ${userRobot.wins || 0}
@@ -44,6 +43,7 @@ const getStatCard = async (message, args, userRecord) => {
 
     return embed;
   } catch (error) {
+    console.error('Error getting robot stat card');
     throw error;
   }
 };
@@ -56,6 +56,7 @@ const incrementAllUserCurrency = async () => {
   try {
     await User.updateMany({}, { $inc: { currency: 20 } });
   } catch (error) {
+    console.error('Error incrementing all users gold: ', error);
     throw error;
   }
 };
@@ -68,9 +69,10 @@ const initializeShop = async message => {
   if (author.id === guild.owner.id && content === triggerMessage) {
     try {
       await ShopItem.insertMany(shopItemDocuments);
-      channel.send("The shop is open for business!");
+      channel.send('The shop is open for business!');
       await updateStock();
     } catch (error) {
+      console.error('Error inserting shop items into database: ', error);
       throw error;
     }
   }
@@ -93,14 +95,13 @@ const updateStock = async () => {
       return true;
     }
   } catch (error) {
+    console.error('Error updating stock stored in memory: ', error);
     throw error;
   }
 };
 
 const getStockCard = () => {
-  const embed = new RichEmbed()
-    .setColor("RANDOM")
-    .setTitle(`One Stop Robot Shop`);
+  const embed = new RichEmbed().setColor('RANDOM').setTitle(`One Stop Robot Shop`);
 
   currentStock.forEach((item, idx) => {
     embed.addField(
@@ -132,6 +133,7 @@ const purchaseItem = async (userRecord, itemNumber) => {
     }
     return false;
   } catch (error) {
+    console.error('Error purchasing item: ', error);
     throw error;
   }
 };
@@ -171,7 +173,7 @@ const simulateFight = async (message, userRecord) => {
     if (opponent.user.bot)
       return message.reply("you are not ready to face my wrath...");
 
-    if (!opponent) return message.reply("who do you want to challenge?");
+    if (!opponent) return message.reply('who do you want to challenge?');
 
     if (opponent.id === author.id)
       return message.reply("play with yourself in your own time!");
@@ -248,9 +250,9 @@ const simulateFight = async (message, userRecord) => {
 
     // After everything create embed card with results
     const embed = new RichEmbed()
-      .setColor("RANDOM")
+      .setColor('RANDOM')
       .setTitle(`${message.member.displayName} VS ${opponent.displayName}`)
-      .addField("Winner:", stripIndents`${winner}`, false)
+      .addField('Winner:', stripIndents`${winner}`, false)
       .addField(
         `${message.member.displayName} Damage Dealt:`,
         stripIndents`${authorDmg}`,
@@ -280,6 +282,7 @@ const simulateFight = async (message, userRecord) => {
       $inc: { currency: authorWon ? 500 : 400 }
     });
   } catch (error) {
+    console.error('Error simulating fight: ', error);
     throw error;
   }
 };
@@ -307,7 +310,7 @@ const getHitMessage = (user, opponent, message) => {
     `GET OVER HERE! ${uName} reels ${oName} in and hits em with an uppercut.`,
     `WAAAHHHHHHHH!! ${oName} is now on ${oHp} hit points`
   ];
-  const rand = randomNumber(0, hit.length);
+  const rand = randomNumber(0, hit.length - 1);
   return hit[rand];
 };
 
@@ -326,14 +329,13 @@ const getMissMessage = (user, opponent, message) => {
     `${uName} attack catches nothing but air...`,
     `${uName} is caught with their pants down and misses`
   ];
-  const rand = randomNumber(0, miss.length);
+  const rand = randomNumber(0, miss.length - 1);
   return miss[rand];
 };
 
 const getVictoryMessage = (user, opponent, message) => {
   const uName = getMember(message, user.userId);
   const oName = getMember(message, opponent.userId);
-  const uDmg = user.damage;
   const victory = [
     `${uName} crushes ${oName} with a powerful blow and claims the VICTORY!`,
     `${oName} takes the L! ${uName} is the WINNER!!!`,
@@ -345,23 +347,14 @@ const getVictoryMessage = (user, opponent, message) => {
     `What a mess! Someones gonna need to put ${oName} back together.... ${uName} wins!`,
     `${oName} disintegrates after being blasted by a nuke! ${uName} conqueror!`
   ];
-  return victory[randomNumber(0, victory.length)];
+  return victory[randomNumber(0, victory.length - 1)];
 };
 
 const resetHasFoughtFlags = async () => {
   try {
     await Robot.updateMany({}, { hasFought: false });
   } catch (error) {
-    throw error;
-  }
-};
-
-const resetUserRobotHealth = async userId => {
-  try {
-    await Robot.findOneAndUpdate({ userId }, [
-      { $set: { currentHp: "$hitPoints" } }
-    ]);
-  } catch (error) {
+    console.error('Error reseting daily hasFought flags: ', error);
     throw error;
   }
 };
@@ -375,6 +368,5 @@ module.exports = {
   getStockCard,
   purchaseItem,
   simulateFight,
-  resetHasFoughtFlags,
-  resetUserRobotHealth
+  resetHasFoughtFlags
 };

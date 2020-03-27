@@ -1,30 +1,30 @@
 const { timeout } = require('../../helpers');
 
-const mute = async (client, message, args) => {
+const mute = async (client, message) => {
   const { deletable, guild, mentions, channel, author } = message;
 
   if (deletable) message.delete();
 
   const toMute = mentions.members.first();
   if (!toMute)
-    return message.reply("you must specify a member").then(m => m.delete(5000));
+    return message.reply('you must specify a member').then(m => m.delete(5000));
 
   if (author.id === toMute.id)
-    return message.reply("why would you want to mute yourself?");
+    return message.reply('why would you want to mute yourself?');
 
   if (author.id !== guild.owner.id)
     return message.reply("you don't have permissions to mute members.");
 
-  let mutedRole = guild.roles.find(r => r.name === "MUTED");
+  let mutedRole = guild.roles.find(r => r.name === 'MUTED');
   if (!mutedRole) {
     try {
       mutedRole = await guild.createRole({
-        name: "MUTED",
+        name: 'MUTED',
         permissions: [],
         position: 999
       });
-      message.guild.channels.forEach(async (channel, id) => {
-        const test = await channel.overwritePermissions(mutedRole, {
+      message.guild.channels.forEach(async channel => {
+        await channel.overwritePermissions(mutedRole, {
           SEND_MESSAGES: false,
           ADD_REACTIONS: false,
           SEND_TTS_MESSAGES: false,
@@ -33,12 +33,12 @@ const mute = async (client, message, args) => {
         });
       });
     } catch (error) {
-      console.error("Error creating mute role: ", error.stack);
+      console.error('Error creating mute role: ', error.stack);
     }
   }
 
   const alreadyHasRole = toMute.roles.has(mutedRole.id);
-  if (alreadyHasRole) return message.reply("that user is already muted!");
+  if (alreadyHasRole) return message.reply('that user is already muted!');
 
   try {
     // Add the role to the user
@@ -57,10 +57,10 @@ const mute = async (client, message, args) => {
 };
 
 module.exports = {
-  name: "mute",
-  category: "moderation",
-  aliases: ["m", "nospeak"],
-  description: "the bot temporarily mutes the user",
-  usage: "[mention]",
+  name: 'mute',
+  category: 'moderation',
+  aliases: ['m', 'nospeak'],
+  description: 'the bot temporarily mutes the user',
+  usage: '[mention]',
   run: mute
 };

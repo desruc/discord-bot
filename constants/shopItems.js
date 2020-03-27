@@ -70,21 +70,5 @@ module.exports = [
     minValue: 20,
     maxValue: 25,
     type: "damage"
-  },
-  {
-    name: 'Divine Rapier',
-    minCost: 9000000,
-    maxCost: 10000000,
-    minValue: 1000,
-    maxValue: 10000,
-    type: "damage"
-  },
-  {
-    name: 'Arnies Arm',
-    minCost: 9000000,
-    maxCost: 10000000,
-    minValue: 1000,
-    maxValue: 10000,
-    type: "hitPoints"
   }
 ];

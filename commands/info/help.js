@@ -1,8 +1,8 @@
-const { RichEmbed } = require("discord.js");
-const { stripIndents } = require("common-tags");
+const { RichEmbed } = require('discord.js');
+const { stripIndents } = require('common-tags');
 
 function getAll(client, message) {
-  const embed = new RichEmbed().setColor("RANDOM");
+  const embed = new RichEmbed().setColor('RANDOM');
 
   // Map all the commands
   // with the specific category
@@ -10,18 +10,16 @@ function getAll(client, message) {
     return client.commands
       .filter(cmd => cmd.category === category)
       .map(cmd => `- \`${cmd.name}\``)
-      .join("\n");
+      .join('\n');
   };
 
   // Map all the categories
   const info = client.categories
     .map(
       cat =>
-        stripIndents`**${cat[0].toUpperCase() + cat.slice(1)}** \n${commands(
-          cat
-        )}`
+        stripIndents`**${cat[0].toUpperCase() + cat.slice(1)}** \n${commands(cat)}`
     )
-    .reduce((string, category) => string + "\n" + category);
+    .reduce((string, category) => string + '\n' + category);
 
   return message.channel.send(embed.setDescription(info));
 }
@@ -38,14 +36,14 @@ function getCMD(client, message, input) {
 
   // If no cmd is found, send not found embed
   if (!cmd) {
-    return message.channel.send(embed.setColor("RED").setDescription(info));
+    return message.channel.send(embed.setColor('RED').setDescription(info));
   }
 
   // Add all cmd info to the embed
   if (cmd.name) info = `**Command name**: ${cmd.name}`;
   if (cmd.category) info += `\n**Category**: ${cmd.category}`;
   if (cmd.aliases)
-    info += `\n**Aliases**: ${cmd.aliases.map(a => `${a}`).join(", ")}`;
+    info += `\n**Aliases**: ${cmd.aliases.map(a => `${a}`).join(', ')}`;
   if (cmd.description) info += `\n**Description**: ${cmd.description}`;
   if (cmd.usage) {
     info += `\n**Usage**: ${cmd.usage}`;
@@ -55,7 +53,7 @@ function getCMD(client, message, input) {
     info += `\n**Example**: ${cmd.example}`;
   }
 
-  return message.channel.send(embed.setColor("GREEN").setDescription(info));
+  return message.channel.send(embed.setColor('GREEN').setDescription(info));
 }
 
 async function help(client, message, args) {
@@ -69,10 +67,10 @@ async function help(client, message, args) {
 }
 
 module.exports = {
-  name: "help",
-  aliases: ["h"],
-  category: "info",
-  description: "returns all commands, or one specific command info",
-  usage: "[command | alias]",
+  name: 'help',
+  aliases: ['h'],
+  category: 'info',
+  description: 'returns all commands, or one specific command info',
+  usage: '[command | alias]',
   run: help
 };
