@@ -169,9 +169,12 @@ const simulateFight = async (message, userRecord) => {
     const opponent = mentions.members.first();
 
     if (opponent.user.bot)
-      return message.reply(", you are not ready to face my wrath...");
+      return message.reply("you are not ready to face my wrath...");
 
     if (!opponent) return message.reply("who do you want to challenge?");
+
+    if (opponent.id === author.id)
+      return message.reply("play with yourself in your own time!");
 
     const botChannel = await getBotChannel(guild);
 
@@ -180,9 +183,7 @@ const simulateFight = async (message, userRecord) => {
     const opponentRobot = await getUserRobot(opponent.id);
 
     if (authorRobot.hasFought)
-      return message.reply(
-        "you've already fought today..."
-      );
+      return message.reply("you've already fought today...");
 
     const msg = await botChannel.send(
       `LET'S GET READY TO RUMBLE! ${author} VS ${getMember(
