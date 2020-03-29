@@ -9,7 +9,7 @@ const initializeBot = async () => {
   await initializeDb();
 
   // Initialize system files
-  fs.promises.readdir('./system/', (err, files) => {
+  fs.readdir('./system/', (err, files) => {
     files.forEach(file => {
       require(`./system/${file}`)(client);
     });
@@ -21,7 +21,7 @@ const initializeBot = async () => {
   client.categories = fs.readdirSync('./commands/');
 
   // Initialize event handlers
-  fs.promises.readdir('./events/', (err, files) => {
+  fs.readdir('./events/', (err, files) => {
     files.forEach(file => {
       const handler = require(`./events/${file}`);
       const event = file.split('.')[0];
