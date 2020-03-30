@@ -1,4 +1,4 @@
-const { Schema, model } = require("mongoose");
+const { Schema, model } = require('mongoose');
 
 // Remove the mongo ID and version key when returning JSON
 const removeIdAndVersion = (doc, ret) => {
@@ -10,9 +10,9 @@ const userModel = new Schema(
   {
     userId: { type: String, unique: true },
     experience: { type: Number, default: 0 },
-    memesRequested: { type: Number, default: 0 },
     currency: { type: Number, default: 0 },
-    robot: { type: Schema.Types.ObjectId, ref: "Robot", default: null }
+    robot: { type: Schema.Types.ObjectId, ref: 'Robot', default: null },
+    cooldowns: [{ command: { type: String }, timestamp: { type: String } }]
   },
   {
     toJSON: {
@@ -22,7 +22,7 @@ const userModel = new Schema(
 );
 
 userModel.pre(/^find/, function() {
-  this.populate("robot");
+  this.populate('robot');
 });
 
-module.exports = model("User", userModel);
+module.exports = model('User', userModel);

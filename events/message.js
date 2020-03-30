@@ -1,9 +1,14 @@
-const { getUserDatabaseRecord } = require("../helpers");
+const {
+  getUserDatabaseRecord,
+  checkCooldown,
+  updateCooldown,
+  msToString
+} = require('../helpers');
 const {
   initializeLevelRoles,
   incrementExperience
-} = require("../services/levelingService");
-const { initializeShop } = require("../services/robotService");
+} = require('../services/levelingService');
+const { initializeShop } = require('../services/robotService');
 
 module.exports = async (client, message) => {
   const prefix = process.env.BOT_PREFIX;
@@ -20,7 +25,7 @@ module.exports = async (client, message) => {
 
   const userRecord = await getUserDatabaseRecord(message.author.id);
 
-  if (message.channel.name !== "modz") {
+  if (message.channel.name !== 'modz') {
     incrementExperience(message, userRecord);
   }
 
@@ -37,6 +42,12 @@ module.exports = async (client, message) => {
 
   let command = client.commands.get(cmd);
   if (!command) command = client.commands.get(client.aliases.get(cmd));
+
+  // Check if the command is cooldown before execution
+  const { onCooldown, timeRemaining } = await checkCooldown(userRecord, command);
+  if (onCooldown)
+    return message.reply(`you'll have to wait another ${msToString(timeRemaining)}.`);
+  else updateCooldown(userRecord, command);
 
   if (command) command.run(client, message, args, userRecord);
 };

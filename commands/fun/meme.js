@@ -35,5 +35,6 @@ module.exports = {
   name: 'meme',
   category: 'fun',
   description: 'returns a random meme from /r/dankmemes',
+  cooldown: 60 * 60 * 1000,
   run: meme
 };
