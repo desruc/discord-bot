@@ -1,6 +1,6 @@
 const schedule = require('node-schedule');
 
-const { morningMeme, clearUsersRequestedMeme } = require('../services/memeService');
+const { morningMeme } = require('../services/memeService');
 const {
   incrementAllUserCurrency,
   updateStock,
@@ -11,15 +11,6 @@ module.exports = client => {
   // Post a meme to the channel at 8.30 every morning
   schedule.scheduleJob('30 8 * * *', function() {
     morningMeme(client);
-  });
-
-  // Clear the usersRequestedMeme record daily at 1am - only two memes per day
-  schedule.scheduleJob('* 1 * * *', async function() {
-    try {
-      await clearUsersRequestedMeme();
-    } catch (error) {
-      console.error('Error clearing user meme requested: ', error);
-    }
   });
 
   // Increment all users currency by 10 every hour
