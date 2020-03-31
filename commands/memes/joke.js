@@ -22,7 +22,8 @@ const joke = async (client, message) => {
 module.exports = {
   name: 'joke',
   aliases: ['pun'],
-  category: 'fun',
-  description: 'returns a random joke.',
+  category: 'memes',
+  description: 'Dad jokes are fun...',
+  cooldown: 10000,
   run: joke
 };
