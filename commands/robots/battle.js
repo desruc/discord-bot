@@ -28,6 +28,9 @@ module.exports = {
   description: 'send your robot to battle another',
   aliases: ['fight', 'duel'],
   usage: '[mention]',
+  cooldown: 180 * 60 * 1000,
+  cooldownMessage: 'your robots still being patched up...',
+  showCooldown: true,
   example: 'arnie battle @user',
   run: battle
 };

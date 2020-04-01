@@ -184,9 +184,6 @@ const simulateFight = async (message, userRecord) => {
     const authorRobot = await getUserRobot(author.id);
     const opponentRobot = await getUserRobot(opponent.id);
 
-    if (authorRobot.hasFought)
-      return message.reply("you've already fought today...");
-
     const msg = await botChannel.send(
       `LET'S GET READY TO RUMBLE! ${author} VS ${getMember(
         message,
@@ -214,8 +211,7 @@ const simulateFight = async (message, userRecord) => {
       if (authorTurn.winner) {
         winner = author;
         await authorRobot.updateOne({
-          $inc: { wins: 1 },
-          $set: { hasFought: true }
+          $inc: { wins: 1 }
         });
         await opponentRobot.updateOne({
           $inc: { losses: 1 }
@@ -235,8 +231,7 @@ const simulateFight = async (message, userRecord) => {
           $inc: { wins: 1 }
         });
         await authorRobot.updateOne({
-          $inc: { losses: 1 },
-          $set: { hasFought: true }
+          $inc: { losses: 1 }
         });
         break;
       }
@@ -350,15 +345,6 @@ const getVictoryMessage = (user, opponent, message) => {
   return victory[randomNumber(0, victory.length - 1)];
 };
 
-const resetHasFoughtFlags = async () => {
-  try {
-    await Robot.updateMany({}, { hasFought: false });
-  } catch (error) {
-    console.error('Error reseting daily hasFought flags: ', error);
-    throw error;
-  }
-};
-
 module.exports = {
   incrementAllUserCurrency,
   getStatCard,
@@ -367,6 +353,5 @@ module.exports = {
   getStock,
   getStockCard,
   purchaseItem,
-  simulateFight,
-  resetHasFoughtFlags
+  simulateFight
 };
