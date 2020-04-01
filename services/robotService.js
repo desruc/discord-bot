@@ -9,9 +9,9 @@ const {
   getUserRobot
 } = require('../helpers');
 
-const User = require('../database/models/userModel');
-const Robot = require('../database/models/robotModel');
-const ShopItem = require('../database/models/shopItemModel');
+const User = require('../models/userModel');
+const Robot = require('../models/robotModel');
+const ShopItem = require('../models/shopItemModel');
 
 const shopItemDocuments = require('../constants/shopItems');
 

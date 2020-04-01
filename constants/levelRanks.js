@@ -15,8 +15,18 @@ module.exports = [
     color: "#14d6e0"
   },
   {
-    name: "Fancy Nancy",
+    name: 'Keyboard Warrior',
     level: 30,
+    color: '#b00000'
+  },
+  {
+    name: 'Meme Farmer',
+    level: 40,
+    color: '#f2ec35'
+  },
+  {
+    name: "Social Butterfly",
+    level: 50,
     color: "#d142f5"
   }
 ];

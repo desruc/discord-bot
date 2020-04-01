@@ -1,6 +1,6 @@
 const levelRoles = require('../constants/levelRanks');
 const { asyncForEach } = require('../helpers');
-const User = require('../database/models/userModel');
+const User = require('../models/userModel');
 
 // Create the roles on the server
 const initializeLevelRoles = async message => {

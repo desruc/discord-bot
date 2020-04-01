@@ -1,6 +1,6 @@
 const moment = require('moment');
-const User = require('./database/models/userModel');
-const Robot = require('./database/models/robotModel');
+const User = require('./models/userModel');
+const Robot = require('./models/robotModel');
 
 const talkedRecently = new Set();
 
