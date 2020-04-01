@@ -1,5 +1,6 @@
 const {
   getUserDatabaseRecord,
+  getTalkedRecently,
   checkCooldown,
   updateCooldown,
   msToString
@@ -29,7 +30,7 @@ module.exports = async (client, message) => {
     incrementExperience(message, userRecord);
   }
 
-  // If the message doesn't start with the prefix, return
+  // No prefix - end process
   if (message.content.toLowerCase().indexOf(prefix) !== 0) return;
 
   const args = message.content
@@ -38,16 +39,32 @@ module.exports = async (client, message) => {
     .split(/ +/g);
   const cmd = args.shift().toLowerCase();
 
+  // No command - end process
   if (cmd.length === 0) return;
 
+  // Get the command by name or alias
   let command = client.commands.get(cmd);
   if (!command) command = client.commands.get(client.aliases.get(cmd));
 
-  // Check if the command is cooldown before execution
-  const { onCooldown, timeRemaining } = await checkCooldown(userRecord, command);
-  if (onCooldown)
-    return message.reply(`you'll have to wait another ${msToString(timeRemaining)}.`);
-  else updateCooldown(userRecord, command);
+  if (command) {
+    // Immediate two and a half second cooldown to stop spam before database actions
+    const talkedRecently = getTalkedRecently();
+    if (talkedRecently.has(message.author.id))
+      return message.reply(
+        "I'm still working on your last request. Wait a second then try again."
+      );
+    talkedRecently.add(message.author.id);
+    setTimeout(() => talkedRecently.delete(message.author.id), 2500);
 
-  if (command) command.run(client, message, args, userRecord);
+    // Check if the command is on cooldown in the database before execution
+    const { onCooldown, timeRemaining } = await checkCooldown(userRecord, command);
+    if (onCooldown)
+      return message.reply(
+        `you'll have to wait another ${msToString(timeRemaining)}.`
+      );
+    else await updateCooldown(userRecord, command);
+
+    // Execute the command
+    command.run(client, message, args, userRecord);
+  }
 };
