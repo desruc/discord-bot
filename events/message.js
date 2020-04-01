@@ -5,30 +5,19 @@ const {
   updateCooldown,
   getCooldownMessage
 } = require('../helpers');
-const {
-  initializeLevelRoles,
-  incrementExperience
-} = require('../services/levelingService');
-const { initializeShop } = require('../services/robotService');
+const { incrementExperience } = require('../services/levelingService');
 
 module.exports = async (client, message) => {
   const prefix = process.env.BOT_PREFIX;
+
   // If the author is a bot, return
   if (message.author.bot) return;
   // If the message was not sent in the server, return
   if (!message.guild) return;
 
-  // Leveling system
-  await initializeLevelRoles(message);
-
-  // Robot system
-  await initializeShop(message);
-
+  // Grab the users database entry for comamnds and experience
   const userRecord = await getUserDatabaseRecord(message.author.id);
-
-  if (message.channel.name !== 'modz') {
-    incrementExperience(message, userRecord);
-  }
+  incrementExperience(message, userRecord);
 
   // No prefix - end process
   if (message.content.toLowerCase().indexOf(prefix) !== 0) return;

@@ -61,20 +61,13 @@ const incrementAllUserCurrency = async () => {
   }
 };
 
-const initializeShop = async message => {
-  const { guild, channel, author, content } = message;
-
-  const triggerMessage = `${process.env.BOT_PREFIX} initialize shop`;
-
-  if (author.id === guild.owner.id && content === triggerMessage) {
-    try {
-      await ShopItem.insertMany(shopItemDocuments);
-      channel.send('The shop is open for business!');
-      await updateStock();
-    } catch (error) {
-      console.error('Error inserting shop items into database: ', error);
-      throw error;
-    }
+const initializeShopDatabase = async () => {
+  try {
+    await ShopItem.insertMany(shopItemDocuments);
+    await updateStock();
+  } catch (error) {
+    console.error('Error inserting shop items into database: ', error);
+    throw error;
   }
 };
 
@@ -171,12 +164,12 @@ const simulateFight = async (message, userRecord) => {
     const opponent = mentions.members.first();
 
     if (opponent.user.bot)
-      return message.reply("you are not ready to face my wrath...");
+      return message.reply('you are not ready to face my wrath...');
 
     if (!opponent) return message.reply('who do you want to challenge?');
 
     if (opponent.id === author.id)
-      return message.reply("play with yourself in your own time!");
+      return message.reply('play with yourself in your own time!');
 
     const botChannel = await getBotChannel(guild);
 
@@ -348,7 +341,7 @@ const getVictoryMessage = (user, opponent, message) => {
 module.exports = {
   incrementAllUserCurrency,
   getStatCard,
-  initializeShop,
+  initializeShopDatabase,
   updateStock,
   getStock,
   getStockCard,

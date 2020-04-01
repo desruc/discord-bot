@@ -4,38 +4,21 @@ const User = require('../models/userModel');
 
 // Create the roles on the server
 const initializeLevelRoles = async message => {
-  const { guild, channel, author, content } = message;
+  const { guild } = message;
 
-  const triggerMessage = `${process.env.BOT_PREFIX} initialize leveling system`;
-
-  const numOfRanks = levelRoles.length;
-  let rolesInitialized = 0;
-
-  if (author.id === guild.owner.id && content === triggerMessage) {
-    await asyncForEach(levelRoles, async ({ name, color, level }) => {
-      try {
-        await guild.createRole({
-          name,
-          color,
-          position: level,
-          hoist: true
-        });
-        rolesInitialized += 1;
-        console.info(`Successfully created the '${name}' role!`);
-      } catch (error) {
-        console.info(`There was an error creating the '${name}' role`);
-      }
-    });
-
-    if (rolesInitialized === numOfRanks) {
-      channel.send(
-        'The leveling system has been initialized - let the games begin!'
-      );
-    } else
-      channel.send(
-        "Something might have gone wrong -I couldn't initialize all of the ranks..."
-      );
-  }
+  await asyncForEach(levelRoles, async ({ name, color, level }) => {
+    try {
+      await guild.createRole({
+        name,
+        color,
+        position: level,
+        hoist: true
+      });
+      console.info(`Successfully created the '${name}' role!`);
+    } catch (error) {
+      console.info(`There was an error creating the '${name}' role`);
+    }
+  });
 };
 
 const calculateExperience = message => {
@@ -101,22 +84,24 @@ const updateRole = async (message, userExperience) => {
 };
 
 const incrementExperience = async (message, userRecord) => {
-  try {
-    const { experience: currentExperience } = userRecord;
+  if (message.channel.name !== process.env.MOD_CHANNEL) {
+    try {
+      const { experience: currentExperience } = userRecord;
 
-    // Update their record with experience gained
-    const experienceGained = calculateExperience(message);
-    const updatedExperience = currentExperience + experienceGained;
-    await userRecord.updateOne({
-      experience: updatedExperience
-    });
+      // Update their record with experience gained
+      const experienceGained = calculateExperience(message);
+      const updatedExperience = currentExperience + experienceGained;
+      await userRecord.updateOne({
+        experience: updatedExperience
+      });
 
-    // Check and update their role
-    await updateRole(message, updatedExperience);
-  } catch (error) {
-    message.channel.send(
-      `Sorry ${message.author}, there was a problem incrementing your experience`
-    );
+      // Check and update their role
+      await updateRole(message, updatedExperience);
+    } catch (error) {
+      message.channel.send(
+        `Sorry ${message.author}, there was a problem incrementing your experience`
+      );
+    }
   }
 };
 
