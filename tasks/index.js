@@ -3,8 +3,7 @@ const schedule = require('node-schedule');
 const { morningMeme } = require('../services/memeService');
 const {
   incrementAllUserCurrency,
-  updateStock,
-  resetHasFoughtFlags
+  updateStock
 } = require('../services/robotService');
 
 module.exports = client => {
@@ -28,15 +27,6 @@ module.exports = client => {
       await updateStock();
     } catch (error) {
       console.error('Error updating stock: ', error);
-    }
-  });
-
-  // Reset hasFought tags every day
-  schedule.scheduleJob('* 2 * * *', async function() {
-    try {
-      await resetHasFoughtFlags();
-    } catch (error) {
-      console.error('Error reset current hp: ', error);
     }
   });
 };

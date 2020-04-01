@@ -18,7 +18,7 @@ module.exports = {
   name: 'wholesome',
   category: 'memes',
   aliases: ['wholesomememe'],
-  description: 'enjoy a meme you can feel good laughing at...',
+  description: 'enjoy a wholesome meme that you can feel good laughing at...',
   cooldown: 60 * 60 * 1000,
   run: wholesome
 };

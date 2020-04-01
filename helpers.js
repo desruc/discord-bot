@@ -2,6 +2,10 @@ const moment = require('moment');
 const User = require('./database/models/userModel');
 const Robot = require('./database/models/robotModel');
 
+const talkedRecently = new Set();
+
+const getTalkedRecently = () => talkedRecently;
+
 const getMember = (message, toFind = '') => {
   toFind = toFind.toLowerCase();
 
@@ -169,6 +173,15 @@ const msToString = ms => {
   return `${seconds} seconds`;
 };
 
+const getCooldownMessage = (command, ms) => {
+  const timeRemaining = msToString(ms);
+  let message = `you'll have to wait another ${timeRemaining} before using that command.`;
+  if (command.cooldownMessage) message = command.cooldownMessage;
+  if (command.cooldownMessage && command.showCooldown)
+    message = `${command.cooldownMessage} (${timeRemaining} remaining)`;
+  return message;
+};
+
 module.exports = {
   getMember,
   formatDate,
@@ -182,5 +195,7 @@ module.exports = {
   getBaseChannel,
   checkCooldown,
   updateCooldown,
-  msToString
+  msToString,
+  getCooldownMessage,
+  getTalkedRecently
 };

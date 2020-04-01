@@ -16,7 +16,7 @@ module.exports = {
   name: 'economy',
   category: 'memes',
   aliases: ['memeeconomy', 'memee'],
-  description: '',
+  description: 'See what memes are worth investing in',
   cooldown: 60 * 60 * 1000,
   run: economy
 };

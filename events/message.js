@@ -3,7 +3,7 @@ const {
   getTalkedRecently,
   checkCooldown,
   updateCooldown,
-  msToString
+  getCooldownMessage
 } = require('../helpers');
 const {
   initializeLevelRoles,
@@ -58,10 +58,7 @@ module.exports = async (client, message) => {
 
     // Check if the command is on cooldown in the database before execution
     const { onCooldown, timeRemaining } = await checkCooldown(userRecord, command);
-    if (onCooldown)
-      return message.reply(
-        `you'll have to wait another ${msToString(timeRemaining)}.`
-      );
+    if (onCooldown) return message.reply(getCooldownMessage(command, timeRemaining));
     else await updateCooldown(userRecord, command);
 
     // Execute the command

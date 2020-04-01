@@ -23,7 +23,7 @@ module.exports = {
   name: 'joke',
   aliases: ['pun'],
   category: 'memes',
-  description: 'Dad jokes are fun...',
+  description: 'Dad jokes are fun!',
   cooldown: 10000,
   run: joke
 };
