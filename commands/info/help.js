@@ -22,7 +22,12 @@ function getAll(client, message) {
     )
     .reduce((string, category) => string + '\n' + category);
 
-  return message.channel.send(embed.setDescription(info));
+  embed.setDescription(info);
+  embed.setFooter(
+    `💡 use '${process.env.BOT_PREFIX} help COMMAND' for more information on a command!`
+  );
+
+  return message.channel.send(embed);
 }
 
 function getCMD(client, message, input) {
