@@ -54,7 +54,15 @@ const getUserDatabaseRecord = async userId => {
   }
 };
 
+const getRichestUsers = async () => {
+  const result = await User.find({})
+    .sort({ currency: -1 })
+    .limit(5);
+  return result;
+};
+
 module.exports = {
   getUserRobot,
-  getUserDatabaseRecord
+  getUserDatabaseRecord,
+  getRichestUsers
 };
