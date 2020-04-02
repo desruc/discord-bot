@@ -1,5 +1,5 @@
 const { getBotChannel, getMember } = require('../../utils/helpers');
-const { getRichestUsers } = require('../../utils/databaseHelpers');
+const { getRichestUsers } = require('../../services/currencyService');
 
 const { RichEmbed } = require('discord.js');
 const { stripIndents } = require('common-tags');

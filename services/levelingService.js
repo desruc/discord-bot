@@ -113,6 +113,8 @@ const getRankInfoCard = () => {
     );
   });
 
+  embed.setColor('RANDOM');
+
   return embed;
 };
 
