@@ -20,8 +20,18 @@ const grantDailyGold = async (userRecord, streak, amount) => {
   return result;
 };
 
+const transferFunds = async (userRecord, recipient, amount) => {
+  const userResult = await userRecord.updateOne({ $inc: { currency: -amount } });
+  const recipientResult = await User.findOneAndUpdate(
+    { userId: recipient.id },
+    { $inc: { currency: amount } }
+  );
+  return { userResult, recipientResult };
+};
+
 module.exports = {
   getRichestUsers,
   updateCurrency,
-  grantDailyGold
+  grantDailyGold,
+  transferFunds
 };

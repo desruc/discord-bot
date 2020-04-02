@@ -33,6 +33,7 @@ const streak = async (client, message, args, userRecord) => {
       );
     }
   } catch (error) {
+    console.error("streak -> error", error)
     const botChannel = await getBotChannel(message.guild);
     botChannel.send(`Damnnnn - there's a bug in the streak command.`);
   }
