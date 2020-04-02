@@ -12,7 +12,11 @@ const userModel = new Schema(
     experience: { type: Number, default: 0 },
     currency: { type: Number, default: 0 },
     robot: { type: Schema.Types.ObjectId, ref: 'Robot', default: null },
-    cooldowns: [{ command: { type: String }, timestamp: { type: String } }]
+    cooldowns: [{ command: { type: String }, timestamp: { type: String } }],
+    daily: {
+      streak: { type: Number, default: 0 },
+      timestamp: { type: String }
+    }
   },
   {
     toJSON: {

@@ -12,7 +12,16 @@ const updateCurrency = async (userRecord, amount) => {
   return result;
 };
 
+const grantDailyGold = async (userRecord, streak, amount) => {
+  const result = userRecord.updateOne({
+    $set: { 'daily.streak': streak, 'daily.timestamp': Date.now() },
+    $inc: { currency: amount }
+  });
+  return result;
+};
+
 module.exports = {
   getRichestUsers,
-  updateCurrency
+  updateCurrency,
+  grantDailyGold
 };
