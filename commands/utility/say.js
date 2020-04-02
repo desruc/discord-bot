@@ -21,7 +21,7 @@ const say = async (client, message, args) => {
 
 module.exports = {
   name: 'say',
-  category: 'moderation',
+  category: 'utility',
   description: 'the bot repeats the message and delete the original',
   run: say
 };

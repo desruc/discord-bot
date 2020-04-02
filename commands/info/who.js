@@ -1,6 +1,6 @@
 const { RichEmbed } = require("discord.js");
 const { stripIndents } = require("common-tags");
-const { getMember, formatDate } = require("../../helpers");
+const { getMember, formatDate } = require("../../utils/helpers");
 
 const who = async (client, message, args) => {
   const member = getMember(message, args.join(" "));

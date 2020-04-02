@@ -1,4 +1,4 @@
-const { getBotChannel, checkNumber, randomNumber } = require("../../helpers");
+const { getBotChannel, checkNumber, randomNumber } = require('../../utils/helpers');
 
 const gamble = async (client, message, args, userRecord) => {
   try {
@@ -14,9 +14,7 @@ const gamble = async (client, message, args, userRecord) => {
     const bet = Number(args[0]);
     const isValid = checkNumber(bet) && bet > 0;
     if (!isValid)
-      return botChannel.send(
-        `${author}, why are you like this? Enter a valid bet.`
-      );
+      return botChannel.send(`${author}, why are you like this? Enter a valid bet.`);
 
     // Check the user has money
     const hasMoney = currency >= bet;
@@ -41,9 +39,7 @@ const gamble = async (client, message, args, userRecord) => {
 
       if (Number(putItOn) === rand) {
         await userRecord.updateOne({ $inc: { currency: bet * 10 } });
-        return botChannel.send(
-          `Nicely done ${author}! You've won $${bet * 10}`
-        );
+        return botChannel.send(`Nicely done ${author}! You've won $${bet * 10}`);
       } else {
         await userRecord.updateOne({ $inc: { currency: -bet } });
         return botChannel.send(
@@ -52,12 +48,12 @@ const gamble = async (client, message, args, userRecord) => {
       }
     } else {
       // Odd or Even
-      const validString = putItOn === "odd" || putItOn === "even";
+      const validString = putItOn === 'odd' || putItOn === 'even';
       if (!validString)
         return botChannel.send(`${author} - come back when you're serious...`);
 
-      const evenSuccess = putItOn === "even" && rand % 2 === 0;
-      const oddSuccess = putItOn === "odd" && rand % 2 !== 0;
+      const evenSuccess = putItOn === 'even' && rand % 2 === 0;
+      const oddSuccess = putItOn === 'odd' && rand % 2 !== 0;
       if (evenSuccess || oddSuccess) {
         await userRecord.updateOne({ $inc: { currency: bet } });
         return botChannel.send(
@@ -69,7 +65,7 @@ const gamble = async (client, message, args, userRecord) => {
       }
     }
   } catch (error) {
-    console.log("gamble -> error", error);
+    console.log('gamble -> error', error);
     const { author } = message;
     const botChannel = await getBotChannel(message.guild);
     botChannel.send(`Sorry ${author}, the casino is closed for maintenance...`);
@@ -77,11 +73,11 @@ const gamble = async (client, message, args, userRecord) => {
 };
 
 module.exports = {
-  name: "gamble",
-  category: "robots",
+  name: 'gamble',
+  category: 'currency',
   description:
-    "gamble your currency for a chance to win big. takes two arguments, your bet and what you bet on (either odd/even or 1-10).",
-  aliases: ["bet"],
-  example: "[arnie bet 1000 even] OR [arnie bet 10 4]",
+    'gamble your currency for a chance to win big. takes two arguments, your bet and what you bet on (either odd/even or 1-10).',
+  aliases: ['bet'],
+  example: '[arnie bet 1000 even] OR [arnie bet 10 4]',
   run: gamble
 };

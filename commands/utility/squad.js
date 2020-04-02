@@ -15,7 +15,7 @@ const squad = async (client, message, args) => {
 
 module.exports = {
   name: 'squad',
-  category: 'fun',
+  category: 'utility',
   description: 'the bot will message the channel calling for action.',
   usage: '[game]',
   example: 'arnie squad Dota 2',

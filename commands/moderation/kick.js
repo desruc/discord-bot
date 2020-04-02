@@ -1,6 +1,7 @@
 const kick = async (client, message) => {
   const member = message.mentions.members.first();
 
+  // TODO
   if (!member) {
     return message.reply(`C'mon sissy! You didn't specify a user`);
   }

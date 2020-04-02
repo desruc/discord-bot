@@ -1,5 +1,5 @@
 const { purchaseItem } = require('../../services/robotService');
-const { getBotChannel } = require('../../helpers');
+const { getBotChannel } = require('../../utils/helpers');
 
 const buy = async (client, message, args, userRecord) => {
   try {
@@ -36,7 +36,7 @@ const buy = async (client, message, args, userRecord) => {
 
 module.exports = {
   name: 'buy',
-  category: 'robots',
+  category: 'currency',
   description: 'buy an item from the shop',
   aliases: ['purchase'],
   usage: '[number]',

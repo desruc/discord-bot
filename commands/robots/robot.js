@@ -1,16 +1,23 @@
 const { getStatCard } = require('../../services/robotService');
-const { getBotChannel } = require('../../helpers');
+const { getBotChannel, getMember } = require('../../utils/helpers');
+const { getUserDatabaseRecord } = require('../../utils/databaseHelpers');
 
 const robot = async (client, message, args, userRecord) => {
   try {
-    const { channel } = message;
+    const { channel, author } = message;
     const botChannel = await getBotChannel(message.guild);
 
     if (channel !== botChannel && message.deletable) {
       message.delete();
     }
 
-    const statCard = await getStatCard(message, args, userRecord);
+    const user = getMember(message, args.join(" "));
+
+    let record = userRecord;
+    const isAuthor = user.id === author.id;
+    if (!isAuthor) record = await getUserDatabaseRecord(user.id);
+
+    const statCard = await getStatCard(user, record);
     return botChannel.send(statCard);
   } catch (error) {
     console.error('Error getting robot stat card: ', error);
@@ -25,6 +32,7 @@ const robot = async (client, message, args, userRecord) => {
 module.exports = {
   name: 'robot',
   category: 'robots',
-  description: 'returns the users robot stat card',
+  description: 'check out your (or someone elses) robots stats',
+  usage: '[user | id | mention]',
   run: robot
 };

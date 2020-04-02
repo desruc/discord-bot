@@ -1,5 +1,5 @@
 const { simulateFight } = require('../../services/robotService');
-const { getBotChannel } = require('../../helpers');
+const { getBotChannel } = require('../../utils/helpers');
 
 const battle = async (client, message, args, userRecord) => {
   try {

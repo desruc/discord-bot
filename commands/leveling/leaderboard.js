@@ -2,7 +2,7 @@ const { RichEmbed } = require('discord.js');
 const { stripIndents } = require('common-tags');
 
 const { getLevelLeaderboard } = require('../../services/levelingService');
-const { getBotChannel, getMember } = require('../../helpers');
+const { getBotChannel, getMember } = require('../../utils/helpers');
 
 const leaderboard = async (client, message) => {
   try {

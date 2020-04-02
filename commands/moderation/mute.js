@@ -1,4 +1,4 @@
-const { timeout } = require('../../helpers');
+const { sleep } = require('../../utils/helpers');
 
 const mute = async (client, message) => {
   const { deletable, guild, mentions, channel, author } = message;
@@ -46,7 +46,7 @@ const mute = async (client, message) => {
     channel.send(`${toMute}, you've been muted for 5 minutes...`);
 
     // Remove the role after 5000
-    await timeout(300000);
+    await sleep(300000);
     await toMute.removeRole(mutedRole);
     channel.send(
       `Alright ${toMute}, you've been unmuted... I hope you've learnt your lesson.`

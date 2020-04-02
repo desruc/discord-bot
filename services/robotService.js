@@ -5,11 +5,11 @@ const {
   getBotChannel,
   getMember,
   asyncForEach,
-  timeout,
-  getUserRobot
-} = require('../helpers');
+  sleep
+} = require('../utils/helpers');
 
-const User = require('../models/userModel');
+const { getUserRobot } = require('../utils/databaseHelpers');
+
 const Robot = require('../models/robotModel');
 const ShopItem = require('../models/shopItemModel');
 
@@ -22,9 +22,8 @@ let currentStock = [];
  * GENERIC FUNCTIONS
  */
 
-const getStatCard = async (message, args, userRecord) => {
+const getStatCard = async (member, userRecord) => {
   try {
-    const { member } = message;
     const { robot: userRobot } = userRecord;
 
     const embed = new RichEmbed()
@@ -51,15 +50,6 @@ const getStatCard = async (message, args, userRecord) => {
 /*
  * SHOP FUNCTIONS
  */
-
-const incrementAllUserCurrency = async () => {
-  try {
-    await User.updateMany({}, { $inc: { currency: 20 } });
-  } catch (error) {
-    console.error('Error incrementing all users gold: ', error);
-    throw error;
-  }
-};
 
 const initializeShopDatabase = async () => {
   try {
@@ -183,7 +173,7 @@ const simulateFight = async (message, userRecord) => {
         opponentRobot.userId
       )}`
     );
-    await timeout(2000);
+    await sleep(2000);
 
     // Variables
     const fightMsgs = [];
@@ -233,7 +223,7 @@ const simulateFight = async (message, userRecord) => {
     // Loop through messages updating every couple of seconds.
     await asyncForEach(fightMsgs, async fm => {
       await msg.edit(fm);
-      await timeout(3000);
+      await sleep(3000);
     });
 
     // After everything create embed card with results
@@ -339,7 +329,6 @@ const getVictoryMessage = (user, opponent, message) => {
 };
 
 module.exports = {
-  incrementAllUserCurrency,
   getStatCard,
   initializeShopDatabase,
   updateStock,

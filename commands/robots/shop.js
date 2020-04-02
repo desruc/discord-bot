@@ -4,7 +4,7 @@ const {
   getStock
 } = require('../../services/robotService');
 
-const { getBotChannel } = require('../../helpers');
+const { getBotChannel } = require('../../utils/helpers');
 
 const shop = async (client, message) => {
   try {

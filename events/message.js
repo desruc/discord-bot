@@ -1,10 +1,12 @@
 const {
-  getUserDatabaseRecord,
   getTalkedRecently,
   checkCooldown,
   updateCooldown,
   getCooldownMessage
-} = require('../helpers');
+} = require('../utils/cooldownHelpers');
+
+const { getUserDatabaseRecord } = require('../utils/databaseHelpers');
+
 const { incrementExperience } = require('../services/levelingService');
 
 module.exports = async (client, message) => {

@@ -1,4 +1,4 @@
-const { checkNumber, randomNumber } = require('../../helpers');
+const { checkNumber, randomNumber } = require('../../utils/helpers');
 
 const roll = async (client, message, args) => {
   const { channel, member } = message;
@@ -14,7 +14,7 @@ const roll = async (client, message, args) => {
 
 module.exports = {
   name: 'roll',
-  category: 'fun',
+  category: 'utility',
   description:
     'returns a random number between 1 and 100 (or the number specified).',
   usage: '[number]',

@@ -1,7 +1,7 @@
 const axios = require('axios');
 const { RichEmbed } = require('discord.js');
 
-const { randomNumber, getBaseChannel } = require('../helpers');
+const { randomNumber, getBaseChannel } = require('../utils/helpers');
 const { memeMessages } = require('../constants/quotes');
 
 const getRedditMediaEmbed = async (sub, title = null) => {

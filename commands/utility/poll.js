@@ -14,7 +14,7 @@ const poll = async (client, message, args) => {
 
 module.exports = {
   name: 'poll',
-  category: 'fun',
+  category: 'utility',
   description: 'start a poll with the defined question',
   usage: '<question>',
   example: 'arnie poll are you having a good day?',

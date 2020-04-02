@@ -1,5 +1,6 @@
 const { getUserLevelInfo } = require('../../services/levelingService');
-const { getBotChannel, getMember, getUserDatabaseRecord } = require('../../helpers');
+const { getBotChannel, getMember } = require('../../utils/helpers');
+const { getUserDatabaseRecord } = require('../../utils/databaseHelpers');
 
 const level = async (client, message, args, userRecord) => {
   try {
@@ -10,7 +11,7 @@ const level = async (client, message, args, userRecord) => {
       message.delete();
     }
 
-    const user = getMember(message, args[0]);
+    const user = getMember(message, args.join(" "));
 
     let record = userRecord;
     const isAuthor = user.id === author.id;
