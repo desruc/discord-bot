@@ -1,3 +1,6 @@
+const { RichEmbed } = require('discord.js');
+
+const { stripIndents } = require('common-tags');
 const levelRoles = require('../constants/levelRanks');
 const { asyncForEach } = require('../utils/helpers');
 const User = require('../models/userModel');
@@ -83,6 +86,36 @@ const updateRole = async (message, userExperience) => {
   }
 };
 
+const getRankInfoCard = () => {
+  const embed = new RichEmbed();
+
+  const levels = [];
+  for (let i = 0; i < 51; i++) {
+    levels.push({ level: i, experience: expForLevel(i) });
+  }
+
+  const ranks = [];
+  levelRoles.forEach(({ level, name, emoji }) => {
+    ranks.push({
+      level,
+      name,
+      emoji,
+      experience: levels.find(l => l.level === level).experience
+    });
+  });
+
+  ranks.forEach(({ level, name, emoji, experience }) => {
+    embed.addField(
+      `** ${emoji} Level ${level} **`,
+      stripIndents`Rank: ${name}
+        Experience required: ${experience}`,
+      false
+    );
+  });
+
+  return embed;
+};
+
 const incrementExperience = async (message, userRecord) => {
   if (message.channel.name !== process.env.MOD_CHANNEL) {
     try {
@@ -136,5 +169,6 @@ module.exports = {
   incrementExperience,
   getUserLevelInfo,
   calculateLevel,
-  getLevelLeaderboard
+  getLevelLeaderboard,
+  getRankInfoCard
 };
