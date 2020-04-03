@@ -4,7 +4,7 @@ const { transferFunds } = require('../../services/currencyService');
 
 const steal = async (client, message) => {
   try {
-    const { author, channel, members } = message;
+    const { author, channel, mentions } = message;
     const botChannel = await getBotChannel(message.guild);
 
     if (channel !== botChannel && message.deletable) {
@@ -12,7 +12,7 @@ const steal = async (client, message) => {
     }
 
     const minGold = 500;
-    const target = members.first();
+    const target = mentions.members.first();
 
     if (!target)
       return botChannel.send(`${author}, you gotta mention someone to steal from!!`);

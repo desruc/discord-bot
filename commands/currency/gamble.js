@@ -11,7 +11,7 @@ const gamble = async (client, message, args, userRecord) => {
     }
 
     // Check if the supplied argument is valid
-    const bet = Number(args[0]);
+    const bet = Number(Math.floor(args[0]));
     const isValid = checkNumber(bet) && bet > 0;
     if (!isValid)
       return botChannel.send(`${author}, why are you like this? Enter a valid bet.`);
@@ -75,6 +75,7 @@ const gamble = async (client, message, args, userRecord) => {
 module.exports = {
   name: 'gamble',
   category: 'currency',
+  cooldown: 5000,
   description:
     'gamble your currency for a chance to win big. takes two arguments, your bet and what you bet on (either odd/even or 1-10).',
   aliases: ['bet'],

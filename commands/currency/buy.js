@@ -1,5 +1,5 @@
 const { purchaseItem } = require('../../services/robotService');
-const { getBotChannel } = require('../../utils/helpers');
+const { getBotChannel, checkNumber } = require('../../utils/helpers');
 
 const buy = async (client, message, args, userRecord) => {
   try {
@@ -11,14 +11,15 @@ const buy = async (client, message, args, userRecord) => {
     }
 
     const itemNumber = Number(args[0]);
+    const quantity = Number(args[1]) || 1;
 
-    if (isNaN(itemNumber) || !isFinite(itemNumber))
+    if (!checkNumber(itemNumber))
       return botChannel.send(`${author}, you didn't specify an item number.`);
 
     if (itemNumber > 4 || itemNumber < 1)
       return botChannel.send(`${author}... don't take me for a fool.`);
 
-    const purchased = await purchaseItem(userRecord, itemNumber);
+    const purchased = await purchaseItem(userRecord, itemNumber, quantity);
     if (!purchased)
       return botChannel.send(`${author}, are you sure you can afford that?`);
     return botChannel.send(

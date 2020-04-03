@@ -99,17 +99,20 @@ const getStockCard = () => {
   return embed;
 };
 
-const purchaseItem = async (userRecord, itemNumber) => {
+const purchaseItem = async (userRecord, itemNumber, quantity = 1) => {
   try {
     const { currency } = userRecord;
+
+    if (currentStock.length === 0) await updateStock();
+
     const item = currentStock[itemNumber - 1];
-    const itemPrice = Number(item.cost);
+    const itemPrice = Number(item.cost) * Number(quantity);
 
     if (currency >= itemPrice) {
       await userRecord.updateOne({ $inc: { currency: -itemPrice } });
       await Robot.findOneAndUpdate(
         { userId: userRecord.userId },
-        { $inc: { [item.type]: item.value } },
+        { $inc: { [item.type]: item.value * Number(quantity) } },
         { new: true }
       );
       return true;

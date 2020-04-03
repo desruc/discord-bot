@@ -19,8 +19,8 @@ const rich = async (client, message) => {
     const emoji = {
       1: '💰 The Don',
       2: '🤑 Second in Command',
-      3: '💳 Easy money',
-      4: '💲 Cashed up',
+      3: '💎 Charge it to the game',
+      4: '💅 Cashed up',
       5: '💸 Young entrepreneur'
     };
 

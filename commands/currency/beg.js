@@ -16,11 +16,11 @@ const beg = async (client, message, args, userRecord) => {
     if (success) {
       const amount = randomNumber(5000, 10000);
       await updateCurrency(userRecord, amount);
-      return botChannel.reply(
+      return botChannel.send(
         `You know what, ${author}? I'm feeling generous... here's $${amount}!`
       );
     } else {
-      return botChannel.reply(
+      return botChannel.send(
         'has it really come to this? begging for cash? get outta here!'
       );
     }

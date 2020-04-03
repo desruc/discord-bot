@@ -6,7 +6,7 @@ const setStatus = async (client, message, args) => {
     const game = args.join(' ');
 
     if (author.id === guild.owner.id || member.roles.has(modRole.id)) {
-      await client.user.setGame(game);
+      await client.user.setActivity(game);
     }
 
     return message.reply('my status has been updated.');
