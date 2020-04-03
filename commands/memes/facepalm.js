@@ -1,8 +1,10 @@
 const { getRedditMediaEmbed } = require('../../services/memeService');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
-const facepalm = async (client, message) => {
+const facepalm = async (client, message, args, userRecord) => {
   try {
     const { channel } = message;
+    await updateCooldown(userRecord, command);
     const msg = await channel.send('Okay hold plz!');
     const embed = await getRedditMediaEmbed('facepalm');
     msg.edit(embed);
@@ -14,10 +16,12 @@ const facepalm = async (client, message) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'facepalm',
   category: 'memes',
   description: 'Things that are so dumb, you have to facepalm',
   cooldown: 60 * 60 * 1000,
   run: facepalm
 };
+
+module.exports = command;

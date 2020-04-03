@@ -1,7 +1,6 @@
 const {
   getTalkedRecently,
   checkCooldown,
-  updateCooldown,
   getCooldownMessage
 } = require('../utils/cooldownHelpers');
 
@@ -50,7 +49,6 @@ module.exports = async (client, message) => {
     // Check if the command is on cooldown in the database before execution
     const { onCooldown, timeRemaining } = await checkCooldown(userRecord, command);
     if (onCooldown) return message.reply(getCooldownMessage(command, timeRemaining));
-    else await updateCooldown(userRecord, command);
 
     // Execute the command
     command.run(client, message, args, userRecord);

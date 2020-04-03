@@ -1,5 +1,6 @@
 const { randomNumber, getBotChannel } = require('../../utils/helpers');
 const { updateCurrency } = require('../../services/currencyService');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
 const beg = async (client, message, args, userRecord) => {
   try {
@@ -9,6 +10,8 @@ const beg = async (client, message, args, userRecord) => {
     if (channel !== botChannel && message.deletable) {
       message.delete();
     }
+
+    await updateCooldown(userRecord, command);
 
     const chance = randomNumber(1, 100);
 
@@ -32,7 +35,7 @@ const beg = async (client, message, args, userRecord) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'beg',
   category: 'currency',
   cooldown: 180 * 60 * 1000,
@@ -40,3 +43,5 @@ module.exports = {
   description: '... literally beg for cash',
   run: beg
 };
+
+module.exports = command;

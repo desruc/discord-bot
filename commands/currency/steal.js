@@ -1,8 +1,9 @@
 const { getBotChannel, randomNumber } = require('../../utils/helpers');
 const { getUserDatabaseRecord } = require('../../utils/databaseHelpers');
 const { transferFunds } = require('../../services/currencyService');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
-const steal = async (client, message) => {
+const steal = async (client, message, args, userRecord) => {
   try {
     const { author, channel, mentions } = message;
     const botChannel = await getBotChannel(message.guild);
@@ -29,6 +30,8 @@ const steal = async (client, message) => {
       return botChannel.send(
         `${author}... ${target} only has $${targetGold}. Let them get a bit more before we hit em where it hurts.`
       );
+
+    await updateCooldown(userRecord, command);
 
     const canSteal = randomNumber(1, 100);
     let stealAmount = 0;
@@ -58,7 +61,7 @@ const steal = async (client, message) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'steal',
   category: 'currency',
   aliases: ['rob'],
@@ -66,3 +69,5 @@ module.exports = {
   description: 'attempt to steal someones gold',
   run: steal
 };
+
+module.exports = command;

@@ -1,4 +1,5 @@
 const { getBotChannel, checkNumber, randomNumber } = require('../../utils/helpers');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
 const gamble = async (client, message, args, userRecord) => {
   try {
@@ -37,6 +38,8 @@ const gamble = async (client, message, args, userRecord) => {
           `${author}, You must choose a number between 1-10 or specify even or odd.`
         );
 
+      await updateCooldown(userRecord, command);
+
       if (Number(putItOn) === rand) {
         await userRecord.updateOne({ $inc: { currency: bet * 10 } });
         return botChannel.send(`Nicely done ${author}! You've won $${bet * 10}`);
@@ -51,6 +54,8 @@ const gamble = async (client, message, args, userRecord) => {
       const validString = putItOn === 'odd' || putItOn === 'even';
       if (!validString)
         return botChannel.send(`${author} - come back when you're serious...`);
+
+      await updateCooldown(userRecord, command);
 
       const evenSuccess = putItOn === 'even' && rand % 2 === 0;
       const oddSuccess = putItOn === 'odd' && rand % 2 !== 0;
@@ -72,7 +77,7 @@ const gamble = async (client, message, args, userRecord) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'gamble',
   category: 'currency',
   cooldown: 5000,
@@ -82,3 +87,5 @@ module.exports = {
   example: '[arnie bet 1000 even] OR [arnie bet 10 4]',
   run: gamble
 };
+
+module.exports = command;

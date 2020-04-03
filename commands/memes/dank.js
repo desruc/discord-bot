@@ -1,8 +1,10 @@
 const { getRedditMediaEmbed } = require('../../services/memeService');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
-const dank = async (client, message) => {
+const dank = async (client, message, args, userRecord) => {
   try {
     const { channel } = message;
+    await updateCooldown(userRecord, command);
     const msg = await channel.send("Alright lemme see what I've got...");
     const embed = await getRedditMediaEmbed('dankmemes');
     msg.edit(embed);
@@ -12,7 +14,7 @@ const dank = async (client, message) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'dank',
   category: 'memes',
   aliases: ['meme'],
@@ -20,3 +22,5 @@ module.exports = {
   cooldown: 60 * 60 * 1000,
   run: dank
 };
+
+module.exports = command;

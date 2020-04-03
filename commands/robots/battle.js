@@ -1,5 +1,6 @@
 const { simulateFight } = require('../../services/robotService');
 const { getBotChannel } = require('../../utils/helpers');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
 const battle = async (client, message, args, userRecord) => {
   try {
@@ -9,6 +10,8 @@ const battle = async (client, message, args, userRecord) => {
     if (channel !== botChannel && message.deletable) {
       message.delete();
     }
+
+    await updateCooldown(userRecord, command);
 
     // All logic is handle within the robot service
     await simulateFight(message, userRecord);
@@ -22,7 +25,7 @@ const battle = async (client, message, args, userRecord) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'battle',
   category: 'robots',
   description: 'send your robot to battle another',
@@ -34,3 +37,5 @@ module.exports = {
   example: 'arnie battle @user',
   run: battle
 };
+
+module.exports = command;

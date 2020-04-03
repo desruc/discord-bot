@@ -1,5 +1,6 @@
 const { getBotChannel } = require('../../utils/helpers');
 const { grantDailyGold } = require('../../services/currencyService');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
 const streak = async (client, message, args, userRecord) => {
   try {
@@ -9,6 +10,8 @@ const streak = async (client, message, args, userRecord) => {
     if (channel !== botChannel && message.deletable) {
       message.delete();
     }
+
+    await updateCooldown(userRecord, command);
 
     const {
       daily: { streak, timestamp }
@@ -39,7 +42,7 @@ const streak = async (client, message, args, userRecord) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'daily',
   category: 'currency',
   description: 'get a daily streak going and earn yourself some serious dough!',
@@ -47,3 +50,5 @@ module.exports = {
   aliases: ['quest'],
   run: streak
 };
+
+module.exports = command;

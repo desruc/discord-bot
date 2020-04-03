@@ -1,5 +1,6 @@
 const { getBotChannel, checkNumber } = require('../../utils/helpers');
 const { transferFunds } = require('../../services/currencyService');
+const { updateCooldown } = require('../../utils/cooldownHelpers');
 
 const share = async (client, message, args, userRecord) => {
   try {
@@ -33,6 +34,8 @@ const share = async (client, message, args, userRecord) => {
     if (recipient === author)
       return botChannel.send(`C'mon ${author}... you can't share with yourself...`);
 
+    await updateCooldown(userRecord, command);
+
     // Everything checks out - update the database records
     await transferFunds(author, recipient, shareAmount);
 
@@ -46,7 +49,7 @@ const share = async (client, message, args, userRecord) => {
   }
 };
 
-module.exports = {
+const command = {
   name: 'share',
   category: 'currency',
   description: 'gift someone some cash!',
@@ -56,3 +59,5 @@ module.exports = {
   aliases: ['give', 'donate'],
   run: share
 };
+
+module.exports = command;
