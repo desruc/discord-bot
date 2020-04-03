@@ -11,13 +11,16 @@ const initializeLevelRoles = async message => {
 
   await asyncForEach(levelRoles, async ({ name, color, level }) => {
     try {
-      await guild.createRole({
-        name,
-        color,
-        position: level,
-        hoist: true
-      });
-      console.info(`Successfully created the '${name}' role!`);
+      const role = guild.roles.find(r => r.name === name);
+      if (!role) {
+        await guild.createRole({
+          name,
+          color,
+          position: level,
+          hoist: true
+        });
+        console.info(`Successfully created the '${name}' role!`);
+      }
     } catch (error) {
       console.info(`There was an error creating the '${name}' role`);
     }

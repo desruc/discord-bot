@@ -4,7 +4,7 @@ const addLevelRoles = async (client, message) => {
   const { author, guild } = message;
   if (author.id === guild.owner.id) {
     try {
-      await initializeLevelRoles();
+      await initializeLevelRoles(message);
       return message.reply('the leveling roles have been created');
     } catch (error) {
       console.log('Error initializing level roles: ', error);
