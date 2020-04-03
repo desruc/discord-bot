@@ -34,7 +34,7 @@ const share = async (client, message, args, userRecord) => {
       return botChannel.send(`C'mon ${author}... you can't share with yourself...`);
 
     // Everything checks out - update the database records
-    await transferFunds(userRecord, recipient, shareAmount);
+    await transferFunds(author, recipient, shareAmount);
 
     return botChannel.send(
       `Yo ${recipient}! Send your thanks to ${author}. They just gave you $${shareAmount}.`
