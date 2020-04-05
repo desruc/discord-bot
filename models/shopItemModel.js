@@ -16,6 +16,7 @@ const shopItemModel = new Schema(
     type: { type: String, required: true }
   },
   {
+    timestamps: true,
     toJSON: {
       transform: removeIdAndVersion
     }

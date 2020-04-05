@@ -14,19 +14,27 @@ const beg = async (client, message, args, userRecord) => {
     await updateCooldown(userRecord, command);
 
     const chance = randomNumber(1, 100);
+    let amount = 0;
+    let responseMessage = '';
 
-    const success = chance <= 3;
-    if (success) {
-      const amount = randomNumber(5000, 10000);
-      await updateCurrency(userRecord, amount);
-      return botChannel.send(
-        `You know what, ${author}? I'm feeling generous... here's $${amount}!`
-      );
-    } else {
-      return botChannel.send(
-        'has it really come to this? begging for cash? get outta here!'
-      );
+    if (chance === 1) {
+      // Bingo!
+      amount = randomNumber(5000, 10000);
+      responseMessage = `You know what, ${author}? I'm feeling generous... here's $${amount}!`;
+    } else if (chance <= 50) {
+      // Fail
+      responseMessage = `Are you that broke, ${author}?`;
+    } else if (chance > 50 && chance < 90) {
+      amount = randomNumber(1, 100);
+      responseMessage = `Alright ${author}, here's $${amount} because I feel bad for ya.`;
+    } else if (chance > 90) {
+      amount = randomNumber(100, 500);
+      responseMessage = `$${amount} comin' your way! Stay frosty ${author}.`;
     }
+
+    if (amount > 0) await updateCurrency(userRecord, amount);
+
+    botChannel.send(responseMessage);
   } catch (error) {
     console.error('beg -> error', error);
     const { guild } = message;
@@ -38,8 +46,8 @@ const beg = async (client, message, args, userRecord) => {
 const command = {
   name: 'beg',
   category: 'currency',
-  cooldown: 180 * 60 * 1000,
-  cooldownMessage: "stop begging me! I won't change my mind",
+  cooldown: 60 * 60 * 1000,
+  cooldownMessage: '... leave me alone.',
   description: '... literally beg for cash',
   run: beg
 };

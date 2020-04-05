@@ -16,6 +16,7 @@ const robotModel = new Schema(
     losses: { type: Number, default: 0 }
   },
   {
+    timestamps: true,
     toJSON: {
       transform: removeIdAndVersion
     }

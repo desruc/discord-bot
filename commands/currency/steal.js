@@ -12,7 +12,7 @@ const steal = async (client, message, args, userRecord) => {
       message.delete();
     }
 
-    const minGold = 500;
+    const minGold = 400;
     const target = mentions.members.first();
 
     if (!target)
@@ -25,6 +25,12 @@ const steal = async (client, message, args, userRecord) => {
 
     const targetRecord = await getUserDatabaseRecord(target.id);
     const { currency: targetGold } = targetRecord;
+    const { currency: authorGold } = userRecord;
+
+    if (authorGold < minGold)
+      return botChannel.send(
+        `You've got nothing to lose ${author}. Come back when you have at least $${minGold}.`
+      );
 
     if (targetGold < minGold)
       return botChannel.send(
@@ -38,23 +44,23 @@ const steal = async (client, message, args, userRecord) => {
     let resultMsg = '';
 
     if (canSteal <= 50) {
-      const punishAmount = targetGold * 0.1;
+      const punishAmount = Math.floor(authorGold * 0.25);
       await transferFunds(author, target, punishAmount);
       return botChannel.send(
-        `Damn ${author}, you were caught! You've just paid ${target} $${punishAmount}`
+        `Damn ${author}, you were caught! You've just paid ${target} $${punishAmount}.`
       );
     } else if (canSteal > 50 && canSteal <= 80) {
-      stealAmount = targetGold * 0.2;
+      stealAmount = Math.floor(targetGold * 0.1);
       resultMsg = `${author}, you managed to grab $${stealAmount} before heading out the back door.`;
     } else if (canSteal > 80 && canSteal <= 90) {
-      stealAmount = targetGold * 0.4;
+      stealAmount = Math.floor(targetGold * 0.2);
       resultMsg = `${author}, you swiped $${stealAmount} out from right under their nose!`;
     } else {
-      stealAmount = targetGold * 0.8;
+      stealAmount = Math.floor(targetGold * 0.35);
       resultMsg = `${author}, you are one thieving muhfugga! You stole $${stealAmount}!!!`;
     }
 
-    await transferFunds(target, author, stealAmount);
+    await transferFunds(target, author, Math.floor(stealAmount));
     return botChannel.send(resultMsg);
   } catch (error) {
     console.error('steal -> error', error);

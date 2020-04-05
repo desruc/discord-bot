@@ -154,12 +154,12 @@ const playerTurn = (user, opponent, message) => {
 const simulateFight = async (message, userRecord) => {
   try {
     const { author, mentions, guild } = message;
-    const opponent = mentions.members.first();
+    const opponent = mentions.members.first() || false;
+
+    if (!opponent) return message.reply('who do you want to challenge?');
 
     if (opponent.user.bot)
       return message.reply('you are not ready to face my wrath...');
-
-    if (!opponent) return message.reply('who do you want to challenge?');
 
     if (opponent.id === author.id)
       return message.reply('play with yourself in your own time!');

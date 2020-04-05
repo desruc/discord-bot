@@ -13,6 +13,9 @@ const buy = async (client, message, args, userRecord) => {
     const itemNumber = Number(args[0]);
     const quantity = Number(args[1]) || 1;
 
+    if (quantity <= 0)
+      return botChannel.send(`${author}, enter a valid quantity or none at all.`);
+
     if (!checkNumber(itemNumber))
       return botChannel.send(`${author}, you didn't specify an item number.`);
 

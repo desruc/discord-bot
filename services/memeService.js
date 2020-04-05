@@ -26,19 +26,19 @@ const getRedditMediaEmbed = async (sub, title = null) => {
 
 const morningMeme = async client => {
   // Get the base server channel
-  const channel = await getBaseChannel(client);
-
   try {
+    const channel = await getBaseChannel(client);
     // Pick a random subreddit and title
     const memeSubs = ['dankmemes', 'memeeconomy', 'wholesomememes'];
     const sub = memeSubs[randomNumber(0, 2)];
     const title = memeMessages[randomNumber(0, memeMessages.length - 1)];
 
     // Create the embed and send to base channel
-    const embed = getRedditMediaEmbed(sub, title);
+    const embed = await getRedditMediaEmbed(sub, title);
     channel.send(embed);
   } catch (error) {
     console.info('morningMeme error: ', error);
+    const channel = await getBaseChannel(client);
     channel.send('Sorry guys! There was an error retrieving your morning meme...');
   }
 };

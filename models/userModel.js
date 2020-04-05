@@ -19,6 +19,7 @@ const userModel = new Schema(
     }
   },
   {
+    timestamps: true,
     toJSON: {
       transform: removeIdAndVersion
     }

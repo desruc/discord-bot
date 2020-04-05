@@ -11,7 +11,7 @@ const share = async (client, message, args, userRecord) => {
       message.delete();
     }
 
-    const shareAmount = Number(args[0]);
+    const shareAmount = Number(Math.floor(args[0]));
 
     const isValidNumber = checkNumber(shareAmount);
     const noAmount = shareAmount <= 0;
