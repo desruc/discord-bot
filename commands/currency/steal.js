@@ -71,7 +71,7 @@ const command = {
   name: 'steal',
   category: 'currency',
   aliases: ['rob'],
-  cooldown: 720 * 60 * 1000,
+  cooldown: 240 * 60 * 1000,
   description: 'attempt to steal someones gold',
   run: steal
 };

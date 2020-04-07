@@ -21,14 +21,17 @@ const beg = async (client, message, args, userRecord) => {
       // Bingo!
       amount = randomNumber(5000, 10000);
       responseMessage = `You know what, ${author}? I'm feeling generous... here's $${amount}!`;
-    } else if (chance <= 50) {
+    } else if (chance <= 30) {
       // Fail
-      responseMessage = `Are you that broke, ${author}?`;
-    } else if (chance > 50 && chance < 90) {
-      amount = randomNumber(1, 100);
+      responseMessage = `Are you that broke, ${author}? Get outta here and ask me again in an hour...`;
+    } else if (chance > 30 && chance < 65) {
+      amount = randomNumber(1, 200);
       responseMessage = `Alright ${author}, here's $${amount} because I feel bad for ya.`;
-    } else if (chance > 90) {
-      amount = randomNumber(100, 500);
+    } else if (chance > 65 && chance < 90) {
+      amount = randomNumber(300, 500);
+      responseMessage = `I found $${amount} in my back pocket. Keep it.`;
+    } else if (chance >= 90) {
+      amount = randomNumber(500, 700);
       responseMessage = `$${amount} comin' your way! Stay frosty ${author}.`;
     }
 
@@ -47,7 +50,8 @@ const command = {
   name: 'beg',
   category: 'currency',
   cooldown: 60 * 60 * 1000,
-  cooldownMessage: '... leave me alone.',
+  cooldownMessage: 'I told you to wait an hour!',
+  showCooldown: true,
   description: '... literally beg for cash',
   run: beg
 };
