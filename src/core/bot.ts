@@ -28,10 +28,7 @@ export default class Bot {
       // No prefix - no comprende
       if (message.content.toLowerCase().indexOf(this.prefix) !== 0) return;
 
-      const args = message.content
-        .slice(this.prefix.length)
-        .trim()
-        .split(/ +/g);
+      const args = message.content.slice(this.prefix.length).trim().split(/ +/g);
       const cmd = args.shift().toLowerCase();
 
       // No command - terminate
@@ -52,7 +49,7 @@ export default class Bot {
         .filter((file) => file.endsWith('.js'));
 
       commands.forEach((file) => {
-        let pull = require(`${__dirname}/../commands/${dir}/${file}`).default;
+        const pull = require(`${__dirname}/../commands/${dir}/${file}`).default;
 
         if (pull.name) this.commands.set(pull.name, pull);
       });
