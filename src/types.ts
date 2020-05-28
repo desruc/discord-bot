@@ -1,7 +1,8 @@
 import { Message } from 'discord.js';
 
-export type Command = {
+export interface CommandInterface {
+  active: boolean;
   name: string;
   category: string;
-  run: (message: Message) => void;
-};
+  process(msg: Message): Promise<void>;
+}

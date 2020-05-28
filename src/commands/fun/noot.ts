@@ -1,12 +1,13 @@
 import { Message } from 'discord.js';
+import Command from '../../core/command';
 
-const run = (message: Message) => {
-  message.reply('noot!');
-};
+export default class Noot extends Command {
+  constructor() {
+    super();
+    this.name = 'noot';
+  }
 
-const noot = {
-  name: 'noot',
-  run
-};
-
-export default noot;
+  public async process(msg: Message): Promise<void> {
+    msg.reply('noot!');
+  }
+}

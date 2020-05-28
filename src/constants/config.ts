@@ -1,11 +1,11 @@
-interface EnviromentVariables {
+interface BotConfig {
   discordToken: string;
   botPrefix: string;
 }
 
-const env: EnviromentVariables = {
+const config: BotConfig = {
   discordToken: process.env.DISCORD_TOKEN,
   botPrefix: process.env.BOT_PREFIX || '>'
 };
 
-export default env;
+export default config;

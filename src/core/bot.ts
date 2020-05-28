@@ -1,18 +1,19 @@
 import fs from 'fs';
 import { Client, Message, Collection } from 'discord.js';
-import { Command } from '../types';
-import env from '../constants/env';
+import { CommandInterface } from '../types';
+
+import config from '../constants/config';
 
 export default class Bot {
   private client: Client;
   private readonly token: string;
   private readonly prefix: string;
-  private readonly commands: Collection<string, Command> = new Collection();
+  private readonly commands: Collection<string, CommandInterface> = new Collection();
 
   constructor() {
     this.client = new Client();
-    this.token = env.discordToken;
-    this.prefix = env.botPrefix;
+    this.token = config.discordToken;
+    this.prefix = config.botPrefix;
 
     this.initiateCommands();
   }
@@ -36,7 +37,7 @@ export default class Bot {
 
       const command = this.commands.get(cmd);
 
-      if (command) command.run(message);
+      if (command) command.process(message);
     });
 
     return this.client.login(this.token);
@@ -49,9 +50,10 @@ export default class Bot {
         .filter((file) => file.endsWith('.js'));
 
       commands.forEach((file) => {
-        const pull = require(`${__dirname}/../commands/${dir}/${file}`).default;
+        const cmdClass = require(`${__dirname}/../commands/${dir}/${file}`).default;
+        const command = new cmdClass();
 
-        if (pull.name) this.commands.set(pull.name, pull);
+        if (command.active) this.commands.set(command.name, command);
       });
     });
   }
