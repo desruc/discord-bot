@@ -37,7 +37,7 @@ export default class Bot {
 
       const command = this.commands.get(cmd);
 
-      if (command) command.process(message);
+      if (command) command.process(this.client, message, []);
     });
 
     return this.client.login(this.token);

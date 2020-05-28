@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import Command from '../../core/command';
 
 export default class Noot extends Command {
@@ -7,7 +7,11 @@ export default class Noot extends Command {
     this.name = 'noot';
   }
 
-  public async process(msg: Message): Promise<void> {
-    msg.reply('noot!');
+  public async process(
+    client: Client,
+    message: Message,
+    args: string[]
+  ): Promise<void> {
+    message.reply('noot!');
   }
 }

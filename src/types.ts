@@ -1,8 +1,8 @@
-import { Message } from 'discord.js';
+import { Message, Client } from 'discord.js';
 
 export interface CommandInterface {
   active: boolean;
   name: string;
   category: string;
-  process(msg: Message): Promise<void>;
+  process(client: Client, message: Message, args: string[]): Promise<void>;
 }

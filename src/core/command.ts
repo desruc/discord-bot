@@ -1,4 +1,4 @@
-import { Message } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import { CommandInterface } from '../types';
 
 import { commandDefaults } from '../constants/defaults';
@@ -17,7 +17,12 @@ export default class Command implements CommandInterface {
     this.cooldown = commandDefaults.cooldown;
   }
 
-  public async process(msg: Message): Promise<void> {
-    console.log('Message contents: ', msg.content);
+  public async process(
+    client: Client,
+    message: Message,
+    args: string[]
+  ): Promise<void> {
+    console.log('Message contents: ', message.content);
+    console.log('Arguments: ', args);
   }
 }
