@@ -7,11 +7,7 @@ export default class Noot extends Command {
     this.name = 'noot';
   }
 
-  public async process(
-    client: Client,
-    message: Message,
-    args: string[]
-  ): Promise<void> {
+  public async process(client: Client, message: Message): Promise<void> {
     message.reply('noot!');
   }
 }

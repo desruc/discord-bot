@@ -9,11 +9,11 @@ export default class Command implements CommandInterface {
   public category: string;
   public cooldown: number;
   public description: string;
-  public dm: boolean;
+  public guildOnly: boolean;
 
   constructor() {
     this.active = true;
-    this.dm = false; // TODO: Change this to guildOnly
+    this.guildOnly = true;
     this.cooldown = commandDefaults.cooldown;
   }
 
