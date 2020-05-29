@@ -21,7 +21,7 @@ export default class Command implements CommandInterface {
     client: Client,
     message: Message,
     args: string[]
-  ): Promise<void> {
+  ): Promise<Message | Array<Message> | void> {
     console.log('Message contents: ', message.content);
     console.log('Arguments: ', args);
   }
