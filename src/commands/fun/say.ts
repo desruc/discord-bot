@@ -1,11 +1,33 @@
 import { Client, Message, TextChannel, Guild } from 'discord.js';
 import Command from '../../core/command';
+import config from '../../constants/config';
+
+type hey = {
+  blah: string;
+};
 
 export default class Say extends Command {
   constructor() {
     super();
     this.name = 'say';
     this.dm = true;
+  }
+
+  private checkDmPermissions(message: Message, guild: Guild): boolean {
+    const {
+      author: { id: authorId },
+      member
+    } = message;
+
+    const modRole = guild.roles.cache.find((r) => r.name === config.modRole);
+
+    if (
+      (modRole && member.roles.cache.has(modRole.id)) ||
+      guild.ownerID === authorId
+    )
+      return true;
+
+    return false;
   }
 
   private async sendMessageToChannel(
@@ -89,7 +111,10 @@ export default class Say extends Command {
     args: string[]
   ): Promise<Message | Array<Message> | void> {
     const noArgs = args.length === 0;
-    if (noArgs) return message.channel.send('No args dummy');
+    if (noArgs)
+      return message.channel.send(
+        'What do you want me to say? Try the command again.'
+      );
 
     const userMessage = args.join(' ');
 
@@ -98,8 +123,6 @@ export default class Say extends Command {
       if (message.deletable) message.delete();
       return message.channel.send(userMessage);
     }
-
-    // TODO: Check if author has dm permissions
 
     // The command was sent in a dm - ask for guild and channel
     const {
@@ -130,7 +153,12 @@ export default class Say extends Command {
         g.members.cache.some((member) => member.id === authorId)
       );
 
-      return this.sendMessageToChannel(message, onlyGuild, userMessage);
+      if (this.checkDmPermissions(message, onlyGuild))
+        return this.sendMessageToChannel(message, onlyGuild, userMessage);
+
+      return message.channel.send(
+        "You don't have permission to use that command outside of the guild."
+      );
     }
 
     const serverOptions = authorGuilds
@@ -163,7 +191,12 @@ export default class Say extends Command {
 
             console.info(`You have chosen ${chosenGuildMeta.name}`);
 
-            return this.sendMessageToChannel(message, chosenGuild, userMessage);
+            if (this.checkDmPermissions(message, chosenGuild))
+              return this.sendMessageToChannel(message, chosenGuild, userMessage);
+
+            return message.channel.send(
+              "You don't have permission to use that command outside of the chosen guild."
+            );
           })
           .catch(() =>
             message.channel.send(
