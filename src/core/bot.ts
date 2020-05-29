@@ -23,9 +23,6 @@ export default class Bot {
       // Ignore messages from bot
       if (message.author.bot) return;
 
-      // Ignore messages not sent in a guild
-      if (!message.guild) return;
-
       // No prefix - no comprende
       if (message.content.toLowerCase().indexOf(this.prefix) !== 0) return;
 

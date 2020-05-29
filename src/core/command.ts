@@ -13,7 +13,7 @@ export default class Command implements CommandInterface {
 
   constructor() {
     this.active = true;
-    this.dm = false;
+    this.dm = false; // TODO: Change this to guildOnly
     this.cooldown = commandDefaults.cooldown;
   }
 
