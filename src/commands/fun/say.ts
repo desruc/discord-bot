@@ -10,10 +10,77 @@ export default class Say extends Command {
 
   private async sendMessageToChannel(
     message: Message,
-    guild: Guild
+    guild: Guild,
+    userMessage: string
   ): Promise<Message | Array<Message> | void> {
-    // TODO: Ask for channel choice and send message
-    // If only one channel - send to the only one
+    // Get all text channels in guild
+    const serverTextChannels = guild.channels.cache
+      .filter(({ type }) => type === 'text')
+      .map((channel) => {
+        const c = channel as TextChannel;
+        return {
+          name: c.name,
+          id: c.id
+        };
+      });
+
+    // Guild has no text channels (should never happen)
+    if (serverTextChannels.length <= 0) {
+      return message.channel.send(
+        'The selected guild has no text channels. Terminating process.'
+      );
+    }
+
+    // Only one text channel - send the message there
+    if (serverTextChannels.length === 1) {
+      const onlyTextChannel = guild.channels.cache
+        .filter(({ type }) => type === 'text')
+        .first();
+      return (onlyTextChannel as TextChannel).send(userMessage);
+    }
+
+    const channelOptions = serverTextChannels
+      .map((c, idx) => `${idx + 1}) ${c.name}\n`)
+      .join('');
+
+    const channelAnswers = [...new Array(serverTextChannels.length)].map(
+      (e, idx) => `${idx + 1}`
+    );
+
+    const channelFilter = (response) =>
+      channelAnswers.some((answer) => answer === response.content);
+
+    // Await a channel response
+    return message.channel
+      .send(
+        `Please select a channel (Enter a number from 1 - ${serverTextChannels.length})?\n${channelOptions}`
+      )
+      .then(() =>
+        message.channel
+          .awaitMessages(channelFilter, {
+            max: 1,
+            time: 3000,
+            errors: ['time']
+          })
+          .then((collected) => {
+            // The user has selected a guild and channel - send the message
+            const chosenChannel =
+              serverTextChannels[Number(collected.first().content) - 1];
+
+            console.info(`You have chosen ${chosenChannel.name}`);
+
+            const channelObject = guild.channels.cache.find(
+              (c) => c.id === chosenChannel.id
+            );
+
+            (channelObject as TextChannel).send(userMessage);
+          })
+          .catch(() =>
+            message.channel.send(
+              'Are you still there? No channel was selected, please start the command again.'
+            )
+          )
+      );
   }
 
   public async process(
@@ -36,7 +103,7 @@ export default class Say extends Command {
 
     // The command was sent in a dm - ask for guild and channel
     const {
-      author: { id: authorId },
+      author: { id: authorId }
     } = message;
 
     const authorGuilds = [];
@@ -46,7 +113,7 @@ export default class Say extends Command {
       if (guild.members.cache.some((member) => member.id === authorId)) {
         authorGuilds.push({
           name: guild.name,
-          id: guild.id,
+          id: guild.id
         });
       }
     });
@@ -57,8 +124,13 @@ export default class Say extends Command {
         'We have no guilds in common. Terminating process.'
       );
 
+    // Bot and user only share one guild - ask which channel
     if (authorGuilds.length === 1) {
-      // TODO: If only one guild available - only ask for text channels
+      const onlyGuild = client.guilds.cache.find((g) =>
+        g.members.cache.some((member) => member.id === authorId)
+      );
+
+      return this.sendMessageToChannel(message, onlyGuild, userMessage);
     }
 
     const serverOptions = authorGuilds
@@ -91,66 +163,7 @@ export default class Say extends Command {
 
             console.info(`You have chosen ${chosenGuildMeta.name}`);
 
-            // Get all the text channels
-            const serverTextChannels = chosenGuild.channels.cache
-              .filter(({ type }) => type === 'text')
-              .map((channel) => {
-                const c = channel as TextChannel;
-                return {
-                  name: c.name,
-                  id: c.id,
-                };
-              });
-
-            // Guild has no text channels (should never happen)
-            if (serverTextChannels.length <= 0) {
-              return message.channel.send(
-                'The selected guild has no text channels. Terminating process.'
-              );
-            }
-
-            const channelOptions = serverTextChannels
-              .map((c, idx) => `${idx + 1}) ${c.name}\n`)
-              .join('');
-
-            const channelAnswers = [...new Array(serverTextChannels.length)].map(
-              (e, idx) => `${idx + 1}`
-            );
-
-            const channelFilter = (response) =>
-              channelAnswers.some((answer) => answer === response.content);
-
-            // Await a channel response
-            message.channel
-              .send(
-                `Please select a channel (Enter a number from 1 - ${serverTextChannels.length})?\n${channelOptions}`
-              )
-              .then(() => {
-                message.channel
-                  .awaitMessages(channelFilter, {
-                    max: 1,
-                    time: 3000,
-                    errors: ['time'],
-                  })
-                  .then((collected) => {
-                    // The user has selected a guild and channel - send the message
-                    const chosenChannel =
-                      serverTextChannels[Number(collected.first().content) - 1];
-
-                    console.info(`You have chosen ${chosenChannel.name}`);
-
-                    const channelObject = client.channels.cache.find(
-                      (c) => c.id === chosenChannel.id
-                    );
-
-                    (channelObject as TextChannel).send(userMessage);
-                  })
-                  .catch(() =>
-                    message.channel.send(
-                      'Are you still there? No channel was selected, please start the command again.'
-                    )
-                  );
-              });
+            return this.sendMessageToChannel(message, chosenGuild, userMessage);
           })
           .catch(() =>
             message.channel.send(
