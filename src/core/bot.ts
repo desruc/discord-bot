@@ -34,7 +34,12 @@ export default class Bot {
 
       const command = this.commands.get(cmd);
 
-      if (command) command.process(this.client, message, args);
+      if (command) {
+        // Guild only command in direct message - not today!
+        if (command.guildOnly && !message.guild) return;
+
+        command.process(this.client, message, args);
+      }
     });
 
     return this.client.login(this.token);
