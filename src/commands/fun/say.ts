@@ -2,10 +2,6 @@ import { Client, Message, TextChannel, Guild } from 'discord.js';
 import Command from '../../core/command';
 import config from '../../constants/config';
 
-type hey = {
-  blah: string;
-};
-
 export default class Say extends Command {
   constructor() {
     super();
