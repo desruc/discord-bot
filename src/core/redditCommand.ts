@@ -19,7 +19,8 @@ export default class RedditCommand extends Command {
     sub: string,
     title: string = null,
     image = true,
-    redditMeta = false
+    redditMeta = false,
+    thumbnail = false
   ): Promise<MessageEmbed> {
     const response = await axios.get(
       `https://www.reddit.com/r/${sub}/top/.json?limit=99&t=week`
@@ -53,6 +54,8 @@ export default class RedditCommand extends Command {
         .setURL(`https://www.reddit.com${chosenPost.data.permalink}`)
         .setFooter(`👍 ${chosenPost.data.ups} | 💬 ${chosenPost.data.num_comments}`);
     }
+
+    if (thumbnail) embed.setThumbnail(chosenPost.data.thumbnail);
 
     return embed;
   }
