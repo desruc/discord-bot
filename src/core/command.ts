@@ -17,7 +17,7 @@ export default class Command implements CommandInterface {
     this.cooldown = commandDefaults.cooldown;
   }
 
-  public async process(
+  public async exec(
     client: Client,
     message: Message,
     args: string[]

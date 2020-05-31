@@ -101,7 +101,7 @@ export default class Say extends Command {
       );
   }
 
-  public async process(
+  public async exec(
     client: Client,
     message: Message,
     args: string[]

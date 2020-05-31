@@ -38,7 +38,7 @@ export default class Bot {
         // Guild only command in direct message - not today!
         if (command.guildOnly && !message.guild) return;
 
-        command.process(this.client, message, args);
+        command.exec(this.client, message, args);
       }
     });
 

@@ -7,7 +7,7 @@ export interface CommandInterface {
   cooldown: number;
   description: string;
   guildOnly: boolean;
-  process(
+  exec(
     client: Client,
     message: Message,
     args?: string[]

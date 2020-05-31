@@ -21,7 +21,7 @@ export default class Say extends Command {
     return !isNaN(Number(number)) && isFinite(Number(number));
   }
 
-  public async process(
+  public async exec(
     client: Client,
     message: Message,
     args: string[]
