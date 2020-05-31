@@ -1,11 +1,11 @@
 import RedditCommand from '../../core/redditCommand';
 import { Client, Message } from 'discord.js';
 
-export default class ShowerThought extends RedditCommand {
+export default class Dank extends RedditCommand {
   constructor() {
     super();
-    this.name = 'showerthought';
-    this.sub = 'showerthoughts';
+    this.name = 'wholesome';
+    this.sub = 'wholesomememes';
   }
 
   public async exec(
@@ -14,7 +14,7 @@ export default class ShowerThought extends RedditCommand {
   ): Promise<Message | Array<Message> | void> {
     const { channel } = message;
 
-    const embed = await this.getRedditMediaEmbed(this.sub, null, false, false);
+    const embed = await this.getRedditMediaEmbed(this.sub, null, true);
     return channel.send(embed);
   }
 }
