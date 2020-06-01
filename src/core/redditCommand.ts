@@ -1,34 +1,24 @@
 import Command from '../core/command';
-import { MessageEmbed } from 'discord.js';
+import { MessageEmbed, Client, Message } from 'discord.js';
 import axios from 'axios';
 
 import { randomNumber } from '../utils/helpers';
 
 export default class RedditCommand extends Command {
   public sub: string;
-  public redditMeta: boolean;
+  public redditMeta = true;
   public title: string;
-  public isImage: boolean;
+  public isImage = true;
+  public thumbnail = false;
 
-  constructor() {
-    super();
-    this.guildOnly = false;
-  }
-
-  public async getRedditMediaEmbed(
-    sub: string,
-    title: string = null,
-    image = true,
-    redditMeta = false,
-    thumbnail = false
-  ): Promise<MessageEmbed> {
+  private async getRedditMediaEmbed(): Promise<MessageEmbed> {
     const response = await axios.get(
-      `https://www.reddit.com/r/${sub}/top/.json?limit=99&t=week`
+      `https://www.reddit.com/r/${this.sub}/top/.json?limit=99&t=week`
     );
 
     const rawPosts = response.data.data.children;
 
-    const posts = image
+    const posts = this.isImage
       ? rawPosts.filter((p) => p.data.post_hint === 'image')
       : rawPosts;
 
@@ -43,20 +33,30 @@ export default class RedditCommand extends Command {
 
     const embed: MessageEmbed = new MessageEmbed().setColor('RANDOM');
 
-    if (image) embed.setImage(chosenPost.data.url);
+    if (this.isImage) embed.setImage(chosenPost.data.url);
     else embed.setTitle(redditTitle);
 
-    if (title && !redditMeta) embed.setTitle(title);
+    if (this.title && !this.redditMeta) embed.setTitle(this.title);
 
-    if (redditMeta) {
+    if (this.redditMeta) {
       embed
         .setTitle(redditTitle)
         .setURL(`https://www.reddit.com${chosenPost.data.permalink}`)
         .setFooter(`👍 ${chosenPost.data.ups} | 💬 ${chosenPost.data.num_comments}`);
     }
 
-    if (thumbnail) embed.setThumbnail(chosenPost.data.thumbnail);
+    if (this.thumbnail) embed.setThumbnail(chosenPost.data.thumbnail);
 
     return embed;
+  }
+
+  public async exec(
+    client: Client,
+    message: Message
+  ): Promise<Message | Array<Message> | void> {
+    const { channel } = message;
+
+    const embed = await this.getRedditMediaEmbed();
+    return channel.send(embed);
   }
 }
