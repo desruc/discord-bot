@@ -1,10 +1,10 @@
 import { readdirSync } from 'fs';
-import { CommandInterface } from '../typings';
+import { ICommand } from '../typings';
 import { Collection, Message } from 'discord.js';
 import Bot from './bot';
 
 export default class CommandHandler {
-  readonly commands: Collection<string, CommandInterface> = new Collection();
+  readonly commands: Collection<string, ICommand> = new Collection();
   readonly aliases: Collection<string, string> = new Collection();
 
   constructor(public client: Bot) {}

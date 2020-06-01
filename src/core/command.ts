@@ -1,9 +1,9 @@
 import { Client, Message } from 'discord.js';
-import { CommandInterface } from '../typings';
+import { ICommand } from '../typings';
 
 import { commandDefaults } from '../constants/defaults';
 
-export default class Command implements CommandInterface {
+export default class Command implements ICommand {
   public active = true;
   public name: string;
   public category: string;

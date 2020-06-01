@@ -6,7 +6,7 @@ export interface BotConfig {
   modRole: string;
 }
 
-export interface CommandInterface {
+export interface ICommand {
   active: boolean;
   name: string;
   category: string;
@@ -20,7 +20,7 @@ export interface CommandInterface {
   ): Promise<Message | Array<Message> | void>;
 }
 
-export interface Event {
+export interface IEvent {
   name: keyof ClientEvents;
   exec(...args: any): any;
 }

@@ -1,8 +1,8 @@
 import Bot from '../core/bot';
-import { Event } from '../typings';
+import { IEvent } from '../typings';
 import { Message } from 'discord.js';
 
-export default class MessageEvent implements Event {
+export default class MessageEvent implements IEvent {
   readonly name = 'message';
 
   constructor(private client: Bot) {}

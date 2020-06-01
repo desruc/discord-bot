@@ -1,7 +1,7 @@
 import Bot from '../core/bot';
-import { Event } from '../typings';
+import { IEvent } from '../typings';
 
-export default class ReadyEvent implements Event {
+export default class ReadyEvent implements IEvent {
   readonly name = 'ready';
 
   constructor(private client: Bot) {}
