@@ -1,5 +1,6 @@
 require('dotenv').config();
 import Bot from './core/bot';
+import initializeDb from './core/database/db';
 
 const bot = new Bot({});
 
@@ -15,4 +16,9 @@ process.on('uncaughtException', (e) => {
   process.exit(1);
 });
 
-bot.init();
+const initialize = async (): Promise<Bot> => {
+  await initializeDb();
+  return bot.init();
+};
+
+initialize();
