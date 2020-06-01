@@ -1,4 +1,10 @@
-import { Message, Client } from 'discord.js';
+import { Message, Client, ClientEvents } from 'discord.js';
+
+export interface BotConfig {
+  discordToken: string;
+  prefix: string;
+  modRole: string;
+}
 
 export interface CommandInterface {
   active: boolean;
@@ -12,4 +18,9 @@ export interface CommandInterface {
     message: Message,
     args?: string[]
   ): Promise<Message | Array<Message> | void>;
+}
+
+export interface Event {
+  name: keyof ClientEvents;
+  exec(...args: any): any;
 }

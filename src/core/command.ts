@@ -1,21 +1,16 @@
 import { Client, Message } from 'discord.js';
-import { CommandInterface } from '../types';
+import { CommandInterface } from '../typings';
 
 import { commandDefaults } from '../constants/defaults';
 
 export default class Command implements CommandInterface {
-  public active: boolean;
+  public active = true;
   public name: string;
   public category: string;
-  public cooldown: number;
+  public cooldown: number = commandDefaults.cooldown;
   public description: string;
-  public guildOnly: boolean;
-
-  constructor() {
-    this.active = true;
-    this.guildOnly = true;
-    this.cooldown = commandDefaults.cooldown;
-  }
+  public guildOnly = false;
+  public aliases: string[] = [];
 
   public async exec(
     client: Client,
