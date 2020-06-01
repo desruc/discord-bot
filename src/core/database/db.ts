@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import env from '../../constants/env';
+import Bot from '../bot';
 
 const { mongoUser, mongoPassword, mongoHost, mongoPort, dbName, nodeEnv } = env;
 
@@ -9,7 +10,7 @@ if (nodeEnv === 'development') {
   url = `mongodb://${mongoHost}:${mongoPort}`;
 }
 
-const initializeDb = async (): Promise<mongoose> => {
+const initializeDb = async (client: Bot): Promise<mongoose> => {
   const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
@@ -18,9 +19,10 @@ const initializeDb = async (): Promise<mongoose> => {
 
   return await mongoose.connect(url, options, (err: Error) => {
     if (err) {
-      console.error('Error connecting to database', err);
+      client.logger.error('Error connecting to database: ', err);
+      process.exit(1);
     } else {
-      console.info('Database connection established');
+      client.logger.info('Database connection established');
     }
   });
 };

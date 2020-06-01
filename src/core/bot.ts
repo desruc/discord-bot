@@ -5,9 +5,11 @@ import CommandHandler from './commandHandler';
 import { BotConfig } from '../typings';
 
 import config from '../constants/config';
+import { Logger } from './logger';
 
 export default class Bot extends Client {
   public readonly config: BotConfig = config;
+  readonly logger = new Logger(config.name).logger;
   public readonly commandHandler = new CommandHandler(this);
   private readonly eventHandler = new EventHandler(this);
 

@@ -2,6 +2,7 @@ import { Message, Client, ClientEvents } from 'discord.js';
 
 export interface BotConfig {
   discordToken: string;
+  name: string;
   prefix: string;
   modRole: string;
 }

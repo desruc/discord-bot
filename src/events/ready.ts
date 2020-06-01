@@ -7,6 +7,8 @@ export default class ReadyEvent implements IEvent {
   constructor(private client: Bot) {}
 
   public exec(): void {
-    console.log('Ready to serve!');
+    this.client.logger.info(
+      `Logged in as ${this.client.user.tag} and ready to serve!`
+    );
   }
 }

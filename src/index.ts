@@ -17,7 +17,7 @@ process.on('uncaughtException', (e) => {
 });
 
 const initialize = async (): Promise<Bot> => {
-  await initializeDb();
+  await initializeDb(bot);
   return bot.init();
 };
 
