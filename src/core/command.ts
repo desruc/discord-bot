@@ -1,13 +1,11 @@
 import { Client, Message } from 'discord.js';
 import { ICommand } from '../typings';
 
-import { commandDefaults } from '../constants/defaults';
-
 export default class Command implements ICommand {
   public active = true;
   public name: string;
   public category: string;
-  public cooldown: number = commandDefaults.cooldown;
+  public cooldown = 1000;
   public description: string;
   public guildOnly = false;
   public aliases: string[] = [];
