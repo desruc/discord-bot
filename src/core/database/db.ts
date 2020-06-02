@@ -14,7 +14,8 @@ const initializeDb = async (client: Bot): Promise<mongoose> => {
   const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    useFindAndModify: false
+    useFindAndModify: false,
+    useCreateIndex: true
   };
 
   return await mongoose.connect(url, options, (err: Error) => {
