@@ -17,10 +17,10 @@ export default class InitRoles extends Command {
   public async exec(client: Bot, message: Message): Promise<void> {
     const { guild } = message;
     await asyncForEach(roles, async (role, index) => {
+      const { name, color, position } = role;
       const existingRole = guild.roles.cache.find((r) => r.name === name);
 
       if (!existingRole) {
-        const { name, color, position } = role;
         try {
           await guild.roles.create({
             data: {
