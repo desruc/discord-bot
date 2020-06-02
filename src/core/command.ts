@@ -8,6 +8,7 @@ export default class Command implements ICommand {
   public cooldown = 1000;
   public description: string;
   public guildOnly = false;
+  public ownerOnly = false;
   public aliases: string[] = [];
 
   public async exec(

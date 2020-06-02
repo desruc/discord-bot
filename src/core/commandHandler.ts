@@ -50,6 +50,9 @@ export default class CommandHandler {
       // Guild only command in direct message - not today!
       if (command.guildOnly && !message.guild) return;
 
+      // Guild owners only!
+      if (command.ownerOnly && message.guild.ownerID !== message.author.id) return;
+
       return command.exec(this.client, message, args);
     }
   }

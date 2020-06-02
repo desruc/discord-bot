@@ -14,6 +14,7 @@ export interface ICommand {
   cooldown: number;
   description: string;
   guildOnly: boolean;
+  ownerOnly: boolean;
   exec(
     client: Client,
     message: Message,
