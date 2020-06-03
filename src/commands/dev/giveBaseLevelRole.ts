@@ -2,7 +2,7 @@ import { Message } from 'discord.js';
 import Command from '../../core/command';
 import Bot from '../../core/bot';
 
-import UserModel from '../../core/database/models/userModel';
+import UserModel from '../../database/models/userModel';
 
 import { asyncForEach } from '../../utils/helpers';
 

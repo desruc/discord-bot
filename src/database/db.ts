@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
-import env from '../../constants/env';
-import Bot from '../bot';
+import env from '../constants/env';
+import Bot from '../core/bot';
 
 const { mongoUser, mongoPassword, mongoHost, mongoPort, dbName, nodeEnv } = env;
 

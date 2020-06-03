@@ -1,6 +1,6 @@
 require('dotenv').config();
 import Bot from './core/bot';
-import initializeDb from './core/database/db';
+import initializeDb from './database/db';
 
 const bot = new Bot({});
 
