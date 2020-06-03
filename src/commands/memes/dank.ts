@@ -5,5 +5,6 @@ export default class Dank extends RedditCommand {
     super();
     this.name = 'dank';
     this.sub = 'dankmemes';
+    this.category = 'memes';
   }
 }

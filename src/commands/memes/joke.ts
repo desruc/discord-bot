@@ -7,6 +7,7 @@ export default class Joke extends Command {
     super();
     this.name = 'joke';
     this.guildOnly = false;
+    this.category = 'memes';
   }
 
   private async getDadJoke(): Promise<string> {

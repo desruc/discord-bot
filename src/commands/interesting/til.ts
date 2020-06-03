@@ -7,5 +7,6 @@ export default class TodayILearned extends RedditCommand {
     this.sub = 'todayilearned';
     this.thumbnail = true;
     this.isImage = false;
+    this.category = 'info';
   }
 }

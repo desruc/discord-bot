@@ -6,5 +6,6 @@ export default class ShowerThought extends RedditCommand {
     this.name = 'showerthought';
     this.sub = 'showerthoughts';
     this.redditMeta = false;
+    this.category = 'memes';
   }
 }

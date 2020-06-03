@@ -9,6 +9,7 @@ export default class Say extends Command {
     this.guildOnly = false;
     this.description =
       'returns a random number between 1 and 100 (or the number specified).';
+    this.category = 'fun';
   }
 
   private randomNumber(min: number, max: number) {

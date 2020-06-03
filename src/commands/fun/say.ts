@@ -7,6 +7,7 @@ export default class Say extends Command {
     super();
     this.name = 'say';
     this.guildOnly = false;
+    this.category = 'fun';
   }
 
   private checkDmPermissions(message: Message, guild: Guild): boolean {

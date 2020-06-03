@@ -5,6 +5,7 @@ export default class Noot extends Command {
   constructor() {
     super();
     this.name = 'noot';
+    this.category = 'fun';
   }
 
   public async exec(client: Client, message: Message): Promise<void> {
