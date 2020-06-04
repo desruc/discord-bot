@@ -1,4 +1,5 @@
 import { Message, Client, ClientEvents } from 'discord.js';
+import { Document } from 'mongoose';
 
 export interface BotConfig {
   discordToken: string;
@@ -25,4 +26,12 @@ export interface ICommand {
 export interface IEvent {
   name: keyof ClientEvents;
   exec(...args: any): any;
+}
+
+export interface IUser extends Document {
+  userId: string;
+  guilds: {
+    guildId: string;
+    experience: number;
+  }[];
 }

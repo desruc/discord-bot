@@ -10,7 +10,7 @@ if (nodeEnv === 'development') {
   url = `mongodb://${mongoHost}:${mongoPort}`;
 }
 
-const initializeDb = async (client: Bot): Promise<mongoose> => {
+const initializeDb = async (client: Bot): Promise<any> => {
   const options = {
     useNewUrlParser: true,
     useUnifiedTopology: true,

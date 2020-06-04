@@ -3,6 +3,7 @@ interface NewRoleMeta {
   level?: number;
   position?: number;
   color?: string;
+  hoist?: boolean;
 }
 
 export const roles: NewRoleMeta[] = [
@@ -11,6 +12,11 @@ export const roles: NewRoleMeta[] = [
     level: 0,
     position: 100,
     color: '#07a3d7'
+  },
+  {
+    name: 'Dragonborn',
+    level: 5,
+    position: 95
   }
 ];
 

@@ -1,12 +1,5 @@
-import { Schema, model, Document } from 'mongoose';
-
-interface IUser extends Document {
-  userId: string;
-  guilds: {
-    guildId: string;
-    experience: number;
-  }[];
-}
+import mongoose, { Schema, Document } from 'mongoose';
+import { IUser } from '../../typings';
 
 // Remove the mongo ID and version key when returning JSON
 const removeIdAndVersion = (doc, ret) => {
@@ -14,7 +7,7 @@ const removeIdAndVersion = (doc, ret) => {
   delete ret.__v;
 };
 
-const userModel: Schema = new Schema(
+const userSchema: Schema = new Schema(
   {
     userId: { type: String, unique: true },
     guilds: [
@@ -32,4 +25,4 @@ const userModel: Schema = new Schema(
   }
 );
 
-export default model<IUser>('User', userModel);
+export default mongoose.model<IUser>('User', userSchema);
