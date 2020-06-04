@@ -11,7 +11,31 @@ export default class RedditCommand extends Command {
   public isImage = true;
   public thumbnail = false;
 
-  private async getRedditMediaEmbed(): Promise<MessageEmbed> {
+  public async getOmbed(service: string | string[]): Promise<string> {
+    const response = await axios.get(
+      `https://www.reddit.com/r/${this.sub}/top/.json?limit=99&t=week`
+    );
+
+    const rawPosts = response.data.data.children;
+
+    const posts = rawPosts.filter((rp) =>
+      Array.from(service).some((s) => rp.data.url.includes(s))
+    );
+
+    const rand = randomNumber(0, posts.length - 1);
+    const chosenPost = posts[rand];
+
+    // Trim the title if too long
+    const redditTitle =
+      chosenPost.data.title.length > 256
+        ? `${chosenPost.data.title.slice(0, 253)}...`
+        : chosenPost.data.title;
+
+    const oEmbedText = `**${redditTitle}**\n\n${chosenPost.data.url}`;
+    return oEmbedText;
+  }
+
+  private async getRedditMediaEmbed(): Promise<MessageEmbed | string> {
     const response = await axios.get(
       `https://www.reddit.com/r/${this.sub}/top/.json?limit=99&t=week`
     );
