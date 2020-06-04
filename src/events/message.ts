@@ -1,6 +1,6 @@
 import Bot from '../core/bot';
 import { IEvent } from '../typings';
-import { Message, GuildMember } from 'discord.js';
+import { Message } from 'discord.js';
 
 import User from '../database/models/userModel';
 

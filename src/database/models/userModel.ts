@@ -1,4 +1,4 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Schema } from 'mongoose';
 import { IUser } from '../../typings';
 
 // Remove the mongo ID and version key when returning JSON
