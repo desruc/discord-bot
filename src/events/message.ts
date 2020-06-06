@@ -46,7 +46,7 @@ export default class MessageEvent implements IEvent {
   private getExpForLevel(level: number): number {
     let exp = 0;
     for (let i = 1; i < level; i++) {
-      exp += 1 * 2;
+      exp += i * 25;
     }
     return exp;
   }
