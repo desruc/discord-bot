@@ -26,4 +26,25 @@ export default class Bot extends Client {
     await this.login(discordToken);
     return this;
   }
+
+  public async getUserCount(filter = true): Promise<number> {
+    if (filter) {
+      if (!this.shard)
+        return this.users.cache.filter((u) => !u.equals(this.user!)).size;
+      const size = await this.shard.broadcastEval(
+        'this.users.cache.filter(u => !u.equals(this.user)).size'
+      );
+      return size.reduce((p, v) => p + v, 0);
+    } else {
+      if (!this.shard) return this.users.cache.size;
+      const size = await this.shard.broadcastEval('this.users.cache.size');
+      return size.reduce((p, v) => p + v, 0);
+    }
+  }
+
+  public async getGuildCount(): Promise<number> {
+    if (!this.shard) return this.guilds.cache.size;
+    const size = await this.shard.broadcastEval('this.guilds.cache.size');
+    return size.reduce((p, v) => p + v, 0);
+  }
 }
