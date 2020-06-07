@@ -21,13 +21,22 @@ export default class ReadyEvent implements IEvent {
       } I'm ready to serve ${logMessage}`
     );
 
-    const updatePresence = async (): Promise<Presence> =>
-      this.client.user!.setPresence({
+    const updatePresence = async (): Promise<Presence> => {
+      const guildCount = await this.client.getGuildCount();
+      const userCount = await this.client.getUserCount();
+
+      const activityName =
+        guildCount > 1
+          ? `${userCount} users in ${guildCount} guilds`
+          : `${userCount} users!`;
+
+      return this.client.user!.setPresence({
         activity: {
-          name: `${await this.client.getUsersCount()} users!`,
+          name: activityName,
           type: 'WATCHING'
         }
       });
+    };
 
     setInterval(updatePresence, 30 * 1000);
     updatePresence();

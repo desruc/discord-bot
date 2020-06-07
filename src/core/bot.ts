@@ -27,7 +27,7 @@ export default class Bot extends Client {
     return this;
   }
 
-  public async getUsersCount(filter = true): Promise<number> {
+  public async getUserCount(filter = true): Promise<number> {
     if (filter) {
       if (!this.shard)
         return this.users.cache.filter((u) => !u.equals(this.user!)).size;
@@ -40,5 +40,11 @@ export default class Bot extends Client {
       const size = await this.shard.broadcastEval('this.users.cache.size');
       return size.reduce((p, v) => p + v, 0);
     }
+  }
+
+  public async getGuildCount(): Promise<number> {
+    if (!this.shard) return this.guilds.cache.size;
+    const size = await this.shard.broadcastEval('this.guilds.cache.size');
+    return size.reduce((p, v) => p + v, 0);
   }
 }
