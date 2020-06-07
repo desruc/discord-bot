@@ -45,9 +45,7 @@ export default class Say extends Command {
 
     // Guild has no text channels (should never happen)
     if (serverTextChannels.length <= 0) {
-      return message.channel.send(
-        'The selected guild has no text channels. Terminating process.'
-      );
+      return message.channel.send('The selected guild has no text channels.');
     }
 
     // Only one text channel - send the message there
@@ -140,9 +138,7 @@ export default class Say extends Command {
 
     // Bot and user share no guilds (should never happen)
     if (authorGuilds.length <= 0)
-      return message.channel.send(
-        'We have no guilds in common. Terminating process.'
-      );
+      return message.channel.send('We have no guilds in common.');
 
     // Bot and user only share one guild - ask which channel
     if (authorGuilds.length === 1) {

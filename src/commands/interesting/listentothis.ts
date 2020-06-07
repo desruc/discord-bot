@@ -8,7 +8,7 @@ export default class ListenToThis extends RedditCommand {
     this.sub = 'listentothis';
     this.thumbnail = false;
     this.isImage = false;
-    this.category = 'info';
+    this.category = 'random';
   }
 
   public async exec(
@@ -16,8 +16,10 @@ export default class ListenToThis extends RedditCommand {
     message: Message
   ): Promise<Message | Array<Message> | void> {
     const { channel } = message;
-
+    const placeholder = await channel.send(
+      'Just fetching something now... please hold.'
+    );
     const song = await this.getOmbed(['bandcamp', 'youtube']);
-    return channel.send(song);
+    return placeholder.edit(song);
   }
 }
