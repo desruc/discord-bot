@@ -1,5 +1,4 @@
-import Bot from '../core/bot';
-import { TextChannel } from 'discord.js';
+import { TextChannel, Guild } from 'discord.js';
 
 export const randomNumber = (min: number, max: number): number => {
   const strictMin: number = Math.ceil(Number(min));
@@ -17,12 +16,10 @@ export const asyncForEach = async (
 };
 
 export const getTextChannel = async (
-  client: Bot,
+  guild: Guild,
   channelName = ''
 ): Promise<TextChannel> => {
-  const textChannels = await client.channels.cache.filter(
-    ({ type }) => type === 'text'
-  );
+  const textChannels = guild.channels.cache.filter(({ type }) => type === 'text');
   const baseChannel = textChannels.first();
 
   if (channelName.trim().length === 0) return baseChannel as TextChannel;

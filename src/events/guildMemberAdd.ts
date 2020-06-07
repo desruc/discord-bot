@@ -16,7 +16,8 @@ export default class GuildMemberAdd implements IEvent {
     const { id: guildId } = guild;
     new userRecords().initializeUserRecord(this.client, guildId, member);
 
-    const baseChannel = await getTextChannel(this.client);
+    const baseChannel = await getTextChannel(guild);
+
     // TODO: Add fantasy greetings
     return baseChannel.send(`Welcome ${member}!`);
   }
