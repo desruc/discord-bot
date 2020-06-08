@@ -4,7 +4,7 @@ import Bot from '../core/bot';
 
 const { mongoUser, mongoPassword, mongoHost, mongoPort, dbName, nodeEnv } = env;
 
-let url = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoHost}-ebmxw.mongodb.net/${dbName}?retryWrites=true&w=majority`;
+let url = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoHost}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
 if (nodeEnv === 'development') {
   url = `mongodb://${mongoHost}:${mongoPort}`;
