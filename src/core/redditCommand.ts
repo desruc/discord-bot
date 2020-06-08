@@ -10,6 +10,7 @@ export default class RedditCommand extends Command {
   public title: string;
   public isImage = true;
   public thumbnail = false;
+  public guildOnly = true;
 
   public async getOmbed(service: string | string[]): Promise<string> {
     const response = await axios.get(
@@ -80,9 +81,11 @@ export default class RedditCommand extends Command {
   ): Promise<Message | Array<Message> | void> {
     const { channel } = message;
     const placeholder = await channel.send(
-      'Just fetching something now... please hold.'
+      new MessageEmbed().setDescription(
+        'Just fetching something now... please hold.'
+      )
     );
     const embed = await this.getRedditMediaEmbed();
-    return placeholder.edit(embed);
+    return await placeholder.edit(embed);
   }
 }

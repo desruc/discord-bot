@@ -1,5 +1,5 @@
 import RedditCommand from '../../core/redditCommand';
-import { Client, Message } from 'discord.js';
+import { Client, Message, MessageEmbed } from 'discord.js';
 
 export default class ListenToThis extends RedditCommand {
   constructor() {
@@ -16,10 +16,7 @@ export default class ListenToThis extends RedditCommand {
     message: Message
   ): Promise<Message | Array<Message> | void> {
     const { channel } = message;
-    const placeholder = await channel.send(
-      'Just fetching something now... please hold.'
-    );
     const song = await this.getOmbed(['bandcamp', 'youtube']);
-    return placeholder.edit(song);
+    await channel.send(song);
   }
 }
