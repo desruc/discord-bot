@@ -1,5 +1,5 @@
 import RedditCommand from '../../core/redditCommand';
-import { Client, Message, MessageEmbed } from 'discord.js';
+import { Client, Message } from 'discord.js';
 
 export default class ListenToThis extends RedditCommand {
   constructor() {
