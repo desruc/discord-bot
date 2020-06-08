@@ -23,6 +23,9 @@ export default class MessageEvent implements IEvent {
   }
 
   private async incrementExperience(message: Message): Promise<void> {
+    // Only grant experience for messages sent in a guild channel
+    if (!message.guild) return;
+
     const {
       member,
       guild: { id: guildId }
@@ -86,7 +89,7 @@ export default class MessageEvent implements IEvent {
         try {
           await member.roles.add(guildRole.id);
           channel.send(
-            `Congratulations ${member}! You are now a ${guildRole.name}!`
+            `Congratulations **${member.displayName}**! You are now a ${guildRole.name}!`
           );
         } catch (error) {
           this.client.logger.error(
