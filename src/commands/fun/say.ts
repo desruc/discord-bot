@@ -12,11 +12,11 @@ export default class Say extends Command {
 
   private checkDmPermissions(message: Message, guild: Guild): boolean {
     const {
-      author: { id: authorId },
-      member
+      author: { id: authorId }
     } = message;
 
     const modRole = guild.roles.cache.find((r) => r.name === config.modRole);
+    const member = guild.members.cache.find((m) => m.id === authorId);
 
     if (
       (modRole && member.roles.cache.has(modRole.id)) ||
@@ -76,7 +76,7 @@ export default class Say extends Command {
         message.channel
           .awaitMessages(channelFilter, {
             max: 1,
-            time: 3000,
+            time: 5000,
             errors: ['time']
           })
           .then((collected) => {
@@ -173,7 +173,7 @@ export default class Say extends Command {
       .then(() => {
         // Await a guild response
         message.channel
-          .awaitMessages(guildFilter, { max: 1, time: 3000, errors: ['time'] })
+          .awaitMessages(guildFilter, { max: 1, time: 5000, errors: ['time'] })
           .then((collected) => {
             const chosenGuildMeta =
               authorGuilds[Number(collected.first().content) - 1];
