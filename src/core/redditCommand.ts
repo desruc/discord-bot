@@ -85,7 +85,15 @@ export default class RedditCommand extends Command {
         'Just fetching something now... please hold.'
       )
     );
-    const embed = await this.getRedditMediaEmbed();
-    return await placeholder.edit(embed);
+    try {
+      const embed = await this.getRedditMediaEmbed();
+      return await placeholder.edit(embed);
+    } catch {
+      return await placeholder.edit(
+        new MessageEmbed().setDescription(
+          'Something went wrong. Please try again later.'
+        )
+      );
+    }
   }
 }
