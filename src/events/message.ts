@@ -1,6 +1,6 @@
 import Bot from '../core/bot';
 import { IEvent } from '../typings';
-import { Message } from 'discord.js';
+import { Message, MessageEmbed, TextChannel } from 'discord.js';
 
 import User from '../database/models/userModel';
 
@@ -25,6 +25,10 @@ export default class MessageEvent implements IEvent {
   private async incrementExperience(message: Message): Promise<void> {
     // Only grant experience for messages sent in a guild channel
     if (!message.guild) return;
+
+    // Don't grant experience in the mod channel
+    if ((message.channel as TextChannel).name === this.client.config.modChannel)
+      return;
 
     const {
       member,

@@ -7,6 +7,7 @@ export interface BotConfig {
   prefix: string;
   modRole: string;
   totalShards: string;
+  modChannel: string;
 }
 
 export interface ICommand {
