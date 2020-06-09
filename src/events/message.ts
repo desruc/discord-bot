@@ -74,6 +74,18 @@ export default class MessageEvent implements IEvent {
     return userLevel;
   }
 
+  private getLevelEmbed(roleName: string, memberName: string): MessageEmbed {
+    const roleMeta = roles.find((r) => r.name === roleName);
+
+    const embed = new MessageEmbed()
+      .setTitle(`Congratulations ${memberName}! You are now a ${roleName}!`)
+      .setDescription(roleMeta.description)
+      .setThumbnail(roleMeta.image)
+      .setColor(roleMeta.color);
+
+    return embed;
+  }
+
   private async promoteMember(message: Message, userLevel: number): Promise<void> {
     const { guild, member, channel } = message;
 
@@ -92,9 +104,8 @@ export default class MessageEvent implements IEvent {
       if (!alreadyHasRole) {
         try {
           await member.roles.add(guildRole.id);
-          channel.send(
-            `Congratulations **${member.displayName}**! You are now a ${guildRole.name}!`
-          );
+          const embed = this.getLevelEmbed(guildRole.name, member.displayName);
+          channel.send(embed);
         } catch (error) {
           this.client.logger.error(
             `Error granting ${member.displayName} the ${guildRole.name} role on ${guild.name}: `,

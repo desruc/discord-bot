@@ -4,23 +4,35 @@ interface NewRoleMeta {
   position?: number;
   color?: string;
   hoist?: boolean;
+  image?: string;
+  description?: string;
 }
 
 export const roles: NewRoleMeta[] = [
   {
     name: 'Human',
     level: 0,
-    color: '#878472'
+    color: '#878472',
+    description: '',
+    image:
+      'https://media-waterdeep.cursecdn.com/avatars/thumbnails/6/258/420/618/636271801914013762.png'
   },
   {
     name: 'Locathah',
     level: 5,
-    color: '#666A86'
+    color: '#666A86',
+    description:
+      'Locathah are typically tall and lanky, with features strongly resembling a fish. their 4 fingered hands and three toed feet are heavily webbed, as well as fins on their upper and lower arms, calves, and a large crowning fin on their head.',
+    image:
+      'https://i.pinimg.com/originals/73/90/e2/7390e2b24f8ec5db7678fca2f28b92ae.jpg'
   },
   {
     name: 'Goblin',
     level: 10,
-    color: '#A2D729'
+    color: '#A2D729',
+    description: '',
+    image:
+      'https://media-waterdeep.cursecdn.com/avatars/thumbnails/0/351/1000/1000/636252777818652432.jpeg'
   },
   {
     name: 'Kobold',
