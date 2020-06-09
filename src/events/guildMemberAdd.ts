@@ -2,6 +2,8 @@ import Bot from '../core/bot';
 import { IEvent } from '../typings';
 import { Message, GuildMember } from 'discord.js';
 
+import { getGreeting } from '../constants/messages';
+
 import userRecords from '../commands/dev/initUserRecords';
 
 import { getTextChannel } from '../utils/helpers';
@@ -18,7 +20,6 @@ export default class GuildMemberAdd implements IEvent {
 
     const baseChannel = await getTextChannel(guild);
 
-    // TODO: Add fantasy greetings
-    return baseChannel.send(`Welcome ${member}!`);
+    return baseChannel.send(getGreeting(member));
   }
 }
