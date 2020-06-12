@@ -18,16 +18,10 @@ commands:
             echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
             gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
             gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
-            gcloud --quiet compute ssh 694365681079-compute@${GOOGLE_INSTANCE} --strict-host-key-checking=no --command 'docker container rm discord-bot && docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG} && docker container create --name discord-bot ${DOCKER_IMAGE}:${DOCKER_TAG} && docker start discord-bot'
+            gcloud --quiet compute ssh 694365681079-compute@${GOOGLE_INSTANCE} --strict-host-key-checking=no --command 'docker container stop discord-bot && docker container rm discord-bot && docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG} && docker container create --name discord-bot ${DOCKER_IMAGE}:${DOCKER_TAG} && docker start discord-bot'
 workflows:
   version: 2
   build-deploy:
-    jobs:
-      - build:
-        filters:
-          branches:
-            ignore:
-              - master
       - deploy:
           filters:
             branches:
