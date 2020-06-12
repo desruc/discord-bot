@@ -1,0 +1,42 @@
+version: 2.1
+commands:
+  build-bot-container:
+    steps:
+      - checkout
+      - setup_remote_docker
+      - run:
+          name: Build and push Docker image
+          command: |
+            docker build --build-arg DISCORD_TOKEN=${DISCORD_TOKEN} --build-arg MONGO_USER=${MONGO_USER} --build-arg MONGO_PASSWORD=${MONGO_PASSWORD} --build-arg MONGO_HOST=${MONGO_HOST} --build-arg MONGO_DB=${MONOGO_DB} -t ${DOCKER_IMAGE}:${DOCKER_TAG} ./
+            echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
+            docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
+  deploy-container-to-gce:
+    steps:
+      - run:
+          name: Deploy bot container to GCE
+          command: |
+            echo $GCLOUD_SERVICE_KEY | gcloud auth activate-service-account --key-file=-
+            gcloud --quiet config set project ${GOOGLE_PROJECT_ID}
+            gcloud --quiet config set compute/zone ${GOOGLE_COMPUTE_ZONE}
+            gcloud --quiet compute ssh 694365681079-compute@${GOOGLE_INSTANCE} --strict-host-key-checking=no --command 'docker container rm discord-bot && docker image rm ${DOCKER_IMAGE}:${DOCKER_TAG} && docker container create --name discord-bot ${DOCKER_IMAGE}:${DOCKER_TAG} && docker start discord-bot'
+workflows:
+  version: 2
+  build-deploy:
+    jobs:
+      - build:
+        filters:
+          branches:
+            ignore:
+              - master
+      - deploy:
+          filters:
+            branches:
+              only:
+                - master
+jobs:
+  deploy:
+    docker:
+      - image: google/cloud-sdk
+    steps:
+      - build-bot-container
+      - deploy-container-to-gce
