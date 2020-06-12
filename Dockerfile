@@ -1,5 +1,6 @@
 # Build layer
-FROM arm32v7/node:alpine AS build
+# FROM arm32v7/node:alpine AS build
+FROM node:lts-alpine AS build
 RUN mkdir -p /usr/discordbot-source/
 WORKDIR /usr/discordbot-source/
 COPY package.json /usr/discordbot-source/
@@ -8,7 +9,8 @@ COPY . /usr/discordbot-source/
 RUN yarn build
 
 # Image layer
-FROM arm32v7/node:alpine
+# FROM arm32v7/node:alpine
+FROM node:lts-alpine
 
 LABEL name "Xanathar-bot"
 
