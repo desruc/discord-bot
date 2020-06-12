@@ -3,6 +3,9 @@ import env from '../constants/env';
 import Bot from '../core/bot';
 
 const { mongoUser, mongoPassword, mongoHost, mongoPort, dbName, nodeEnv } = env;
+console.log("mongoHost", mongoHost)
+console.log("nodeEnv", nodeEnv)
+console.log("dbName", dbName)
 
 let url = `mongodb+srv://${mongoUser}:${mongoPassword}@${mongoHost}.mongodb.net/${dbName}?retryWrites=true&w=majority`;
 
