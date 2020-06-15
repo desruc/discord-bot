@@ -43,6 +43,7 @@ export interface IAvatar extends Document {
   guildId: string;
   exp: number;
   hitPoints: number;
+  maxHitPoints: number;
   armour: number;
   attack: number;
   coins: number;

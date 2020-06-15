@@ -9,13 +9,14 @@ const removeIdAndVersion = (doc, ret) => {
 
 const avatarSchema: Schema = new Schema(
   {
-    userId: { type: String },
-    guildId: { type: String },
-    exp: { type: Number },
-    hitPoints: { type: Number },
-    armour: { type: Number },
-    attack: { type: Number },
-    coins: { type: Number }
+    userId: { type: String, required: true },
+    guildId: { type: String, required: true },
+    exp: { type: Number, default: 0 },
+    hitPoints: { type: Number, default: 100 },
+    maxHitPoints: { type: Number, default: 100 },
+    armour: { type: Number, default: 1 },
+    attack: { type: Number, default: 1 },
+    coins: { type: Number, default: 0 }
   },
   {
     timestamps: true,
@@ -25,4 +26,4 @@ const avatarSchema: Schema = new Schema(
   }
 );
 
-export default mongoose.model<IAvatar>('User', avatarSchema);
+export default mongoose.model<IAvatar>('Avatar', avatarSchema);
