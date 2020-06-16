@@ -1,4 +1,4 @@
-import Command from '../core/command';
+import Command from './command';
 import { MessageEmbed, Client, Message } from 'discord.js';
 import axios from 'axios';
 

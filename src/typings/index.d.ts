@@ -37,3 +37,14 @@ export interface IUser extends Document {
     experience: number;
   }[];
 }
+
+export interface IAvatar extends Document {
+  userId: string;
+  guildId: string;
+  exp: number;
+  hitPoints: number;
+  maxHitPoints: number;
+  armour: number;
+  attack: number;
+  coins: number;
+}
