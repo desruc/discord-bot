@@ -10,7 +10,6 @@ const removeIdAndVersion = (doc, ret) => {
 const avatarSchema: Schema = new Schema(
   {
     userId: { type: String, required: true },
-    guildId: { type: String, required: true },
     exp: { type: Number, default: 0 },
     hitPoints: { type: Number, default: 100 },
     maxHitPoints: { type: Number, default: 100 },

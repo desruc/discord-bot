@@ -11,11 +11,10 @@ export default class Stats extends RPGCommand {
   public async exec(client: Client, message: Message): Promise<void> {
     try {
       const {
-        member: { id: userId, user, displayName },
-        guild: { id: guildId }
+        member: { id: userId, user, displayName }
       } = message;
 
-      const avatar = await this.getUserAvatar(userId, guildId);
+      const avatar = await this.getUserAvatar(userId);
 
       const { hitPoints, maxHitPoints, armour, attack, exp, coins } = avatar;
 
