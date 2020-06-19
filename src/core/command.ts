@@ -5,7 +5,7 @@ export default class Command implements ICommand {
   public active = true;
   public name: string;
   public category: string;
-  public cooldown = 1000;
+  public cooldown = 0;
   public description: string;
   public guildOnly = false;
   public ownerOnly = false;

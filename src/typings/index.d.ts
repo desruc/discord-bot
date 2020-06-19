@@ -18,6 +18,12 @@ export interface ICommand {
   description: string;
   guildOnly: boolean;
   ownerOnly: boolean;
+  rpg?: boolean;
+  execRpgCommand?(
+    client: Client,
+    message: Message,
+    args?: string[]
+  ): Promise<Message | Array<Message> | void>;
   exec(
     client: Client,
     message: Message,
@@ -47,6 +53,10 @@ export interface IAvatar extends Document {
   armour: number;
   attack: number;
   coins: number;
+  cooldowns: {
+    command: string;
+    timestamp: number;
+  }[];
 }
 
 export interface IMonster {
