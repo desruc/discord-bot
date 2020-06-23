@@ -57,6 +57,9 @@ export interface IAvatar extends Document {
     command: string;
     timestamp: number;
   }[];
+  inventory: {
+    healthPotion: number;
+  };
 }
 
 export interface IMonster {
@@ -74,4 +77,10 @@ export interface IMonsterResult {
   damage: number;
   coins: number;
   exp: number;
+}
+
+export interface IShopItem {
+  name: string;
+  cost: number;
+  addToInventory?: boolean;
 }

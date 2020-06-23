@@ -16,7 +16,10 @@ const avatarSchema: Schema = new Schema(
     armour: { type: Number, default: 1 },
     attack: { type: Number, default: 1 },
     coins: { type: Number, default: 0 },
-    cooldowns: [{ command: { type: String }, timestamp: { type: Number } }]
+    cooldowns: [{ command: { type: String }, timestamp: { type: Number } }],
+    inventory: {
+      healthPotion: { type: Number, default: 0 }
+    }
   },
   {
     timestamps: true,

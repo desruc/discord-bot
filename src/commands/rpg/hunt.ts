@@ -1,4 +1,4 @@
-import { Client, Message, MessageEmbed } from 'discord.js';
+import { Client, Message } from 'discord.js';
 import RPGCommand from '../../core/rpgCommand';
 
 export default class Hunt extends RPGCommand {
