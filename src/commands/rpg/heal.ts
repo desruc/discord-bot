@@ -31,7 +31,7 @@ export default class Heal extends RPGCommand {
 
       await avatar.updateOne({
         $set: { hitPoints: maxHitPoints },
-        $inc: { 'invtentory.healthPotion': -1 }
+        $inc: { 'inventory.healthPotion': -1 }
       });
 
       return channel.send(`${member}, your health has been restored.`);
