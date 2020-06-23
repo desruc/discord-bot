@@ -32,7 +32,6 @@ export default class Buy extends RPGCommand {
         );
 
       const avatar = await this.getUserAvatar(userId);
-      console.log('Buy -> avatar', avatar);
       const { coins } = avatar;
       const { name, cost, addToInventory } = item;
 
@@ -61,7 +60,7 @@ export default class Buy extends RPGCommand {
         );
       }
     } catch (error) {
-      client.logger.error(' ', error);
+      client.logger.error('Error in the BUY command: ', error);
     }
   }
 }
