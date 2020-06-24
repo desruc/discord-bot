@@ -42,3 +42,6 @@ export const msToString = (ms: number): string => {
   if (mins > 0) return `${mins}m ${seconds}s`;
   return `${seconds}s`;
 };
+
+export const isValidNumber = (num: string | number): boolean =>
+  !isNaN(Number(num)) && isFinite(Number(num));
