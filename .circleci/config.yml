@@ -27,6 +27,7 @@ workflows:
           filters:
             branches:
               only:
+                - release/*
                 - master
 jobs:
   deploy:
