@@ -45,7 +45,7 @@ export default class Inventory extends RPGCommand {
 
       return channel.send(embed);
     } catch (error) {
-      client.logger.error('Error in the INVENTORY command: ', error);
+      client.logger.error('Error caught in the INVENTORY command: ', error);
     }
   }
 }

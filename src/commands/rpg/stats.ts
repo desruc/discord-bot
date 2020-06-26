@@ -1,14 +1,16 @@
-import { Client, Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
 import RPGCommand from '../../core/rpgCommand';
+import Bot from '../../core/bot';
 
 export default class Stats extends RPGCommand {
   constructor() {
     super();
     this.name = 'stats';
+    this.aliases = ['profile'];
     this.category = 'rpg';
   }
 
-  public async exec(client: Client, message: Message): Promise<void> {
+  public async exec(client: Bot, message: Message): Promise<void> {
     try {
       const {
         member: { id: userId, user, displayName }
@@ -42,7 +44,7 @@ export default class Stats extends RPGCommand {
 
       message.channel.send(embed);
     } catch (error) {
-      console.log(error);
+      client.logger.error('Error caught in the STATS command: ', error);
     }
   }
 }

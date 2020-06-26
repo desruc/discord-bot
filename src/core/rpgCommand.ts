@@ -1,10 +1,10 @@
 import { Client, Message, MessageEmbed } from 'discord.js';
 import Command from './command';
-import { IAvatar, IMonster, IMonsterResult } from '../typings';
+import { IAvatar, IMonster } from '../typings';
 
 import Avatar from '../database/models/avatarModel';
 
-import { basicMonsters } from '../constants/monsters';
+import { basicCreatures } from '../constants/monsters';
 import { randomNumber, msToString } from '../utils/helpers';
 
 export default class RPGCommand extends Command {
@@ -41,14 +41,13 @@ export default class RPGCommand extends Command {
     return Math.floor(this.baseExp * Math.pow(currentLevel, this.levelExponent));
   }
 
-  public getBasicMonster(): IMonsterResult {
-    const monster: IMonster =
-      basicMonsters[randomNumber(0, basicMonsters.length - 1)];
-    const damage = randomNumber(monster.minDmg, monster.maxDmg);
-    const coins = randomNumber(monster.minCoins, monster.maxCoins);
-    const exp = randomNumber(monster.minExp, monster.maxExp);
+  public getBasicMonster(): IMonster {
+    const name = basicCreatures[randomNumber(0, basicCreatures.length - 1)];
+    const damage = randomNumber(10, 35);
+    const coins = randomNumber(4, 15);
+    const exp = randomNumber(5, 20);
     return {
-      name: monster.name,
+      name,
       damage,
       coins,
       exp

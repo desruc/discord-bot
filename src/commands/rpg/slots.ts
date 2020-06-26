@@ -117,7 +117,7 @@ export default class Slots extends RPGCommand {
 
       return channel.send(embed);
     } catch (error) {
-      client.logger.error('Error caught in SLOTS command: ', error);
+      client.logger.error('Error caught in the SLOTS command: ', error);
     }
   }
 }

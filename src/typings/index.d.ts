@@ -64,16 +64,6 @@ export interface IAvatar extends Document {
 
 export interface IMonster {
   name: string;
-  minDmg: number;
-  maxDmg: number;
-  minCoins: number;
-  maxCoins: number;
-  minExp: number;
-  maxExp: number;
-}
-
-export interface IMonsterResult {
-  name: string;
   damage: number;
   coins: number;
   exp: number;

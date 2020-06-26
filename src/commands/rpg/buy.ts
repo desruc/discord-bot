@@ -60,7 +60,7 @@ export default class Buy extends RPGCommand {
         );
       }
     } catch (error) {
-      client.logger.error('Error in the BUY command: ', error);
+      client.logger.error('Error caught in the BUY command: ', error);
     }
   }
 }

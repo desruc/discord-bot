@@ -36,7 +36,7 @@ export default class Heal extends RPGCommand {
 
       return channel.send(`${member}, your health has been restored.`);
     } catch (error) {
-      client.logger.error('Error in the HEAL command: ', error);
+      client.logger.error('Error caught in the HEAL command: ', error);
     }
   }
 }

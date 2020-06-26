@@ -20,7 +20,7 @@ export default class Shop extends RPGCommand {
 
       return channel.send(embed);
     } catch (error) {
-      client.logger.error('ERROR SENDING SHOP EMBED: ', error);
+      client.logger.error('Error caught in the SHOP command: ', error);
     }
   }
 }

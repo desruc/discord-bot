@@ -77,7 +77,7 @@ export default class CoinFlip extends RPGCommand {
         .setFooter(`You lost ${bettingAmount} coins`);
       return channel.send(embed);
     } catch (error) {
-      client.logger.error('Error in the HEAL command: ', error);
+      client.logger.error('Error caught in the COINFLIP command: ', error);
     }
   }
 }

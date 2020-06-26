@@ -1,13 +1,12 @@
-import { IMonster } from '../typings/index';
-
-export const basicMonsters: IMonster[] = [
-  {
-    name: 'Crocodile',
-    minDmg: 10,
-    maxDmg: 35,
-    minCoins: 4,
-    maxCoins: 15,
-    minExp: 1,
-    maxExp: 12
-  }
+export const basicCreatures: string[] = [
+  'Fire Beetle',
+  'Unicorn',
+  'Giant Bat',
+  'Spider',
+  'Wolf',
+  'Rat',
+  'Crab',
+  'Lizard',
+  'Baboon',
+  'Boar'
 ];
