@@ -44,4 +44,4 @@ export const msToString = (ms: number): string => {
 };
 
 export const isValidNumber = (num: string | number): boolean =>
-  !isNaN(Number(num)) && isFinite(Number(num));
+  !isNaN(Number(num)) && isFinite(Number(num)) && Number(num) >= 0;
