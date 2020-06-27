@@ -29,7 +29,7 @@ export default class CoinFlip extends RPGCommand {
         );
 
       const choice = args[0];
-      const bettingAmount = args[1];
+      const bettingAmount = Math.floor(Number(args[1]));
 
       const acceptedArgs = ['h', 't', 'heads', 'tails'];
 
@@ -50,7 +50,7 @@ export default class CoinFlip extends RPGCommand {
       const avatar = await this.getUserAvatar(userId);
       const { coins } = avatar;
 
-      if (Number(bettingAmount) > coins)
+      if (bettingAmount > coins)
         return channel.send(
           `**${displayName}**. Come back when you have enough coins.`
         );
@@ -64,14 +64,14 @@ export default class CoinFlip extends RPGCommand {
       const tails = ['t', 'tails'].some((a) => a === choice) && rand % 2 !== 0;
 
       if (heads || tails) {
-        await avatar.updateOne({ $inc: { coins: Number(bettingAmount) } });
+        await avatar.updateOne({ $inc: { coins: bettingAmount } });
         embed
           .setDescription(`\nIt was ${heads ? '**heads**' : '**tails**'}!`)
           .setFooter(`You won ${bettingAmount} coins`);
         return channel.send(embed);
       }
 
-      await avatar.updateOne({ $inc: { coins: -Number(bettingAmount) } });
+      await avatar.updateOne({ $inc: { coins: -bettingAmount } });
       embed
         .setDescription(`\nIt was ${rand % 2 === 0 ? '**heads**' : '**tails**'}!`)
         .setFooter(`You lost ${bettingAmount} coins`);

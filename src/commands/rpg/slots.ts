@@ -27,7 +27,7 @@ export default class Slots extends RPGCommand {
           `Try again **${displayName}**, but this time with a valid amount of coins`
         );
 
-      const bettingAmount = args[0];
+      const bettingAmount = Math.floor(Number(args[0]));
 
       if (!isValidNumber(bettingAmount))
         return channel.send(
@@ -84,7 +84,7 @@ export default class Slots extends RPGCommand {
       const jackpot = turn.every((t) => t.emoji === turn[0].emoji);
 
       if (jackpot) {
-        const winnings = Number(bettingAmount) * turn[0].jackpot;
+        const winnings = bettingAmount * turn[0].jackpot;
 
         await avatar.updateOne({ $inc: { coins: winnings } });
         embed
@@ -99,7 +99,7 @@ export default class Slots extends RPGCommand {
       );
 
       if (threeOfAKind) {
-        const winnings = Number(bettingAmount) * threeOfAKind.weight;
+        const winnings = bettingAmount * threeOfAKind.weight;
 
         await avatar.updateOne({ $inc: { coins: winnings } });
         embed
@@ -108,7 +108,9 @@ export default class Slots extends RPGCommand {
         return channel.send(embed);
       }
 
-      await avatar.updateOne({ $inc: { coins: -Number(bettingAmount) } });
+      await avatar.updateOne({
+        $inc: { coins: -bettingAmount }
+      });
       embed
         .setDescription(
           `\nYou lost **${bettingAmount}** coins!\n\n${resultIconString}`
