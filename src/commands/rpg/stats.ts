@@ -18,11 +18,11 @@ export default class Stats extends RPGCommand {
 
       const avatar = await this.getUserAvatar(userId);
 
-      const { hitPoints, maxHitPoints, armour, attack, exp, coins } = avatar;
+      const { hitPoints, maxHitPoints, armour, attack, level, exp, coins } = avatar;
 
-      const currentLevel = this.getCurrentLevel(exp);
-      const expToNextLevel = this.getExpForNextLevel(currentLevel);
-      const percentProgress = Math.round((exp / expToNextLevel) * 100 * 10) / 10;
+      const requiredExp = this.getExpForLevel(level + 1);
+
+      const percentProgress = Math.round((exp / requiredExp) * 100 * 10) / 10;
 
       const embed = new MessageEmbed()
         .setColor('RANDOM')
@@ -30,8 +30,8 @@ export default class Stats extends RPGCommand {
         .setAuthor(`${displayName}'s avatar`, user.avatarURL())
         .addField(
           'Meta',
-          `**Level:** ${currentLevel} (${percentProgress}%)
-        **XP:** ${exp}/${expToNextLevel}
+          `**Level:** ${level} (${percentProgress}%)
+        **XP:** ${exp}/${requiredExp}
         `
         )
         .addField(

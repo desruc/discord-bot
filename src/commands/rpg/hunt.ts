@@ -20,19 +20,15 @@ export default class Hunt extends RPGCommand {
       const monster = this.getBasicMonster();
 
       // Check if user survived
-      const { hitPoints, exp, maxHitPoints } = avatar;
+      const { hitPoints, level, exp, maxHitPoints } = avatar;
       const { name, damage, coins, exp: monsterExp } = monster;
 
-      const currentLevel = this.getCurrentLevel(exp);
-      const nextLevelExp = this.getExpForNextLevel(currentLevel);
-
       if (damage > hitPoints) {
-        const backToBase = currentLevel - 1 === 0;
-        const updatedExp = this.getExpForNextLevel(currentLevel - 1);
+        const backToBase = level - 1 === 0;
         if (backToBase) {
           // User is back to the base avatar stats
           await avatar.updateOne({
-            exp: updatedExp,
+            exp: 0,
             hitPoints: 100,
             attack: 1,
             armour: 1,
@@ -43,7 +39,8 @@ export default class Hunt extends RPGCommand {
           const updatedMaxHitPoints = maxHitPoints - 5;
           await avatar.updateOne({
             $set: {
-              exp: updatedExp,
+              level: level - 1,
+              exp: 0,
               hitPoints: updatedMaxHitPoints,
               maxHitPoints: updatedMaxHitPoints
             },
@@ -59,13 +56,17 @@ export default class Hunt extends RPGCommand {
         hitPoints - damage
       }/${maxHitPoints}`;
 
-      const hasLeveled = exp + monsterExp > nextLevelExp;
+      const updatedExp = exp + monsterExp;
+      const hasLeveled = updatedExp >= this.getExpForLevel(level + 1);
 
       if (hasLeveled) {
-        responseMsg += `\nThey are now **Level ${currentLevel + 1}**`;
+        responseMsg += `\nThey are now **Level ${level + 1}**`;
         await avatar.updateOne({
+          $set: {
+            exp: updatedExp - this.getExpForLevel(level + 1)
+          },
           $inc: {
-            exp: monsterExp,
+            level: 1,
             coins,
             hitPoints: -damage,
             maxHitPoints: 5,

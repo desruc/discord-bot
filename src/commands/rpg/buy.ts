@@ -28,7 +28,10 @@ export default class Buy extends RPGCommand {
 
       if (!item)
         return channel.send(
-          `I'm not sure we stock that, ${member}. Please check the item name`
+          `We don't stock that, ${member}. Please view our items by using ` +
+            '`' +
+            `${client.config.prefix}shop` +
+            '`'
         );
 
       const avatar = await this.getUserAvatar(userId);

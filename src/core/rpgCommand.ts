@@ -1,4 +1,5 @@
-import { Client, Message, MessageEmbed } from 'discord.js';
+import { Message, MessageEmbed } from 'discord.js';
+import Bot from './bot';
 import Command from './command';
 import { IAvatar, IMonster } from '../typings';
 
@@ -32,19 +33,14 @@ export default class RPGCommand extends Command {
     }
   }
 
-  public getCurrentLevel(experience: number): number {
-    // This will need to be updated if the exponent is updated
-    return Math.floor(Math.pow(experience / this.baseExp, 2 / 3)) || 1;
-  }
-
-  public getExpForNextLevel(currentLevel: number): number {
-    return Math.floor(this.baseExp * Math.pow(currentLevel, this.levelExponent));
+  public getExpForLevel(level: number): number {
+    return Math.floor(this.baseExp * Math.pow(level, this.levelExponent));
   }
 
   public getBasicMonster(): IMonster {
     const name = basicCreatures[randomNumber(0, basicCreatures.length - 1)];
     const damage = randomNumber(10, 35);
-    const coins = randomNumber(4, 15);
+    const coins = randomNumber(4, 18);
     const exp = randomNumber(5, 20);
     return {
       name,
@@ -114,7 +110,7 @@ export default class RPGCommand extends Command {
   }
 
   public async execRpgCommand(
-    client: Client,
+    client: Bot,
     message: Message,
     args: string[]
   ): Promise<Message | Array<Message> | void> {
@@ -134,7 +130,7 @@ export default class RPGCommand extends Command {
   }
 
   public async exec(
-    client: Client,
+    client: Bot,
     message: Message,
     args: string[]
   ): Promise<Message | Array<Message> | void> {
