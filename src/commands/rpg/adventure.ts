@@ -2,12 +2,12 @@ import { Message } from 'discord.js';
 import RPGCommand from '../../core/rpgCommand';
 import Bot from '../../core/bot';
 
-export default class Hunt extends RPGCommand {
+export default class Adventure extends RPGCommand {
   constructor() {
     super();
-    this.name = 'hunt';
+    this.name = 'adventure';
     this.category = 'rpg';
-    this.cooldown = 1000 * 60 * 3;
+    this.cooldown = 1000 * 60 * 60;
   }
 
   public async exec(client: Bot, message: Message): Promise<Message> {
@@ -17,7 +17,7 @@ export default class Hunt extends RPGCommand {
       } = message;
 
       const avatar = await this.getUserAvatar(userId);
-      const monster = this.getMonster('hunt');
+      const monster = this.getMonster('adventure');
 
       // Check if user survived
       const { hitPoints, level, exp, maxHitPoints } = avatar;
@@ -67,7 +67,7 @@ export default class Hunt extends RPGCommand {
 
       return message.channel.send(responseMsg);
     } catch (error) {
-      client.logger.error('Error caught in the HUNT command: ', error);
+      client.logger.error('Error caught in the ADVENTURE command: ', error);
     }
   }
 }

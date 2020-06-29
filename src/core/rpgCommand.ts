@@ -5,7 +5,7 @@ import { IAvatar, IMonster } from '../typings';
 
 import Avatar from '../database/models/avatarModel';
 
-import { basicCreatures } from '../constants/monsters';
+import Monsters from '../constants/monsters';
 import { randomNumber, msToString } from '../utils/helpers';
 
 export default class RPGCommand extends Command {
@@ -33,15 +33,46 @@ export default class RPGCommand extends Command {
     }
   }
 
+  public async resetAvatar(avatar: IAvatar): Promise<void> {
+    await avatar.updateOne({
+      exp: 0,
+      hitPoints: 100,
+      attack: 1,
+      armour: 1,
+      maxHitPoints: 100
+    });
+  }
+
+  public async removeLevel(avatar: IAvatar): Promise<void> {
+    const { maxHitPoints } = avatar;
+    await avatar.updateOne({
+      $set: {
+        exp: 0,
+        hitPoints: maxHitPoints - 5,
+        maxHitPoints: maxHitPoints - 5
+      },
+      $inc: { attack: -1, armour: -1, level: -1 }
+    });
+  }
+
   public getExpForLevel(level: number): number {
     return Math.floor(this.baseExp * Math.pow(level, this.levelExponent));
   }
 
-  public getBasicMonster(): IMonster {
-    const name = basicCreatures[randomNumber(0, basicCreatures.length - 1)];
-    const damage = randomNumber(10, 35);
-    const coins = randomNumber(4, 18);
-    const exp = randomNumber(5, 20);
+  public getMonster(type: string, modifier = 1): IMonster {
+    const {
+      names,
+      minDamage,
+      maxDamage,
+      minCoins,
+      maxCoins,
+      minExp,
+      maxExp
+    } = Monsters[type];
+    const name = names[randomNumber(0, names.length - 1)];
+    const damage = randomNumber(minDamage, maxDamage);
+    const coins = randomNumber(minCoins, maxCoins) * modifier;
+    const exp = randomNumber(minExp, maxExp) * modifier;
     return {
       name,
       damage,
