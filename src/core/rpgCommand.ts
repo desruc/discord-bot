@@ -1,7 +1,7 @@
 import { Message, MessageEmbed } from 'discord.js';
 import Bot from './bot';
 import Command from './command';
-import { IAvatar, IMonster } from '../typings';
+import { IAvatar, IMonster, IMonsterMeta } from '../typings';
 
 import Avatar from '../database/models/avatarModel';
 
@@ -55,11 +55,34 @@ export default class RPGCommand extends Command {
     });
   }
 
+  public async addLevel(
+    avatar: IAvatar,
+    exp = 0,
+    coins = 0,
+    dmg = 0
+  ): Promise<void> {
+    const { exp: currentExp, level } = avatar;
+    await avatar.updateOne({
+      $set: {
+        exp: currentExp + exp - this.getExpForLevel(level + 1)
+      },
+      $inc: {
+        level: 1,
+        coins,
+        hitPoints: -dmg,
+        maxHitPoints: 5,
+        attack: 1,
+        armour: 1
+      }
+    });
+  }
+
   public getExpForLevel(level: number): number {
     return Math.floor(this.baseExp * Math.pow(level, this.levelExponent));
   }
 
   public getMonster(type: string, modifier = 1): IMonster {
+    const monster: IMonsterMeta = Monsters[type];
     const {
       names,
       minDamage,
@@ -68,7 +91,7 @@ export default class RPGCommand extends Command {
       maxCoins,
       minExp,
       maxExp
-    } = Monsters[type];
+    } = monster;
     const name = names[randomNumber(0, names.length - 1)];
     const damage = randomNumber(minDamage, maxDamage);
     const coins = randomNumber(minCoins, maxCoins) * modifier;
@@ -113,7 +136,7 @@ export default class RPGCommand extends Command {
         });
       }
     } catch (error) {
-      console.log(error);
+      this.client.logger.error('Error caught in updateCooldown function: ', error);
     }
   }
 
@@ -136,7 +159,10 @@ export default class RPGCommand extends Command {
 
       return channel.send(embed);
     } catch (error) {
-      console.log(error);
+      this.client.logger.error(
+        'Error caught in the sendCooldownMessage function: ',
+        error
+      );
     }
   }
 

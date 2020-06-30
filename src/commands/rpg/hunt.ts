@@ -46,19 +46,7 @@ export default class Hunt extends RPGCommand {
 
       if (hasLeveled) {
         responseMsg += `\nThey are now **Level ${level + 1}**`;
-        await avatar.updateOne({
-          $set: {
-            exp: updatedExp - this.getExpForLevel(level + 1)
-          },
-          $inc: {
-            level: 1,
-            coins,
-            hitPoints: -damage,
-            maxHitPoints: 5,
-            attack: 1,
-            armour: 1
-          }
-        });
+        await this.addLevel(avatar, monsterExp, coins, damage);
       } else {
         await avatar.updateOne({
           $inc: { exp: monsterExp, coins, hitPoints: -damage }
