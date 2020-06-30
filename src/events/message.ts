@@ -16,7 +16,7 @@ export default class MessageEvent implements IEvent {
     const {
       config: { prefix }
     } = this.client;
-    if (message.content.toLowerCase().indexOf(prefix) === 0) return 3;
+    if (message.content.toLowerCase().indexOf(prefix) === 0) return 1;
     if (Array.from(attachments.values()).length > 0) return 21;
     if (embeds.length > 0) return 14;
     return 7;
