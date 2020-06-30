@@ -1,4 +1,6 @@
-export default {
+import { IMonsters } from '../typings/index';
+
+export const monsters: IMonsters = {
   hunt: {
     minDamage: 10,
     maxDamage: 35,
@@ -40,3 +42,5 @@ export default {
     ]
   }
 };
+
+export default monsters;

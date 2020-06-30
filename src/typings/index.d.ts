@@ -75,3 +75,18 @@ export interface IShopItem {
   cost: number;
   addToInventory?: boolean;
 }
+
+export interface IMonsters {
+  hunt: IMonsterMeta;
+  adventure: IMonsterMeta;
+}
+
+export interface IMonsterMeta {
+  minDamage: number;
+  maxDamage: number;
+  minCoins: number;
+  maxCoins: number;
+  minExp: number;
+  maxExp: number;
+  names: string[];
+}
