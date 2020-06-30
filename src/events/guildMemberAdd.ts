@@ -16,7 +16,7 @@ export default class GuildMemberAdd implements IEvent {
   public async exec(member: GuildMember): Promise<Message> {
     const { guild } = member;
     const { id: guildId } = guild;
-    new userRecords().initializeUserRecord(this.client, guildId, member);
+    new userRecords(this.client).initializeUserRecord(this.client, guildId, member);
 
     const baseChannel = await getTextChannel(guild);
 

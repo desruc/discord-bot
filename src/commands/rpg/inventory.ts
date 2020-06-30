@@ -5,8 +5,8 @@ import RPGCommand from '../../core/rpgCommand';
 import { Items } from '../../constants/items';
 
 export default class Inventory extends RPGCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'inventory';
     this.category = 'rpg';
   }

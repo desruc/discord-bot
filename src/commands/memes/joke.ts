@@ -1,10 +1,11 @@
 import { Client, Message, MessageEmbed } from 'discord.js';
 import Command from '../../core/command';
 import axios from 'axios';
+import Bot from '../../core/bot';
 
 export default class Joke extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'joke';
     this.guildOnly = false;
     this.category = 'memes';

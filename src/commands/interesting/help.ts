@@ -4,8 +4,8 @@ import Bot from '../../core/bot';
 import { ICommand } from '../../typings';
 
 export default class Help extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'help';
     this.category = 'info';
   }

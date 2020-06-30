@@ -3,8 +3,8 @@ import RPGCommand from '../../core/rpgCommand';
 import Bot from '../../core/bot';
 
 export default class Hunt extends RPGCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'hunt';
     this.category = 'rpg';
     this.cooldown = 1000 * 60 * 3;

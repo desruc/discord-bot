@@ -5,8 +5,8 @@ import RPGCommand from '../../core/rpgCommand';
 import { randomNumber, isValidNumber } from '../../utils/helpers';
 
 export default class Slots extends RPGCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'slots';
     this.category = 'rpg';
   }

@@ -5,8 +5,8 @@ import RPGCommand from '../../core/rpgCommand';
 import { randomNumber, isValidNumber } from '../../utils/helpers';
 
 export default class CoinFlip extends RPGCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'coinflip';
     this.aliases = ['cf'];
     this.category = 'rpg';

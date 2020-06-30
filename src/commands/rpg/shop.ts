@@ -3,8 +3,8 @@ import Bot from '../../core/bot';
 import RPGCommand from '../../core/rpgCommand';
 
 export default class Shop extends RPGCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'shop';
     this.category = 'rpg';
   }

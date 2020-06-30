@@ -7,8 +7,8 @@ import { Items } from '../../constants/items';
 import { IShopItem } from '../../typings';
 
 export default class Buy extends RPGCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'buy';
     this.category = 'rpg';
   }

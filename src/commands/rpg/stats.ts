@@ -3,8 +3,8 @@ import RPGCommand from '../../core/rpgCommand';
 import Bot from '../../core/bot';
 
 export default class Stats extends RPGCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'stats';
     this.aliases = ['profile'];
     this.category = 'rpg';
