@@ -7,8 +7,8 @@ import { asyncForEach } from '../../utils/helpers';
 import { roles } from '../../constants/roles';
 
 export default class RemoveRoles extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'removeroles';
     this.guildOnly = true;
     this.ownerOnly = true;

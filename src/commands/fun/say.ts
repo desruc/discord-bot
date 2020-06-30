@@ -1,10 +1,11 @@
 import { Client, Message, TextChannel, Guild } from 'discord.js';
 import Command from '../../core/command';
 import config from '../../constants/config';
+import Bot from '../../core/bot';
 
 export default class Say extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'say';
     this.guildOnly = false;
     this.category = 'fun';

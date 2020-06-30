@@ -7,8 +7,8 @@ import { asyncForEach } from '../../utils/helpers';
 import { roles } from '../../constants/roles';
 
 export default class InitRoles extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'initroles';
     this.guildOnly = true;
     this.ownerOnly = true;

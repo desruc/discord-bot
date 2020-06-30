@@ -18,7 +18,7 @@ export default class GuildCreate implements IEvent {
       (m) => !m.user.bot
     );
 
-    const recordHelpers = new userRecords();
+    const recordHelpers = new userRecords(this.client);
 
     await asyncForEach(guildMembers, async (member) => {
       await recordHelpers.initializeUserRecord(this.client, guildId, member);

@@ -6,8 +6,8 @@ import UserModel from '../../database/models/userModel';
 import { asyncForEach } from '../../utils/helpers';
 
 export default class InitUserRecords extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'inituserrecords';
     this.guildOnly = true;
     this.ownerOnly = true;

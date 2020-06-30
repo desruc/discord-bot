@@ -32,3 +32,16 @@ export const getTextChannel = async (
   if (channel) return channel as TextChannel;
   else return baseChannel as TextChannel;
 };
+
+export const msToString = (ms: number): string => {
+  const hours = Math.floor((ms / (1000 * 60 * 60)) % 60);
+  const mins = Math.floor((ms / (1000 * 60)) % 60);
+  const seconds = Math.floor((ms / 1000) % 60);
+
+  if (hours > 0) return `${hours}h ${mins}m`;
+  if (mins > 0) return `${mins}m ${seconds}s`;
+  return `${seconds}s`;
+};
+
+export const isValidNumber = (num: string | number): boolean =>
+  !isNaN(Number(num)) && isFinite(Number(num)) && Number(num) >= 0;

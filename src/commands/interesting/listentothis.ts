@@ -1,9 +1,10 @@
 import RedditCommand from '../../core/redditCommand';
 import { Client, Message } from 'discord.js';
+import Bot from '../../core/bot';
 
 export default class ListenToThis extends RedditCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'listentothis';
     this.sub = 'listentothis';
     this.thumbnail = false;

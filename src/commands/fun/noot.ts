@@ -1,9 +1,10 @@
 import { Client, Message } from 'discord.js';
 import Command from '../../core/command';
+import Bot from '../../core/bot';
 
 export default class Noot extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'noot';
     this.category = 'fun';
   }

@@ -1,8 +1,9 @@
 import RedditCommand from '../../core/redditCommand';
+import Bot from '../../core/bot';
 
 export default class ShowerThought extends RedditCommand {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'showerthought';
     this.sub = 'showerthoughts';
     this.isImage = false;

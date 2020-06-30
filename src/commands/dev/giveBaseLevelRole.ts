@@ -9,8 +9,8 @@ import { asyncForEach } from '../../utils/helpers';
 import { roles } from '../../constants/roles';
 
 export default class GiveBaseLevelRole extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'givebaselevelrole';
     this.guildOnly = true;
     this.ownerOnly = true;

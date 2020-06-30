@@ -7,8 +7,8 @@ import { asyncForEach } from '../../utils/helpers';
 import { categories, textChannels, voiceChannels } from '../../constants/channels';
 
 export default class InitChannels extends Command {
-  constructor() {
-    super();
+  constructor(client: Bot) {
+    super(client);
     this.name = 'initchannels';
     this.guildOnly = true;
     this.ownerOnly = true;

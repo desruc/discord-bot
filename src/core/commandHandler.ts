@@ -53,6 +53,9 @@ export default class CommandHandler {
       // Guild owners only!
       if (command.ownerOnly && message.guild.ownerID !== message.author.id) return;
 
+      // Rpg commands have their own handler that checks cooldowns before executing
+      if (command.rpg) return command.execRpgCommand(this.client, message, args);
+
       return command.exec(this.client, message, args);
     }
   }
