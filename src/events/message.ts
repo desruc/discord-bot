@@ -4,12 +4,19 @@ import { Message, MessageEmbed, TextChannel } from 'discord.js';
 
 import User from '../database/models/userModel';
 
-import { roles } from '../constants/roles';
+import { basicRoles, fantasyRoles } from '../constants/roles';
 
 export default class MessageEvent implements IEvent {
   readonly name = 'message';
+  private roles = [];
 
-  constructor(private client: Bot) {}
+  constructor(private client: Bot) {
+    const {
+      config: { roleSet }
+    } = client;
+
+    this.roles = roleSet === 'basic' ? basicRoles : fantasyRoles;
+  }
 
   private calculateMessageExp(message: Message): number {
     const { embeds, attachments } = message;
@@ -46,8 +53,14 @@ export default class MessageEvent implements IEvent {
       (g) => g.guildId === guildId
     );
 
-    const userLevel = this.calculateUserLevel(userExp);
-    this.promoteMember(message, userLevel);
+    const {
+      config: { enableRoles }
+    } = this.client;
+
+    if (enableRoles) {
+      const userLevel = this.calculateUserLevel(userExp);
+      this.promoteMember(message, userLevel);
+    }
   }
 
   private getExpForLevel(level: number): number {
@@ -59,7 +72,7 @@ export default class MessageEvent implements IEvent {
   }
 
   private calculateUserLevel(userExperience: number) {
-    const levelRoles = roles.filter((r) => r.level !== undefined);
+    const levelRoles = this.roles.filter((r) => r.level !== undefined);
 
     // Calculate the exp for each level
     const levelMeta = [];
@@ -75,10 +88,20 @@ export default class MessageEvent implements IEvent {
   }
 
   private getLevelEmbed(roleName: string, memberName: string): MessageEmbed {
-    const roleMeta = roles.find((r) => r.name === roleName);
+    const roleMeta = this.roles.find((r) => r.name === roleName);
+
+    const {
+      config: { roleSet }
+    } = this.client;
+
+    const isBasic = roleSet === 'basic';
+
+    const embedTitle = isBasic
+      ? `[~/]>initiate\_promotion *${memberName}*`
+      : `Congratulations ${memberName}! You are now a ${roleName}!`;
 
     const embed = new MessageEmbed()
-      .setTitle(`Congratulations ${memberName}! You are now a ${roleName}!`)
+      .setTitle(embedTitle)
       .setDescription(roleMeta.description)
       .setThumbnail(roleMeta.image)
       .setColor(roleMeta.color);
@@ -89,7 +112,7 @@ export default class MessageEvent implements IEvent {
   private async promoteMember(message: Message, userLevel: number): Promise<void> {
     const { guild, member, channel } = message;
 
-    const levelRoles = roles.filter((r) => r.level !== undefined);
+    const levelRoles = this.roles.filter((r) => r.level !== undefined);
 
     let roleName = '';
     levelRoles.forEach(({ level, name }) => {

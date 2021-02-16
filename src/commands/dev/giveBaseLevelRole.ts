@@ -6,14 +6,22 @@ import UserModel from '../../database/models/userModel';
 
 import { asyncForEach } from '../../utils/helpers';
 
-import { roles } from '../../constants/roles';
+import { basicRoles, fantasyRoles } from '../../constants/roles';
 
 export default class GiveBaseLevelRole extends Command {
+  private roles = [];
+
   constructor(client: Bot) {
     super(client);
+
+    const {
+      config: { roleSet }
+    } = client;
+
     this.name = 'givebaselevelrole';
     this.guildOnly = true;
     this.ownerOnly = true;
+    this.roles = roleSet === 'basic' ? basicRoles : fantasyRoles;
   }
 
   public async exec(client: Bot, message: Message): Promise<void> {
@@ -21,7 +29,7 @@ export default class GiveBaseLevelRole extends Command {
       guild: { members, roles: guildRoles, name: guildName }
     } = message;
 
-    const baseLevelRole = roles.find((r) => r.level === 0);
+    const baseLevelRole = this.roles.find((r) => r.level === 0);
     const existingGuildRole = guildRoles.cache.find(
       (r) => r.name === baseLevelRole.name
     );

@@ -8,6 +8,8 @@ export interface BotConfig {
   modRole: string;
   totalShards: string;
   modChannel: string;
+  enableRoles: boolean;
+  roleSet: string;
 }
 
 export interface ICommand {

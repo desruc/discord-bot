@@ -4,19 +4,27 @@ import Bot from '../../core/bot';
 
 import { asyncForEach } from '../../utils/helpers';
 
-import { roles } from '../../constants/roles';
+import { basicRoles, fantasyRoles } from '../../constants/roles';
 
 export default class RemoveRoles extends Command {
+  private roles = [];
+
   constructor(client: Bot) {
     super(client);
+
+    const {
+      config: { roleSet }
+    } = client;
+
     this.name = 'removeroles';
     this.guildOnly = true;
     this.ownerOnly = true;
+    this.roles = roleSet === 'basic' ? basicRoles : fantasyRoles;
   }
 
   public async exec(client: Bot, message: Message): Promise<void> {
     const { guild } = message;
-    await asyncForEach(roles, async (role) => {
+    await asyncForEach(this.roles, async (role) => {
       const { name } = role;
       const existingRole = guild.roles.cache.find((r) => r.name === name);
 

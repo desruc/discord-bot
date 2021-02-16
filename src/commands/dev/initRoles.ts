@@ -4,7 +4,7 @@ import Bot from '../../core/bot';
 
 import { asyncForEach } from '../../utils/helpers';
 
-import { roles } from '../../constants/roles';
+import { basicRoles, fantasyRoles } from '../../constants/roles';
 
 export default class InitRoles extends Command {
   constructor(client: Bot) {
@@ -16,6 +16,13 @@ export default class InitRoles extends Command {
 
   public async exec(client: Bot, message: Message): Promise<void> {
     const { guild } = message;
+
+    const {
+      config: { roleSet }
+    } = this.client;
+
+    const roles = roleSet === 'basic' ? basicRoles : fantasyRoles;
+
     await asyncForEach(roles, async (role, index) => {
       const { name, color, position, hoist } = role;
       const existingRole = guild.roles.cache.find((r) => r.name === name);

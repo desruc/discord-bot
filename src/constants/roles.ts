@@ -1,4 +1,4 @@
-interface NewRoleMeta {
+export interface NewRoleMeta {
   name: string;
   level?: number;
   position?: number;
@@ -8,7 +8,26 @@ interface NewRoleMeta {
   description?: string;
 }
 
-export const roles: NewRoleMeta[] = [
+export const basicRoles: NewRoleMeta[] = [
+  {
+    name: '>conscious',
+    level: 0,
+    color: '#F8F32B',
+    hoist: true,
+    description: 'welcome to the real world',
+    image: 'https://cdn.mos.cms.futurecdn.net/MJ6QbXmHQBhVuXMcEAZ3jK.jpg'
+  },
+  {
+    name: '>sentient',
+    level: 10,
+    color: '#3185FC',
+    hoist: true,
+    description: 'your effort to contribute has not gone unnoticed',
+    image: ''
+  }
+];
+
+export const fantasyRoles: NewRoleMeta[] = [
   {
     name: 'Human',
     level: 0,
