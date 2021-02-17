@@ -4,7 +4,8 @@ const env = {
   mongoPassword: process.env.MONGO_PASSWORD,
   mongoHost: process.env.MONGO_HOST || 'localhost',
   mongoPort: process.env.MONGO_PORT || '27017',
-  dbName: process.env.MONGO_DB
+  dbName: process.env.MONGO_DB,
+  newsApiKey: process.env.NEWS_API_KEY
 };
 
 export default env;

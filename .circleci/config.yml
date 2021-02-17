@@ -7,7 +7,7 @@ commands:
       - run:
           name: Build and push Docker image
           command: |
-            docker build --build-arg DISCORD_TOKEN=${DISCORD_TOKEN} --build-arg MONGO_USER=${MONGO_USER} --build-arg MONGO_PASSWORD=${MONGO_PASSWORD} --build-arg MONGO_HOST=${MONGO_HOST} --build-arg MONGO_DB=${MONGO_DB} -t ${DOCKER_IMAGE}:${DOCKER_TAG} ./
+            docker build --build-arg DISCORD_TOKEN=${DISCORD_TOKEN} --build-arg MONGO_USER=${MONGO_USER} --build-arg MONGO_PASSWORD=${MONGO_PASSWORD} --build-arg MONGO_HOST=${MONGO_HOST} --build-arg NEWS_API_KEY=${NEWS_API_KEY} --build-arg MONGO_DB=${MONGO_DB} -t ${DOCKER_IMAGE}:${DOCKER_TAG} ./
             echo $DOCKER_PASSWORD | docker login -u $DOCKER_USER --password-stdin
             docker push ${DOCKER_IMAGE}:${DOCKER_TAG}
   deploy-container-to-gce:
