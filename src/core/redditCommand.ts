@@ -80,13 +80,16 @@ export default class RedditCommand extends Command {
     message: Message
   ): Promise<Message | Array<Message> | void> {
     const { channel } = message;
+
     const placeholder = await channel.send(
       new MessageEmbed().setDescription(
         'Just fetching something now... please hold.'
       )
     );
+
     try {
       const embed = await this.getRedditMediaEmbed();
+
       return await placeholder.edit(embed);
     } catch {
       return await placeholder.edit(

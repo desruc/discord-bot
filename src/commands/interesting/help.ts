@@ -1,7 +1,6 @@
 import { Message, Collection, MessageEmbed } from 'discord.js';
-import Command from '../../core/command';
+import Command, { CommandDefinition} from '../../core/command';
 import Bot from '../../core/bot';
-import { ICommand } from '../../typings';
 
 export default class Help extends Command {
   constructor(client: Bot) {
@@ -11,7 +10,7 @@ export default class Help extends Command {
   }
 
   private getCategoryCommandList(
-    commands: Collection<string, ICommand>,
+    commands: Collection<string, CommandDefinition>,
     category: string
   ): string {
     return commands

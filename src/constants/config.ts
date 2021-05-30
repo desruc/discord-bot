@@ -1,14 +1,15 @@
-import { BotConfig } from '../typings';
+export interface BotConfig {
+  name: string;
+  totalShards: string;
+  discordToken: string;
+  prefix: string;
+}
 
-const config: BotConfig = {
+const config = {
   discordToken: process.env.DISCORD_TOKEN,
-  name: process.env.BOT_NAME || 'XANATHAR',
+  name: process.env.BOT_NAME || 'KING CROC',
   prefix: process.env.BOT_PREFIX || '.',
-  modRole: process.env.MOD_ROLE || 'Dungeon Master',
-  totalShards: process.env.TOTAL_SHARDS || 'auto',
-  modChannel: process.env.MODE_CHANNEL || 'modz',
-  roleSet: process.env.ROLE_SET || 'basic',
-  enableRoles: true
+  totalShards: process.env.TOTAL_SHARDS || 'auto'
 };
 
 export default config;

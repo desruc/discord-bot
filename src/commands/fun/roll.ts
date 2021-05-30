@@ -7,7 +7,6 @@ export default class Say extends Command {
     super(client);
     this.name = 'roll';
     this.category = 'utility';
-    this.guildOnly = false;
     this.description =
       'returns a random number between 1 and 100 (or the number specified).';
     this.category = 'fun';

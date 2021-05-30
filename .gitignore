@@ -1,7 +1,5 @@
 dist
 node_modules
 .env
-
 *.log
-
-deploy-to-pi.sh
+yarn-error.log

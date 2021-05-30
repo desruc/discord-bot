@@ -7,7 +7,6 @@ export default class Joke extends Command {
   constructor(client: Bot) {
     super(client);
     this.name = 'joke';
-    this.guildOnly = false;
     this.category = 'memes';
   }
 

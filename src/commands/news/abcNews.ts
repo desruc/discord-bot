@@ -11,7 +11,6 @@ export default class AbcNews extends Command {
     super(client);
     this.name = 'abcnews';
     this.category = 'news';
-    this.guildOnly = true;
     this.description = 'returns the top headlines from https://www.abc.net.au/';
   }
 

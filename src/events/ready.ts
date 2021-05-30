@@ -1,8 +1,8 @@
 import Bot from '../core/bot';
 import { Presence } from 'discord.js';
-import { IEvent } from '../typings';
+import { Event } from '../core/eventHandler';
 
-export default class ReadyEvent implements IEvent {
+export default class ReadyEvent implements Event {
   readonly name = 'ready';
 
   constructor(private client: Bot) {}

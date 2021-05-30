@@ -2,7 +2,7 @@ import { Logger as WinstonLogger, transports, format, createLogger } from 'winst
 import { EventEmitter } from 'events';
 import chalk from 'chalk';
 
-export class Logger extends EventEmitter {
+class Logger extends EventEmitter {
   logger: WinstonLogger;
   public defaultLogLevel = 'info';
   public customColor = {
@@ -56,3 +56,5 @@ export class Logger extends EventEmitter {
       );
   }
 }
+
+export default Logger;

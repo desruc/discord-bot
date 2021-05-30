@@ -1,15 +1,24 @@
 import { Client, Message } from 'discord.js';
 import Bot from './bot';
-import { ICommand } from '../typings';
 
-export default class Command implements ICommand {
+export interface CommandDefinition {
+  active: boolean;
+  name: string;
+  category: string;
+  description: string;
+  aliases: string[];
+  exec(
+    client: Client,
+    message: Message,
+    args?: string[]
+  ): Promise<Message | Array<Message> | void>;
+}
+
+export default class BotCommand implements CommandDefinition {
   public active = true;
   public name: string;
   public category: string;
-  public cooldown = 0;
   public description: string;
-  public guildOnly = false;
-  public ownerOnly = false;
   public aliases: string[] = [];
 
   constructor(public client: Bot) {}
@@ -18,8 +27,5 @@ export default class Command implements ICommand {
     client: Client,
     message: Message,
     args: string[]
-  ): Promise<Message | Array<Message> | void> {
-    console.log('Message contents: ', message.content);
-    console.log('Arguments: ', args);
-  }
+  ): Promise<Message | Array<Message> | void> {}
 }
