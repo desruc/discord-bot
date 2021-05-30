@@ -7,6 +7,8 @@ import { BotConfig } from '../constants/config';
 import config from '../constants/config';
 import Logger from './logger';
 
+import initializeSchedule from '../schedule';
+
 export default class Bot extends Client {
   public readonly config: BotConfig = config;
   readonly logger = new Logger(config.name).logger;
@@ -26,6 +28,9 @@ export default class Bot extends Client {
     const { discordToken } = this.config;
 
     await this.login(discordToken);
+
+    initializeSchedule(this);
+
     return this;
   }
 
