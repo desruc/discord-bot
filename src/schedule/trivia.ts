@@ -1,9 +1,9 @@
-import { Client, Message, MessageEmbed } from 'discord.js';
+import { Client, Message, MessageEmbed, TextChannel } from 'discord.js';
 import axios from 'axios';
 
 import { getTextChannel } from '../utils/helpers';
 
-function shuffleArray(array) {
+function shuffleArray(array): string[] {
   const temp = [...array];
   for (let i = temp.length - 1; i > 0; i--) {
     const j = Math.floor(Math.random() * (i + 1));
@@ -12,17 +12,101 @@ function shuffleArray(array) {
   return temp;
 }
 
+interface TriviaResult {
+  category: string;
+  type: string;
+  difficulty: string;
+  question: string;
+  correct_answer: string;
+  incorrect_answers: string[];
+}
+
 interface OpenTriviaResponse {
   response_code: number;
-  results: {
-    category: string;
-    type: string;
-    difficulty: string;
-    question: string;
-    correct_answer: string;
-    incorrect_answers: string[];
-  }[];
+  results: TriviaResult[];
 }
+
+const handleBooleanQuestion = async (
+  question: TriviaResult,
+  channel: TextChannel
+) => {
+  const embed = new MessageEmbed().setColor('RANDOM');
+
+  embed.setTitle(decodeURIComponent(question.question));
+
+  embed.setDescription('True or False?');
+
+  const answer = decodeURIComponent(question.correct_answer);
+
+  const filterAnswer = (response) =>
+    ['true', 'false'].some((e) => e === response.content.toLowerCase().trim());
+
+  channel.send(embed).then(() => {
+    channel
+      .awaitMessages(filterAnswer, { max: 1, time: 1800000, errors: ['time'] })
+      .then((collected) => {
+        const isTrue = answer.toLowerCase() === 'true';
+        if (isTrue && collected.first().content.toLowerCase() === 'true') {
+          channel.send(`Nicely done, ${collected.first().author}! That is correct.`);
+        } else {
+          channel.send(
+            `Sorry ${
+              collected.first().author
+            }, but that's incorrect! Better luck next time`
+          );
+        }
+      })
+      .catch(() => {
+        channel.send(
+          `Looks like nobody got the answer this time... it was ${answer}.`
+        );
+      });
+  });
+};
+
+const handleMultiple = async (question: TriviaResult, channel: TextChannel) => {
+  const embed = new MessageEmbed().setColor('RANDOM');
+
+  embed.setTitle(decodeURIComponent(question.question));
+
+  const decodedIncorrect = question.incorrect_answers.map((i) =>
+    decodeURIComponent(i)
+  );
+
+  const answer = decodeURIComponent(question.correct_answer);
+
+  const answers = shuffleArray([...decodedIncorrect, answer]);
+
+  const jointAnswers = answers.join('\n');
+
+  embed.setDescription(jointAnswers);
+
+  const answerFilter = (response) =>
+    answers.some((a) => a.toLowerCase() === response.content.toLowerCase().trim());
+
+  await channel.send(embed);
+
+  const collector = await channel.createMessageCollector(answerFilter, {
+    time: 1800000
+  });
+
+  collector.on('collect', (m) => {
+    if (m.content.toLowerCase() === answer.toLowerCase()) {
+      channel.send(`Nicely done, ${m.author}! That is correct`);
+      collector.stop('winner');
+    } else {
+      channel.send('Nope... try again');
+    }
+  });
+
+  collector.on('end', () => {
+    if (collector.endReason() !== 'winner') {
+      channel.send(
+        `Looks like nobody got the answer this time... it was ${answer}.`
+      );
+    }
+  });
+};
 
 const morningTrivia = async (
   client: Client
@@ -37,44 +121,15 @@ const morningTrivia = async (
 
   const data: OpenTriviaResponse = response.data;
 
-  const embed = new MessageEmbed().setColor('RANDOM');
-
   const triviaResult = data.results[0];
 
-  embed.setTitle(decodeURIComponent(triviaResult.question));
+  const isBool = triviaResult.type === 'boolean';
 
-  let answer: string = '';
-
-  if (triviaResult.type === 'boolean') {
-    answer = triviaResult.correct_answer;
-    embed.setDescription('True or False?');
+  if (isBool) {
+    await handleBooleanQuestion(triviaResult, channel);
   } else {
-    const decodedIncorrect = triviaResult.incorrect_answers.map((i) =>
-      decodeURIComponent(i)
-    );
-
-    answer = decodeURIComponent(triviaResult.correct_answer);
-
-    const answers = shuffleArray([...decodedIncorrect, answer]).join('\n');
-
-    embed.setDescription(answers);
+    await handleMultiple(triviaResult, channel);
   }
-
-  const filter = (response) =>
-    answer.toLowerCase().trim() === response.content.toLowerCase().trim();
-
-  channel.send(embed).then(() => {
-    channel
-      .awaitMessages(filter, { max: 1, time: 1800000, errors: ['time'] })
-      .then((collected) => {
-        channel.send(`Nicely done, ${collected.first().author}! That is correct.`);
-      })
-      .catch(() => {
-        channel.send(
-          `Looks like nobody got the answer this time... it was ${answer}.`
-        );
-      });
-  });
 };
 
 export default morningTrivia;
