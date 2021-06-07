@@ -1,4 +1,4 @@
-import { Client, Message, MessageEmbed, TextChannel } from 'discord.js';
+import { Client, Guild, Message, MessageEmbed, TextChannel, User } from 'discord.js';
 import axios from 'axios';
 
 import { getTextChannel } from '../utils/helpers';
@@ -26,6 +26,33 @@ interface OpenTriviaResponse {
   results: TriviaResult[];
 }
 
+const handleWinner = async (guild: Guild, message: Message) => {
+  const triviaRoleName = 'Trivia Kingpin';
+
+  let existingRole = guild.roles.cache.find((r) => r.name === triviaRoleName);
+
+  if (!existingRole) {
+    existingRole = await guild.roles.create({
+      data: {
+        name: triviaRoleName,
+        mentionable: false,
+        hoist: true,
+        color: 'RANDOM',
+        position: 3
+      }
+    });
+  }
+
+  guild.members
+    .fetch()
+    .then((v) => {
+      v.forEach((m) => m.roles.remove(existingRole));
+    })
+    .catch((e) => console.log(e));
+
+  message.member.roles.add(existingRole);
+};
+
 const handleBooleanQuestion = async (
   question: TriviaResult,
   channel: TextChannel
@@ -52,7 +79,7 @@ const handleBooleanQuestion = async (
           channel.send(
             `Sorry ${
               collected.first().author
-            }, but that's incorrect! Better luck next time`
+            }, but that's incorrect! Better luck next time.`
           );
         }
       })
@@ -82,7 +109,9 @@ const handleMultiple = async (question: TriviaResult, channel: TextChannel) => {
   embed.setDescription(jointAnswers);
 
   const answerFilter = (response) =>
-    answers.some((a) => a.toLowerCase() === response.content.toLowerCase().trim());
+    answers.some((a) =>
+      response.content.toLowerCase().trim().includes(a.toLowerCase())
+    );
 
   await channel.send(embed);
 
@@ -91,16 +120,20 @@ const handleMultiple = async (question: TriviaResult, channel: TextChannel) => {
   });
 
   collector.on('collect', (m) => {
-    if (m.content.toLowerCase() === answer.toLowerCase()) {
-      channel.send(`Nicely done, ${m.author}! That is correct`);
+    const lowerCaseMsg = m.content.toLowerCase();
+
+    if (answers.filter((a) => lowerCaseMsg.includes(a.toLowerCase())).length > 1) {
+      channel.send('One answer at a time, wise guy.');
+    } else if (lowerCaseMsg.includes(answer.toLowerCase())) {
+      channel.send(`Nicely done, ${m.author}! That is correct.`);
       collector.stop('winner');
     } else {
-      channel.send('Nope... try again');
+      channel.send('Nope... try again.');
     }
   });
 
-  collector.on('end', () => {
-    if (collector.endReason() !== 'winner') {
+  collector.on('end', (_, reason) => {
+    if (reason !== 'winner') {
       channel.send(
         `Looks like nobody got the answer this time... it was ${answer}.`
       );
@@ -109,11 +142,10 @@ const handleMultiple = async (question: TriviaResult, channel: TextChannel) => {
 };
 
 const morningTrivia = async (
-  client: Client
+  client: Client,
+  guild: Guild
 ): Promise<Message | Array<Message> | void> => {
-  const channel = await getTextChannel(
-    await client.guilds.fetch('208189454253424640')
-  );
+  const channel = await getTextChannel(guild);
 
   const response = await axios.get(
     'https://opentdb.com/api.php?amount=1&encode=url3986'

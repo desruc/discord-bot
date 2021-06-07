@@ -1,10 +1,11 @@
+import { Client } from 'discord.js';
 import schedule from 'node-schedule';
 
 import morningTrivia from './trivia';
 
-export default (client) => {
+export default (client: Client) => {
   // Morning trivia
   schedule.scheduleJob('1 8 * * *', function () {
-    morningTrivia(client);
+    client.guilds.cache.forEach((guild) => morningTrivia(client, guild));
   });
 };
