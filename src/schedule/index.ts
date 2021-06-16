@@ -4,7 +4,7 @@ import morningTrivia from './trivia';
 
 export default (client) => {
   // Morning trivia
-  schedule.scheduleJob('1 8 * * *', function () {
+  schedule.scheduleJob('1 19 * * *', function () {
     morningTrivia(client);
   });
 };
